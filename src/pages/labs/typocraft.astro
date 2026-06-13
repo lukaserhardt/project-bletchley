@@ -1,0 +1,314 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Project Bletchley - Typocraft" description="Interactive typography playground for Geist and Geist Mono variable fonts.">
+  <div class="space-y-8 flex-grow flex flex-col">
+    <!-- Breadcrumbs / Navigation -->
+    <nav class="font-mono text-xs text-text-muted flex items-center gap-2">
+      <a href="/project-bletchley/" class="hover:text-accent hover:underline">HUB</a>
+      <span>/</span>
+      <span class="text-text-base">LABS</span>
+      <span>/</span>
+      <span class="text-text-base font-bold">TYPOCRAFT</span>
+    </nav>
+
+    <!-- Header section -->
+    <header class="border-b border-border-base pb-6">
+      <h1 class="text-3xl font-black uppercase tracking-tight">
+        TYPOCRAFT PLAYGROUND
+      </h1>
+      <p class="text-sm text-text-muted mt-2 max-w-xl">
+        Experiment with variable axis weights, sizing, tracking, and leading of the Geist typography stack in real-time.
+      </p>
+    </header>
+
+    <!-- Playground Workspace -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 flex-grow items-stretch">
+      
+      <!-- Control Panel (Sidebar) -->
+      <section class="lg:col-span-4 border border-border-base bg-surface p-6 flex flex-col justify-between space-y-6">
+        <div class="space-y-6">
+          <h2 class="font-mono text-xs font-bold uppercase tracking-wider border-b border-border-base pb-2 text-text-base">
+            Typography Parameters
+          </h2>
+
+          <!-- Font Selection -->
+          <div class="space-y-2">
+            <label for="font-family-select" class="block font-mono text-xs uppercase tracking-wider text-text-muted">
+              Font Family
+            </label>
+            <select
+              id="font-family-select"
+              class="w-full bg-base border border-border-base text-text-base px-3 py-2 text-xs font-mono focus:border-accent outline-none"
+            >
+              <option value="font-sans">Geist (Sans-Serif)</option>
+              <option value="font-mono">Geist Mono (Monospace)</option>
+            </select>
+          </div>
+
+          <!-- Axis Weight Sliders -->
+          <div class="space-y-4">
+            <!-- Weight (wght) -->
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs font-mono">
+                <label for="axis-weight" class="uppercase tracking-wider text-text-muted">Weight (wght)</label>
+                <span id="weight-val" class="font-bold">400</span>
+              </div>
+              <input
+                type="range"
+                id="axis-weight"
+                min="100"
+                max="900"
+                value="400"
+                step="10"
+                class="w-full h-1 bg-border-base appearance-none cursor-pointer accent-accent"
+              />
+            </div>
+
+            <!-- Font Size -->
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs font-mono">
+                <label for="axis-size" class="uppercase tracking-wider text-text-muted">Size (px)</label>
+                <span id="size-val" class="font-bold">48px</span>
+              </div>
+              <input
+                type="range"
+                id="axis-size"
+                min="16"
+                max="120"
+                value="48"
+                step="1"
+                class="w-full h-1 bg-border-base appearance-none cursor-pointer accent-accent"
+              />
+            </div>
+
+            <!-- Line Height (Leading) -->
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs font-mono">
+                <label for="axis-leading" class="uppercase tracking-wider text-text-muted">Leading (Line Height)</label>
+                <span id="leading-val" class="font-bold">1.2</span>
+              </div>
+              <input
+                type="range"
+                id="axis-leading"
+                min="0.8"
+                max="2.5"
+                value="1.2"
+                step="0.05"
+                class="w-full h-1 bg-border-base appearance-none cursor-pointer accent-accent"
+              />
+            </div>
+
+            <!-- Letter Spacing (Tracking) -->
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs font-mono">
+                <label for="axis-tracking" class="uppercase tracking-wider text-text-muted">Tracking (Spacing)</label>
+                <span id="tracking-val" class="font-bold">0.00em</span>
+              </div>
+              <input
+                type="range"
+                id="axis-tracking"
+                min="-0.08"
+                max="0.4"
+                value="0.0"
+                step="0.01"
+                class="w-full h-1 bg-border-base appearance-none cursor-pointer accent-accent"
+              />
+            </div>
+          </div>
+
+          <!-- Presets -->
+          <div class="space-y-2 border-t border-border-base pt-4">
+            <span class="block font-mono text-[10px] uppercase tracking-wider text-text-muted">
+              Design Presets
+            </span>
+            <div class="grid grid-cols-2 gap-2 font-mono text-[10px]">
+              <button
+                type="button"
+                id="preset-display"
+                class="border border-border-base bg-base hover:border-accent p-2 text-left transition-colors cursor-pointer"
+              >
+                ■ DISPLAY BOLD
+              </button>
+              <button
+                type="button"
+                id="preset-mono-header"
+                class="border border-border-base bg-base hover:border-accent p-2 text-left transition-colors cursor-pointer"
+              >
+                ■ MONO HEADER
+              </button>
+              <button
+                type="button"
+                id="preset-editorial"
+                class="border border-border-base bg-base hover:border-accent p-2 text-left transition-colors cursor-pointer"
+              >
+                ■ EDITORIAL LEAD
+              </button>
+              <button
+                type="button"
+                id="preset-caption"
+                class="border border-border-base bg-base hover:border-accent p-2 text-left transition-colors cursor-pointer"
+              >
+                ■ TINY CAPTION
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generated CSS Export -->
+        <div class="space-y-2 border-t border-border-base pt-4">
+          <div class="flex justify-between items-center">
+            <span class="font-mono text-[10px] uppercase tracking-wider text-text-muted">Generated CSS</span>
+            <button
+              id="copy-css-btn"
+              class="font-mono text-[9px] uppercase tracking-wider px-2 py-0.5 border border-border-base bg-base hover:border-accent transition-colors cursor-pointer"
+            >
+              Copy CSS
+            </button>
+          </div>
+          <pre id="css-output" class="font-mono text-[9px] bg-base border border-border-base p-2 overflow-x-auto select-all text-text-muted"></pre>
+        </div>
+      </section>
+
+      <!-- Live Preview Canvas -->
+      <section class="lg:col-span-8 border border-border-base bg-surface flex flex-col justify-between overflow-hidden">
+        <div class="border-b border-border-base bg-base px-4 py-2 font-mono text-[10px] text-text-muted flex items-center justify-between">
+          <span>CANVAS: EDITABLE PREVIEW</span>
+          <span class="uppercase tracking-widest text-accent font-bold" id="family-indicator">GEIST SANS</span>
+        </div>
+        
+        <!-- Interactive text preview area -->
+        <div class="flex-grow p-8 flex items-center justify-center min-h-[300px] overflow-auto">
+          <div
+            id="text-preview"
+            contenteditable="true"
+            spellcheck="false"
+            class="w-full text-center outline-none select-text playground-sample"
+          >
+            Bletchley.
+          </div>
+        </div>
+
+        <div class="border-t border-border-base bg-base px-4 py-3 font-mono text-[10px] text-text-muted flex flex-col sm:flex-row sm:justify-between gap-2">
+          <span>Click inside the canvas to edit sample text.</span>
+          <span>Axes: font-variation-settings: "wght" <span id="canvas-wght">400</span></span>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Interactive script to apply settings and change axes -->
+  <script>
+    const preview = document.getElementById('text-preview') as HTMLDivElement;
+    const fontFamilySelect = document.getElementById('font-family-select') as HTMLSelectElement;
+    const familyIndicator = document.getElementById('family-indicator') as HTMLSpanElement;
+
+    // Sliders
+    const sliderWeight = document.getElementById('axis-weight') as HTMLInputElement;
+    const sliderSize = document.getElementById('axis-size') as HTMLInputElement;
+    const sliderLeading = document.getElementById('axis-leading') as HTMLInputElement;
+    const sliderTracking = document.getElementById('axis-tracking') as HTMLInputElement;
+
+    // Value Labels
+    const valWeight = document.getElementById('weight-val') as HTMLSpanElement;
+    const valSize = document.getElementById('size-val') as HTMLSpanElement;
+    const valLeading = document.getElementById('leading-val') as HTMLSpanElement;
+    const valTracking = document.getElementById('tracking-val') as HTMLSpanElement;
+
+    // Canvas Outputs
+    const canvasWght = document.getElementById('canvas-wght') as HTMLSpanElement;
+    const cssOutput = document.getElementById('css-output') as HTMLPreElement;
+    const copyCssBtn = document.getElementById('copy-css-btn') as HTMLButtonElement;
+
+    // Presets
+    const presetDisplay = document.getElementById('preset-display') as HTMLButtonElement;
+    const presetMonoHeader = document.getElementById('preset-mono-header') as HTMLButtonElement;
+    const presetEditorial = document.getElementById('preset-editorial') as HTMLButtonElement;
+    const presetCaption = document.getElementById('preset-caption') as HTMLButtonElement;
+
+    function updateTypography() {
+      if (!preview) return;
+
+      const family = fontFamilySelect.value;
+      const weight = sliderWeight.value;
+      const size = sliderSize.value;
+      const leading = sliderLeading.value;
+      const tracking = sliderTracking.value;
+
+      // Update indicators
+      valWeight.textContent = weight;
+      valSize.textContent = `${size}px`;
+      valLeading.textContent = leading;
+      valTracking.textContent = `${tracking}em`;
+      if (canvasWght) canvasWght.textContent = weight;
+
+      // Apply font classes (sans vs mono)
+      if (family === 'font-sans') {
+        preview.classList.remove('font-mono');
+        preview.classList.add('font-sans');
+        if (familyIndicator) familyIndicator.textContent = 'GEIST SANS';
+      } else {
+        preview.classList.remove('font-sans');
+        preview.classList.add('font-mono');
+        if (familyIndicator) familyIndicator.textContent = 'GEIST MONO';
+      }
+
+      // Apply custom inline styles for fine-tuning
+      preview.style.setProperty('--wght', weight);
+      preview.style.fontSize = `${size}px`;
+      preview.style.lineHeight = leading;
+      preview.style.letterSpacing = `${tracking}em`;
+
+      // Update CSS code block
+      const fontStack = family === 'font-sans' ? '"Geist", sans-serif' : '"Geist Mono", monospace';
+      const cssCode = `font-family: ${fontStack};
+font-variation-settings: "wght" ${weight};
+font-size: ${size}px;
+line-height: ${leading};
+letter-spacing: ${tracking}em;`;
+      
+      if (cssOutput) {
+        cssOutput.textContent = cssCode;
+      }
+    }
+
+    // Set presets
+    function applyPreset(family: string, weight: number, size: number, leading: number, tracking: number) {
+      fontFamilySelect.value = family;
+      sliderWeight.value = String(weight);
+      sliderSize.value = String(size);
+      sliderLeading.value = String(leading);
+      sliderTracking.value = String(tracking);
+      updateTypography();
+    }
+
+    // Event listeners
+    fontFamilySelect.addEventListener('change', updateTypography);
+    sliderWeight.addEventListener('input', updateTypography);
+    sliderSize.addEventListener('input', updateTypography);
+    sliderLeading.addEventListener('input', updateTypography);
+    sliderTracking.addEventListener('input', updateTypography);
+
+    presetDisplay.addEventListener('click', () => applyPreset('font-sans', 850, 72, 1.0, -0.04));
+    presetMonoHeader.addEventListener('click', () => applyPreset('font-mono', 700, 42, 1.1, 0.05));
+    presetEditorial.addEventListener('click', () => applyPreset('font-sans', 300, 32, 1.4, 0.02));
+    presetCaption.addEventListener('click', () => applyPreset('font-mono', 400, 16, 1.5, 0.15));
+
+    // Copy CSS clipboard
+    copyCssBtn.addEventListener('click', () => {
+      if (cssOutput) {
+        navigator.clipboard.writeText(cssOutput.textContent || '');
+        const prevText = copyCssBtn.textContent;
+        copyCssBtn.textContent = 'Copied!';
+        setTimeout(() => {
+          copyCssBtn.textContent = prevText;
+        }, 1500);
+      }
+    });
+
+    // Run initially
+    updateTypography();
+  </script>
+</Layout>
