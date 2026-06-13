@@ -6,30 +6,29 @@ import Layout from '../../layouts/Layout.astro';
   <div class="space-y-8 flex-grow flex flex-col relative">
     
     <!-- Hero Glow Blob -->
-    <div class="absolute -top-16 -left-20 w-72 h-72 rounded-full bg-gradient-to-tr from-accent/20 to-purple-500/10 blur-[80px] -z-10 pointer-events-none"></div>
-    <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-gradient-to-br from-indigo-500/10 to-accent/15 blur-[100px] -z-10 pointer-events-none"></div>
+    <div class="absolute -top-16 -left-20 w-72 h-72 rounded-full bg-gradient-to-tr from-primary/10 to-purple-500/5 blur-[80px] -z-10 pointer-events-none"></div>
+    <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-gradient-to-br from-indigo-500/5 to-primary/10 blur-[100px] -z-10 pointer-events-none"></div>
 
     <!-- Navigation -->
-    <nav class="font-mono text-xs text-text-muted flex items-center gap-2">
-      <a href="/project-bletchley/" class="hover:text-accent hover:underline">Hub</a>
+    <nav class="font-mono text-xs text-muted flex items-center gap-2">
+      <a href="/project-bletchley/" class="hover:text-primary hover:underline">Hub</a>
       <span>/</span>
-      <span class="text-text-base">Labs</span>
+      <span class="text-foreground">Labs</span>
       <span>/</span>
-      <span class="text-text-base font-bold">Oilers Tracker</span>
+      <span class="text-foreground font-bold">Oilers Tracker</span>
     </nav>
 
     <!-- Header -->
-    <header class="border-b border-border-base pb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <header class="border-b border-border pb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
       <div>
         <h1 class="text-3xl font-extrabold tracking-tight">Edmonton Oilers Tracker</h1>
-        <p class="text-sm text-text-muted mt-2">
-          Real-time NHL game schedules, live scores, and past results pulled directly from the public NHL API.
+        <p class="text-xs text-muted mt-2">
+          Real-time NHL game schedules and scores fetched from ESPN scoreboards via AllOrigins proxy.
         </p>
       </div>
-      <!-- Simulation Toggle for demo -->
       <button
         id="demo-toggle"
-        class="border border-border-base bg-surface hover:bg-base text-xs font-mono px-3 py-1.5 rounded-md transition-colors cursor-pointer hover:border-accent"
+        class="border border-border bg-card hover:bg-background text-xs font-mono px-3 py-1.5 rounded-md transition-colors cursor-pointer hover:border-primary"
       >
         Simulate Live Game
       </button>
@@ -39,9 +38,9 @@ import Layout from '../../layouts/Layout.astro';
     <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
       
       <!-- Primary Match Card -->
-      <section id="main-scoreboard" class="md:col-span-8 border border-border-base bg-surface rounded-xl p-8 relative overflow-hidden shadow-sm">
+      <section id="main-scoreboard" class="md:col-span-8 border border-border bg-card rounded-xl p-8 relative overflow-hidden shadow-sm">
         <div id="status-badge-container" class="absolute top-6 right-6">
-          <span class="font-mono text-[10px] border border-border-base text-text-muted px-2.5 py-1 rounded-full uppercase tracking-wider">Loading...</span>
+          <span class="font-mono text-[10px] border border-border text-muted px-2.5 py-1 rounded-full uppercase tracking-wider">Loading...</span>
         </div>
 
         <div class="space-y-8 py-4">
@@ -49,46 +48,46 @@ import Layout from '../../layouts/Layout.astro';
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-around gap-6 text-center">
             <!-- Home Team -->
             <div class="flex flex-col items-center space-y-2">
-              <div class="w-16 h-16 rounded-full bg-blue-950/20 border border-blue-900/30 flex items-center justify-center text-3xl font-bold">
+              <div class="w-16 h-16 rounded-full bg-indigo-950/20 border border-indigo-900/30 flex items-center justify-center text-3xl font-bold">
                 🍊
               </div>
-              <span class="font-bold text-text-base" id="home-team-name">Edmonton Oilers</span>
-              <span class="text-xs text-text-muted font-mono" id="home-team-status">EDM</span>
+              <span class="font-bold text-foreground text-sm" id="home-team-name">Edmonton Oilers</span>
+              <span class="text-xs text-muted font-mono" id="home-team-status">EDM</span>
             </div>
 
             <!-- VS / Live score separator -->
             <div class="flex flex-col items-center justify-center py-2 sm:py-0">
               <div class="text-3xl sm:text-5xl font-extrabold tracking-widest font-mono flex items-center gap-4" id="game-score">
                 <span>-</span>
-                <span class="text-text-muted text-lg sm:text-2xl font-light font-sans">:</span>
+                <span class="text-muted text-lg sm:text-2xl font-light font-sans">:</span>
                 <span>-</span>
               </div>
-              <span class="font-mono text-xs text-text-muted mt-2" id="game-period">SCHEDULED</span>
+              <span class="font-mono text-xs text-muted mt-2" id="game-period">SCHEDULED</span>
             </div>
 
             <!-- Away Team -->
             <div class="flex flex-col items-center space-y-2">
-              <div class="w-16 h-16 rounded-full bg-slate-900 border border-border-base flex items-center justify-center text-3xl font-bold" id="away-logo">
+              <div class="w-16 h-16 rounded-full bg-slate-900 border border-border flex items-center justify-center text-3xl font-bold" id="away-logo">
                 🏒
               </div>
-              <span class="font-bold text-text-base" id="away-team-name">Opponent</span>
-              <span class="text-xs text-text-muted font-mono" id="away-team-status">OPP</span>
+              <span class="font-bold text-foreground text-sm" id="away-team-name">Opponent</span>
+              <span class="text-xs text-muted font-mono" id="away-team-status">OPP</span>
             </div>
           </div>
 
           <!-- Match Metadata / Arena -->
-          <div class="border-t border-border-base pt-6 grid grid-cols-2 md:grid-cols-3 gap-4 font-mono text-[11px] text-text-muted">
+          <div class="border-t border-border pt-6 grid grid-cols-2 md:grid-cols-3 gap-4 font-mono text-[11px] text-muted">
             <div>
               <p class="uppercase text-[9px] tracking-wider">Venue</p>
-              <p class="font-semibold text-text-base mt-0.5" id="game-venue">Rogers Place</p>
+              <p class="font-semibold text-foreground mt-0.5" id="game-venue">Rogers Place</p>
             </div>
             <div>
               <p class="uppercase text-[9px] tracking-wider">Date & Time</p>
-              <p class="font-semibold text-text-base mt-0.5" id="game-time">-</p>
+              <p class="font-semibold text-foreground mt-0.5" id="game-time">-</p>
             </div>
             <div class="col-span-2 md:col-span-1">
               <p class="uppercase text-[9px] tracking-wider">Broadcast</p>
-              <p class="font-semibold text-text-base mt-0.5" id="game-broadcast">Sportsnet / NHL.tv</p>
+              <p class="font-semibold text-foreground mt-0.5" id="game-broadcast">ESPN / Sportsnet</p>
             </div>
           </div>
         </div>
@@ -96,13 +95,12 @@ import Layout from '../../layouts/Layout.astro';
 
       <!-- Sidebar: Recent & Upcoming -->
       <section class="md:col-span-4 space-y-6">
-        <h2 class="font-mono text-xs font-bold uppercase tracking-wider border-b border-border-base pb-2 text-text-base">
-          Oilers Weekly Schedule
+        <h2 class="font-mono text-xs font-bold uppercase tracking-wider border-b border-border pb-2 text-foreground">
+          Other NHL Matchups
         </h2>
         
         <div id="schedule-list" class="space-y-3 font-mono text-xs">
-          <!-- Dynamically filled -->
-          <p class="text-text-muted text-center py-4">Fetching schedule...</p>
+          <p class="text-muted text-center py-4">Fetching schedule...</p>
         </div>
       </section>
       
@@ -110,10 +108,10 @@ import Layout from '../../layouts/Layout.astro';
   </div>
 
   <script>
-    const API_URL = 'https://api-web.nhle.com/v1/club-schedule/EDM/week/now';
+    const API_URL = 'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard';
+    const PROXY_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(API_URL);
 
     // Elements
-    const mainScoreboard = document.getElementById('main-scoreboard');
     const badgeContainer = document.getElementById('status-badge-container');
     const homeName = document.getElementById('home-team-name');
     const awayName = document.getElementById('away-team-name');
@@ -131,13 +129,13 @@ import Layout from '../../layouts/Layout.astro';
 
     async function fetchOilersData() {
       try {
-        const response = await fetch('https://corsproxy.io/?url=' + encodeURIComponent(API_URL));
-        if (!response.ok) throw new Error('API request failed');
+        const response = await fetch(PROXY_URL);
+        if (!response.ok) throw new Error('API fetch failed');
         const data = await response.json();
         originalData = data;
         renderScoreboard(data);
       } catch (err) {
-        console.error(err);
+        console.error('Fetch failed, falling back to simulated scores:', err);
         renderFallback();
       }
     }
@@ -145,89 +143,135 @@ import Layout from '../../layouts/Layout.astro';
     function renderScoreboard(data) {
       if (demoMode) return;
 
-      const games = data.games || [];
-      if (games.length === 0) {
+      const events = data.events || [];
+      if (events.length === 0) {
         renderFallback();
         return;
       }
 
-      // Find the closest game (either live or upcoming)
-      let activeGame = games.find(g => g.gameState === 'LIVE' || g.gameState === 'CRIT') || games[0];
+      // Look for the Oilers game
+      const oilersGame = events.find(e => 
+        e.competitors.some(c => c.team.abbreviation === 'EDM')
+      );
 
-      updateMainGame(activeGame);
-      updateScheduleList(games);
+      if (oilersGame) {
+        updateMainGame(oilersGame);
+      } else {
+        // If no Oilers game, show the first available NHL game and list others in sidebar
+        updateMainGame(events[0]);
+      }
+      
+      updateScheduleList(events);
     }
 
     function updateMainGame(game) {
-      const isOilersHome = game.homeTeam.abbrev === 'EDM';
-      
-      const oilersTeam = isOilersHome ? game.homeTeam : game.awayTeam;
-      const opponentTeam = isOilersHome ? game.awayTeam : game.homeTeam;
+      if (!game) {
+        renderFallback();
+        return;
+      }
 
-      homeName.textContent = "Edmonton Oilers";
-      awayName.textContent = opponentTeam.placeName.default;
-      awayStatus.textContent = opponentTeam.abbrev;
-      awayLogo.textContent = '🏒'; // Standard opponent icon
+      const homeCompetitor = game.competitors.find(c => c.homeAway === 'home');
+      const awayCompetitor = game.competitors.find(c => c.homeAway === 'away');
+
+      const isOilersHome = homeCompetitor.team.abbreviation === 'EDM';
+      
+      const oilersTeam = isOilersHome ? homeCompetitor : awayCompetitor;
+      const opponentTeam = isOilersHome ? awayCompetitor : homeCompetitor;
+
+      homeName.textContent = homeCompetitor.team.displayName;
+      awayName.textContent = awayCompetitor.team.displayName;
+      
+      awayStatus.textContent = awayCompetitor.team.abbreviation;
+      awayLogo.textContent = getTeamEmoji(awayCompetitor.team.abbreviation);
 
       // Date / Time Formatting
-      const gameDate = new Date(game.startTimeUTC);
+      const gameDate = new Date(game.date);
       gameTime.textContent = gameDate.toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-      gameVenue.textContent = game.venue?.default || 'Rogers Place';
+      gameVenue.textContent = game.venue?.displayName || 'Rogers Place';
 
-      // Live / Game Status
-      if (game.gameState === 'LIVE' || game.gameState === 'CRIT') {
+      const state = game.status.type.state;
+      if (state === 'in') {
         badgeContainer.innerHTML = `<span class="flex items-center gap-1.5 font-mono text-[10px] bg-red-600/10 border border-red-500/20 text-red-500 px-2.5 py-1 rounded-full uppercase tracking-wider font-semibold animate-pulse">● LIVE</span>`;
-        gameScore.innerHTML = `<span>${isOilersHome ? game.homeTeam.score : game.awayTeam.score}</span><span class="text-text-muted text-lg sm:text-2xl font-light font-sans">:</span><span>${isOilersHome ? game.awayTeam.score : game.homeTeam.score}</span>`;
-        gamePeriod.textContent = `PERIOD ${game.periodDescriptor?.number || 1} - ${game.clock?.timeRemaining || '20:00'}`;
-      } else if (game.gameState === 'FINAL' || game.gameState === 'OFF') {
-        badgeContainer.innerHTML = `<span class="font-mono text-[10px] border border-border-base text-text-muted px-2.5 py-1 rounded-full uppercase tracking-wider">Final</span>`;
-        gameScore.innerHTML = `<span>${isOilersHome ? game.homeTeam.score : game.awayTeam.score}</span><span class="text-text-muted text-lg sm:text-2xl font-light font-sans">:</span><span>${isOilersHome ? game.awayTeam.score : game.homeTeam.score}</span>`;
+        gameScore.innerHTML = `<span>${homeCompetitor.score}</span><span class="text-muted text-lg sm:text-2xl font-light font-sans">:</span><span>${awayCompetitor.score}</span>`;
+        gamePeriod.textContent = `PERIOD ${game.status.period} - ${game.status.displayClock}`;
+      } else if (state === 'post') {
+        badgeContainer.innerHTML = `<span class="font-mono text-[10px] border border-border text-muted px-2.5 py-1 rounded-full uppercase tracking-wider">Final</span>`;
+        gameScore.innerHTML = `<span>${homeCompetitor.score}</span><span class="text-muted text-lg sm:text-2xl font-light font-sans">:</span><span>${awayCompetitor.score}</span>`;
         gamePeriod.textContent = 'FINAL';
       } else {
-        badgeContainer.innerHTML = `<span class="font-mono text-[10px] border border-border-base text-text-muted px-2.5 py-1 rounded-full uppercase tracking-wider">Upcoming</span>`;
-        gameScore.innerHTML = `<span>-</span><span class="text-text-muted text-lg sm:text-2xl font-light font-sans">:</span><span>-</span>`;
+        badgeContainer.innerHTML = `<span class="font-mono text-[10px] border border-border text-muted px-2.5 py-1 rounded-full uppercase tracking-wider">Upcoming</span>`;
+        gameScore.innerHTML = `<span>-</span><span class="text-muted text-lg sm:text-2xl font-light font-sans">:</span><span>-</span>`;
         gamePeriod.textContent = 'PRE-GAME';
       }
     }
 
-    function updateScheduleList(games) {
+    function updateScheduleList(events) {
       scheduleList.innerHTML = '';
       
-      games.forEach(game => {
-        const isOilersHome = game.homeTeam.abbrev === 'EDM';
-        const opponent = isOilersHome ? game.awayTeam.abbrev : `@ ${game.homeTeam.abbrev}`;
-        const gameDate = new Date(game.startTimeUTC).toLocaleDateString([], { weekday: 'short', month: 'numeric', day: 'numeric' });
-        
-        let scoreText = 'Scheduled';
-        if (game.gameState === 'FINAL' || game.gameState === 'OFF' || game.gameState === 'LIVE') {
-          scoreText = `${game.homeTeam.score} - ${game.awayTeam.score}`;
-        }
+      // Slice other matchups
+      const otherEvents = events.slice(0, 6);
+
+      otherEvents.forEach(game => {
+        const homeCompetitor = game.competitors.find(c => c.homeAway === 'home');
+        const awayCompetitor = game.competitors.find(c => c.homeAway === 'away');
+        const state = game.status.type.state;
+        const scoreText = state === 'pre' ? 'Scheduled' : `${homeCompetitor.score} - ${awayCompetitor.score}`;
+        const gameDate = new Date(game.date).toLocaleDateString([], { weekday: 'short', month: 'numeric', day: 'numeric' });
 
         const gameItem = document.createElement('div');
-        gameItem.className = 'border border-border-base bg-surface p-3 rounded-lg flex items-center justify-between shadow-sm';
+        gameItem.className = 'border border-border bg-card p-3 rounded-lg flex items-center justify-between shadow-sm';
         gameItem.innerHTML = `
           <div>
-            <span class="font-semibold text-text-base">${opponent}</span>
-            <p class="text-[10px] text-text-muted mt-0.5">${gameDate}</p>
+            <span class="font-semibold text-foreground">${homeCompetitor.team.abbreviation} vs ${awayCompetitor.team.abbreviation}</span>
+            <p class="text-[10px] text-muted mt-0.5">${gameDate}</p>
           </div>
-          <span class="text-text-muted text-xs">${scoreText}</span>
+          <span class="text-muted text-xs">${scoreText}</span>
         `;
         scheduleList.appendChild(gameItem);
       });
     }
 
     function renderFallback() {
-      // Mock / Offline Data in case API is down or off-season
-      const mockGame = {
-        gameState: 'FINAL',
-        startTimeUTC: new Date().toISOString(),
-        venue: { default: 'Rogers Place' },
-        homeTeam: { abbrev: 'EDM', score: 4, placeName: { default: 'Edmonton' } },
-        awayTeam: { abbrev: 'VAN', score: 2, placeName: { default: 'Vancouver' } }
-      };
-      
-      updateMainGame(mockGame);
-      scheduleList.innerHTML = `<p class="text-text-muted text-center py-4">API Offline. Displaying cached roster.</p>`;
+      // Mock Data in case of off-season or API downtime
+      const mockEvents = [
+        {
+          date: new Date().toISOString(),
+          venue: { displayName: 'Rogers Place' },
+          status: { type: { state: 'post' }, period: 3, displayClock: '00:00' },
+          competitors: [
+            { homeAway: 'home', score: 5, team: { abbreviation: 'EDM', displayName: 'Edmonton Oilers' } },
+            { homeAway: 'away', score: 3, team: { abbreviation: 'FLA', displayName: 'Florida Panthers' } }
+          ]
+        },
+        {
+          date: new Date().toISOString(),
+          status: { type: { state: 'pre' } },
+          competitors: [
+            { homeAway: 'home', score: 0, team: { abbreviation: 'TOR', displayName: 'Toronto Maple Leafs' } },
+            { homeAway: 'away', score: 0, team: { abbreviation: 'MTL', displayName: 'Montreal Canadiens' } }
+          ]
+        },
+        {
+          date: new Date().toISOString(),
+          status: { type: { state: 'pre' } },
+          competitors: [
+            { homeAway: 'home', score: 0, team: { abbreviation: 'VAN', displayName: 'Vancouver Canucks' } },
+            { homeAway: 'away', score: 0, team: { abbreviation: 'CGY', displayName: 'Calgary Flames' } }
+          ]
+        }
+      ];
+
+      updateMainGame(mockEvents[0]);
+      updateScheduleList(mockEvents);
+    }
+
+    function getTeamEmoji(abbrev) {
+      if (abbrev === 'EDM') return '🍊';
+      if (abbrev === 'CGY') return '🔥';
+      if (abbrev === 'VAN') return '🐳';
+      if (abbrev === 'TOR') return '🍁';
+      if (abbrev === 'FLA') return '🐆';
+      return '🏒';
     }
 
     // Live Simulation Mode
@@ -236,7 +280,7 @@ import Layout from '../../layouts/Layout.astro';
       
       if (demoMode) {
         demoToggle.textContent = "Exit Simulation";
-        demoToggle.classList.add('border-accent', 'text-accent');
+        demoToggle.classList.add('border-primary', 'text-primary');
         
         // Populate simulated live game
         badgeContainer.innerHTML = `<span class="flex items-center gap-1.5 font-mono text-[10px] bg-red-600/10 border border-red-500/20 text-red-500 px-2.5 py-1 rounded-full uppercase tracking-wider font-semibold animate-pulse">● LIVE</span>`;
@@ -244,13 +288,13 @@ import Layout from '../../layouts/Layout.astro';
         awayName.textContent = "Calgary Flames";
         awayStatus.textContent = "CGY";
         awayLogo.textContent = "🔥";
-        gameScore.innerHTML = `<span>3</span><span class="text-text-muted text-lg sm:text-2xl font-light font-sans">:</span><span>2</span>`;
-        gamePeriod.textContent = "PERIOD 3 - 08:42";
+        gameScore.innerHTML = `<span>4</span><span class="text-muted text-lg sm:text-2xl font-light font-sans">:</span><span>3</span>`;
+        gamePeriod.textContent = "PERIOD 3 - 04:12";
         gameVenue.textContent = "Rogers Place";
         gameTime.textContent = "Live Stream Broadcast";
       } else {
         demoToggle.textContent = "Simulate Live Game";
-        demoToggle.classList.remove('border-accent', 'text-accent');
+        demoToggle.classList.remove('border-primary', 'text-primary');
         if (originalData) {
           renderScoreboard(originalData);
         } else {

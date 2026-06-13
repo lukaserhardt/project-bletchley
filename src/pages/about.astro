@@ -6,22 +6,22 @@ import Layout from '../layouts/Layout.astro';
   <div class="space-y-10 max-w-3xl mx-auto relative">
     
     <!-- Hero Glow Blob -->
-    <div class="absolute -top-16 -left-20 w-72 h-72 rounded-full bg-gradient-to-tr from-accent/20 to-purple-500/10 blur-[80px] -z-10 pointer-events-none"></div>
-    <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-gradient-to-br from-indigo-500/10 to-accent/15 blur-[100px] -z-10 pointer-events-none"></div>
+    <div class="absolute -top-16 -left-20 w-72 h-72 rounded-full bg-gradient-to-tr from-primary/10 to-purple-500/5 blur-[80px] -z-10 pointer-events-none"></div>
+    <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-gradient-to-br from-indigo-500/5 to-primary/10 blur-[100px] -z-10 pointer-events-none"></div>
 
     <!-- Breadcrumbs / Navigation -->
-    <nav class="font-mono text-xs text-text-muted flex items-center gap-2">
-      <a href="/project-bletchley/" class="hover:text-accent hover:underline">Hub</a>
+    <nav class="font-mono text-xs text-muted flex items-center gap-2">
+      <a href="/project-bletchley/" class="hover:text-primary hover:underline">Hub</a>
       <span>/</span>
-      <span class="text-text-base">About</span>
+      <span class="text-foreground">About</span>
     </nav>
 
     <!-- Title Header -->
-    <header class="border-b border-border-base pb-6">
+    <header class="border-b border-border pb-6">
       <h1 class="text-3xl font-extrabold tracking-tight">
         About Project Bletchley
       </h1>
-      <p class="text-sm text-text-muted mt-2">
+      <p class="text-sm text-muted mt-2">
         An exploration of agent-led software development, design prototyping, and visual experiments.
       </p>
     </header>
@@ -29,67 +29,88 @@ import Layout from '../layouts/Layout.astro';
     <!-- Collaborative Entities -->
     <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Agent Card -->
-      <div class="border border-border-base bg-surface p-6 rounded-xl space-y-4 shadow-sm">
+      <div class="border border-border bg-card p-6 rounded-xl space-y-4 shadow-sm">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
-            <span class="text-accent text-lg font-bold">🤖</span>
+          <div class="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+            <span class="text-primary text-lg font-bold">🤖</span>
           </div>
           <div>
-            <h3 class="font-bold text-text-base text-sm">Antigravity</h3>
-            <p class="text-xs text-text-muted font-mono">Autonomous Coding Agent</p>
+            <h3 class="font-bold text-foreground text-sm">Antigravity</h3>
+            <p class="text-xs text-muted font-mono">Autonomous Coding Agent</p>
           </div>
         </div>
-        <p class="text-xs text-text-muted leading-relaxed">
+        <p class="text-xs text-muted leading-relaxed">
           Designed by the Google DeepMind team, Antigravity is a pair-programming assistant. In this workspace, Antigravity functions as the sole builder, managing file structures, configurations, and API integrations.
         </p>
       </div>
 
       <!-- User Card -->
-      <div class="border border-border-base bg-surface p-6 rounded-xl space-y-4 shadow-sm">
+      <div class="border border-border bg-card p-6 rounded-xl space-y-4 shadow-sm">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
             <span class="text-indigo-500 text-lg font-bold">🧑‍💻</span>
           </div>
           <div>
-            <h3 class="font-bold text-text-base text-sm">Lukas Erhardt</h3>
-            <p class="text-xs text-text-muted font-mono">Architect & Tinkerer</p>
+            <h3 class="font-bold text-foreground text-sm">Lukas Erhardt</h3>
+            <p class="text-xs text-muted font-mono">Architect & Tinkerer</p>
           </div>
         </div>
-        <p class="text-xs text-text-muted leading-relaxed">
+        <p class="text-xs text-muted leading-relaxed">
           The directing human architect. Lukas defines the requirements, steers the visual aesthetics, decides on feature additions, and reviews code changes to ensure Bletchley remains a premium-grade environment.
         </p>
       </div>
     </section>
 
+    <!-- Name Origin: Why Bletchley? -->
+    <section class="border border-border bg-card p-6 rounded-xl space-y-4 shadow-sm">
+      <h2 class="text-lg font-bold text-foreground">Why "Project Bletchley"?</h2>
+      <p class="text-xs text-muted leading-relaxed">
+        The project takes its name from <strong>Bletchley Park</strong>, the historic estate in Buckinghamshire that served as the principal center of Allied codebreaking during World War II. It was there that early pioneers of computer science—most famously Alan Turing—collaborated with electro-mechanical machinery like the Bombe and Colossus to decode ciphertexts and process information at speeds and scales never before possible.
+      </p>
+      <p class="text-xs text-muted leading-relaxed">
+        This historical setting serves as a perfect metaphor for modern <strong>human-agent collaborative software development</strong>:
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 font-mono text-[11px] text-muted">
+        <div class="border border-border/40 p-3 rounded-lg bg-background/40">
+          <span class="block font-bold text-foreground mb-1 text-[10px] uppercase tracking-wider text-primary">The Decoding Loop</span>
+          Bletchley Park operated as a tight feedback loop where human analysts designed logic schemas and interpreted decrypted intelligence, while specialized machines processed the mechanical lifting.
+        </div>
+        <div class="border border-border/40 p-3 rounded-lg bg-background/40">
+          <span class="block font-bold text-foreground mb-1 text-[10px] uppercase tracking-wider text-primary">The Agent Pair-Programming Loop</span>
+          Here, Lukas acts as the directing analyst establishing requirements, while Antigravity functions as the digital machine translating requests into working application modules.
+        </div>
+      </div>
+    </section>
+
     <!-- Working Relation -->
-    <section class="border border-border-base bg-surface p-6 rounded-xl space-y-4 shadow-sm">
-      <h2 class="text-lg font-bold">Our Working Relationship</h2>
-      <p class="text-xs text-text-muted leading-relaxed">
+    <section class="border border-border bg-card p-6 rounded-xl space-y-4 shadow-sm">
+      <h2 class="text-lg font-bold text-foreground">Our Working Relationship</h2>
+      <p class="text-xs text-muted leading-relaxed">
         Project Bletchley is built in an <strong>agent-first paradigm</strong>. Instead of traditional coding, Lukas interacts with Antigravity using natural language prompts. Antigravity takes these specifications, researches API documentation, writes layout code, integrates design styles, runs build tests, and directly coordinates commits and branches.
       </p>
-      <p class="text-xs text-text-muted leading-relaxed">
+      <p class="text-xs text-muted leading-relaxed">
         The result is a fluid, rapid prototyping sandbox where the overhead of environment setup and library configuration is delegated to the AI, allowing the human developer to focus entirely on creative design, ideation, and feature selection.
       </p>
     </section>
 
     <!-- Technical Pillars -->
     <section class="space-y-4">
-      <h2 class="text-lg font-bold">Technical Pillars</h2>
-      <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono text-text-muted">
+      <h2 class="text-lg font-bold text-foreground">Technical Pillars</h2>
+      <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono text-muted">
         <li class="flex items-start gap-2">
-          <span class="text-accent">✔</span>
+          <span class="text-primary">✔</span>
           <span>Astro Framework for ultra-fast static routing and modular page assets.</span>
         </li>
         <li class="flex items-start gap-2">
-          <span class="text-accent">✔</span>
+          <span class="text-primary">✔</span>
           <span>Tailwind CSS v4 using CSS theme properties for responsive, layout-wide style tokens.</span>
         </li>
         <li class="flex items-start gap-2">
-          <span class="text-accent">✔</span>
+          <span class="text-primary">✔</span>
           <span>GitHub Actions for automatic compile and instant deployment to GitHub Pages.</span>
         </li>
         <li class="flex items-start gap-2">
-          <span class="text-accent">✔</span>
+          <span class="text-primary">✔</span>
           <span>Self-hosted Vercel Geist Variable Fonts for a modern, neo-grotesque visual hierarchy.</span>
         </li>
       </ul>

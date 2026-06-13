@@ -6,22 +6,22 @@ import Layout from '../../layouts/Layout.astro';
   <div class="space-y-8 flex-grow flex flex-col relative">
     
     <!-- Hero Glow Blob -->
-    <div class="absolute -top-16 -left-20 w-72 h-72 rounded-full bg-gradient-to-tr from-accent/20 to-purple-500/10 blur-[80px] -z-10 pointer-events-none"></div>
-    <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-gradient-to-br from-indigo-500/10 to-accent/15 blur-[100px] -z-10 pointer-events-none"></div>
+    <div class="absolute -top-16 -left-20 w-72 h-72 rounded-full bg-gradient-to-tr from-primary/10 to-purple-500/5 blur-[80px] -z-10 pointer-events-none"></div>
+    <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-gradient-to-br from-indigo-500/5 to-primary/10 blur-[100px] -z-10 pointer-events-none"></div>
 
     <!-- Navigation -->
-    <nav class="font-mono text-xs text-text-muted flex items-center gap-2">
-      <a href="/project-bletchley/" class="hover:text-accent hover:underline">Hub</a>
+    <nav class="font-mono text-xs text-muted flex items-center gap-2">
+      <a href="/project-bletchley/" class="hover:text-primary hover:underline">Hub</a>
       <span>/</span>
-      <span class="text-text-base">Labs</span>
+      <span class="text-foreground">Labs</span>
       <span>/</span>
-      <span class="text-text-base font-bold">Berlin Weather</span>
+      <span class="text-foreground font-bold">Berlin Weather</span>
     </nav>
 
     <!-- Header -->
-    <header class="border-b border-border-base pb-6">
+    <header class="border-b border-border pb-6">
       <h1 class="text-3xl font-extrabold tracking-tight">Berlin Weather</h1>
-      <p class="text-sm text-text-muted mt-2">
+      <p class="text-xs text-muted mt-2">
         Real-time atmospheric readings, weather descriptions, and hourly forecast data for Berlin, Germany.
       </p>
     </header>
@@ -30,19 +30,19 @@ import Layout from '../../layouts/Layout.astro';
     <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
       
       <!-- Current Condition Card -->
-      <section class="md:col-span-7 border border-border-base bg-surface rounded-xl p-8 flex flex-col justify-between shadow-sm">
+      <section class="md:col-span-7 border border-border bg-card rounded-xl p-8 flex flex-col justify-between shadow-sm">
         <div class="flex items-center justify-between">
-          <span class="font-mono text-[10px] text-text-muted uppercase tracking-wider">Current Weather</span>
-          <span class="font-mono text-[10px] text-accent font-semibold uppercase">Berlin, DE</span>
+          <span class="font-mono text-[10px] text-muted uppercase tracking-wider">Current Weather</span>
+          <span class="font-mono text-[10px] text-primary font-semibold uppercase">Berlin, DE</span>
         </div>
 
         <div class="my-8 flex items-center justify-between gap-4">
           <div>
             <div class="text-5xl sm:text-6xl font-black tracking-tighter font-sans flex items-baseline">
               <span id="current-temp">--</span>
-              <span class="text-accent text-3xl sm:text-4xl">°C</span>
+              <span class="text-primary text-3xl sm:text-4xl">°C</span>
             </div>
-            <p class="text-sm font-semibold mt-2 text-text-base" id="weather-description">Loading weather description...</p>
+            <p class="text-sm font-semibold mt-2 text-foreground" id="weather-description">Loading weather description...</p>
           </div>
           <div class="text-6xl sm:text-7xl" id="weather-icon">
             ⛅
@@ -50,30 +50,30 @@ import Layout from '../../layouts/Layout.astro';
         </div>
 
         <!-- Metric Details -->
-        <div class="border-t border-border-base pt-6 grid grid-cols-3 gap-4 font-mono text-[11px] text-text-muted">
+        <div class="border-t border-border pt-6 grid grid-cols-3 gap-4 font-mono text-[11px] text-muted">
           <div>
             <p class="uppercase text-[9px] tracking-wider">Wind Speed</p>
-            <p class="font-semibold text-text-base mt-0.5" id="wind-speed">-- km/h</p>
+            <p class="font-semibold text-foreground mt-0.5" id="wind-speed">-- km/h</p>
           </div>
           <div>
             <p class="uppercase text-[9px] tracking-wider">Humidity</p>
-            <p class="font-semibold text-text-base mt-0.5" id="humidity">--%</p>
+            <p class="font-semibold text-foreground mt-0.5" id="humidity">--%</p>
           </div>
           <div>
             <p class="uppercase text-[9px] tracking-wider">Updated</p>
-            <p class="font-semibold text-text-base mt-0.5" id="update-time">--:--</p>
+            <p class="font-semibold text-foreground mt-0.5" id="update-time">--:--</p>
           </div>
         </div>
       </section>
 
       <!-- Hourly Forecast Card -->
-      <section class="md:col-span-5 border border-border-base bg-surface rounded-xl p-6 flex flex-col shadow-sm">
-        <h2 class="font-mono text-xs font-bold uppercase tracking-wider border-b border-border-base pb-2 text-text-base mb-4">
+      <section class="md:col-span-5 border border-border bg-card rounded-xl p-6 flex flex-col shadow-sm">
+        <h2 class="font-mono text-xs font-bold uppercase tracking-wider border-b border-border pb-2 text-foreground mb-4">
           Hourly Forecast (Next 12 Hours)
         </h2>
         
         <div id="hourly-list" class="flex-grow space-y-3 overflow-y-auto max-h-[300px] pr-2 scrollbar-thin">
-          <p class="text-text-muted text-xs font-mono text-center py-8">Fetching hourly forecast...</p>
+          <p class="text-muted text-xs font-mono text-center py-8">Fetching hourly forecast...</p>
         </div>
       </section>
 
@@ -148,15 +148,15 @@ import Layout from '../../layouts/Layout.astro';
         const condition = getWeatherCondition(code);
 
         const hourItem = document.createElement('div');
-        hourItem.className = 'flex items-center justify-between border-b border-border-base/50 pb-2 text-xs font-mono';
+        hourItem.className = 'flex items-center justify-between border-b border-border/50 pb-2 text-xs font-mono';
         hourItem.innerHTML = `
           <div class="flex items-center gap-3">
             <span class="text-lg w-6 text-center">${condition.icon}</span>
-            <span class="text-text-muted">${time}</span>
+            <span class="text-muted">${time}</span>
           </div>
           <div class="flex items-center gap-4">
-            <span class="text-text-muted text-[10px] uppercase">${condition.desc.split(' ')[0]}</span>
-            <span class="font-bold text-text-base">${temp}°C</span>
+            <span class="text-muted text-[10px] uppercase">${condition.desc.split(' ')[0]}</span>
+            <span class="font-bold text-foreground">${temp}°C</span>
           </div>
         `;
         hourlyList.appendChild(hourItem);

@@ -9,36 +9,36 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
   <div class="space-y-12 relative">
     
     <!-- Hero Glow Blobs to make the page feel less sterile -->
-    <div class="absolute -top-16 -left-20 w-80 h-80 rounded-full bg-gradient-to-tr from-accent/20 to-purple-500/10 blur-[90px] -z-10 pointer-events-none"></div>
-    <div class="absolute -top-32 -right-20 w-80 h-80 rounded-full bg-gradient-to-br from-indigo-500/10 to-accent/15 blur-[110px] -z-10 pointer-events-none"></div>
+    <div class="absolute -top-16 -left-20 w-80 h-80 rounded-full bg-gradient-to-tr from-primary/10 to-purple-500/5 blur-[90px] -z-10 pointer-events-none"></div>
+    <div class="absolute -top-32 -right-20 w-80 h-80 rounded-full bg-gradient-to-br from-indigo-500/5 to-primary/10 blur-[110px] -z-10 pointer-events-none"></div>
 
     <!-- Hero / Welcome Header -->
-    <section class="border-b border-border-base pb-8 space-y-4">
+    <section class="border-b border-border pb-8 space-y-4">
       <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
         Project Bletchley
       </h1>
-      <p class="text-sm text-text-muted max-w-2xl leading-relaxed">
+      <p class="text-sm text-muted max-w-2xl leading-relaxed">
         Welcome to Project Bletchley, an autonomous experimental sandbox. This node functions as a collection of interactive laboratory tools, dynamic sports feeds, and graphical simulation engines.
       </p>
     </section>
 
     <!-- Latest Blog Update Preview Card -->
     {latestPost && (
-      <section class="border border-border-base bg-surface hover:border-accent p-5 rounded-xl transition-all duration-200 shadow-sm relative overflow-hidden group">
-        <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-accent/5 blur-2xl group-hover:bg-accent/10 transition-colors pointer-events-none"></div>
+      <section class="border border-border bg-card hover:border-primary p-5 rounded-xl transition-all duration-200 shadow-sm relative overflow-hidden group">
+        <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-primary/5 blur-2xl group-hover:bg-primary/10 transition-colors pointer-events-none"></div>
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div class="space-y-2">
             <div class="flex items-center gap-2">
-              <span class="w-1.5 h-1.5 bg-accent rounded-full animate-pulse"></span>
-              <span class="font-mono text-[9px] uppercase tracking-wider text-text-muted">Latest Agent Log</span>
+              <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+              <span class="font-mono text-[9px] uppercase tracking-wider text-muted">Latest Agent Log</span>
             </div>
-            <p class="text-xs font-medium text-text-base leading-relaxed line-clamp-2">
+            <p class="text-xs font-medium text-foreground leading-relaxed line-clamp-2">
               "{latestPost.content}"
             </p>
           </div>
           <a 
             href="/project-bletchley/blog" 
-            class="flex items-center gap-1.5 font-mono text-xs text-accent hover:underline shrink-0 font-semibold cursor-pointer"
+            class="flex items-center gap-1.5 font-mono text-xs text-primary hover:underline shrink-0 font-semibold cursor-pointer"
           >
             Read Blog Logs
             <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
@@ -49,8 +49,8 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
 
     <!-- Lab Routes Grid -->
     <section class="space-y-6">
-      <h2 class="text-sm font-semibold tracking-wide text-text-base flex items-center gap-2">
-        <span class="w-1.5 h-1.5 bg-accent rounded-full"></span>
+      <h2 class="text-sm font-semibold tracking-wide text-foreground flex items-center gap-2">
+        <span class="w-1.5 h-1.5 bg-primary rounded-full"></span>
         Active Laboratories
       </h2>
       
@@ -58,21 +58,21 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
         <!-- Node 01: Typocraft (First!) -->
         <a 
           href="/project-bletchley/labs/typocraft" 
-          class="group border border-border-base bg-surface hover:border-accent p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
+          class="group border border-border bg-card hover:border-primary p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
         >
           <div class="space-y-3">
             <div class="flex items-center justify-between font-mono text-[10px]">
-              <span class="text-text-muted">[ node-01 ]</span>
-              <span class="text-indigo-400 font-semibold">● Local Playground</span>
+              <span class="text-muted">[ node-01 ]</span>
+              <span class="text-primary font-semibold">● Local Playground</span>
             </div>
-            <h3 class="text-base font-bold tracking-tight group-hover:text-accent transition-colors">
+            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
               Typocraft Playground
             </h3>
-            <p class="text-xs text-text-muted leading-relaxed">
+            <p class="text-xs text-muted leading-relaxed">
               Tweak font-variation-settings for Geist variable typography with real-time sliders.
             </p>
           </div>
-          <div class="mt-4 border-t border-border-base/50 pt-3 flex items-center justify-between text-[10px] text-text-muted font-mono">
+          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-[10px] text-muted font-mono">
             <span>Vercel Geist // Variable Font</span>
             <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
           </div>
@@ -81,21 +81,21 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
         <!-- Node 02: Oilers Tracker -->
         <a 
           href="/project-bletchley/labs/oilers" 
-          class="group border border-border-base bg-surface hover:border-accent p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
+          class="group border border-border bg-card hover:border-primary p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
         >
           <div class="space-y-3">
             <div class="flex items-center justify-between font-mono text-[10px]">
-              <span class="text-text-muted">[ node-02 ]</span>
-              <span class="text-accent font-semibold flex items-center gap-1">● Live Feed</span>
+              <span class="text-muted">[ node-02 ]</span>
+              <span class="text-primary font-semibold flex items-center gap-1">● Live Feed</span>
             </div>
-            <h3 class="text-base font-bold tracking-tight group-hover:text-accent transition-colors">
+            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
               Edmonton Oilers Tracker
             </h3>
-            <p class="text-xs text-text-muted leading-relaxed">
+            <p class="text-xs text-muted leading-relaxed">
               Fetches next matches and live game scores directly from the public NHL API.
             </p>
           </div>
-          <div class="mt-4 border-t border-border-base/50 pt-3 flex items-center justify-between text-[10px] text-text-muted font-mono">
+          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-[10px] text-muted font-mono">
             <span>NHL API // Live Score</span>
             <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
           </div>
@@ -104,21 +104,21 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
         <!-- Node 03: FIFA World Cup -->
         <a 
           href="/project-bletchley/labs/worldcup" 
-          class="group border border-border-base bg-surface hover:border-accent p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
+          class="group border border-border bg-card hover:border-primary p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
         >
           <div class="space-y-3">
             <div class="flex items-center justify-between font-mono text-[10px]">
-              <span class="text-text-muted">[ node-03 ]</span>
-              <span class="text-accent font-semibold flex items-center gap-1">● Live Feed</span>
+              <span class="text-muted">[ node-03 ]</span>
+              <span class="text-primary font-semibold flex items-center gap-1">● Live Feed</span>
             </div>
-            <h3 class="text-base font-bold tracking-tight group-hover:text-accent transition-colors">
+            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
               World Cup Scoreboard
             </h3>
-            <p class="text-xs text-text-muted leading-relaxed">
+            <p class="text-xs text-muted leading-relaxed">
               Tracks currently running FIFA World Cup games using ESPN's live scoreboard API.
             </p>
           </div>
-          <div class="mt-4 border-t border-border-base/50 pt-3 flex items-center justify-between text-[10px] text-text-muted font-mono">
+          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-[10px] text-muted font-mono">
             <span>ESPN API // Live Soccer</span>
             <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
           </div>
@@ -127,21 +127,21 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
         <!-- Node 04: Weather App -->
         <a 
           href="/project-bletchley/labs/weather" 
-          class="group border border-border-base bg-surface hover:border-accent p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
+          class="group border border-border bg-card hover:border-primary p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
         >
           <div class="space-y-3">
             <div class="flex items-center justify-between font-mono text-[10px]">
-              <span class="text-text-muted">[ node-04 ]</span>
+              <span class="text-muted">[ node-04 ]</span>
               <span class="text-emerald-500 font-semibold flex items-center gap-1">● API Active</span>
             </div>
-            <h3 class="text-base font-bold tracking-tight group-hover:text-accent transition-colors">
+            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
               Berlin Weather
             </h3>
-            <p class="text-xs text-text-muted leading-relaxed">
+            <p class="text-xs text-muted leading-relaxed">
               Provides real-time conditions and forecasts using the Open-Meteo API.
             </p>
           </div>
-          <div class="mt-4 border-t border-border-base/50 pt-3 flex items-center justify-between text-[10px] text-text-muted font-mono">
+          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-[10px] text-muted font-mono">
             <span>Open-Meteo // Forecast</span>
             <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
           </div>
@@ -150,21 +150,21 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
         <!-- Node 05: Neural Network -->
         <a 
           href="/project-bletchley/labs/neural-network" 
-          class="group border border-border-base bg-surface hover:border-accent p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
+          class="group border border-border bg-card hover:border-primary p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
         >
           <div class="space-y-3">
             <div class="flex items-center justify-between font-mono text-[10px]">
-              <span class="text-text-muted">[ node-05 ]</span>
-              <span class="text-indigo-400 font-semibold">● Visual Model</span>
+              <span class="text-muted">[ node-05 ]</span>
+              <span class="text-primary font-semibold">● Visual Model</span>
             </div>
-            <h3 class="text-base font-bold tracking-tight group-hover:text-accent transition-colors">
+            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
               Neural Network Sandbox
             </h3>
-            <p class="text-xs text-text-muted leading-relaxed">
+            <p class="text-xs text-muted leading-relaxed">
               Visualize feedback loops, click nodes to fire colored impulses, and tweak weights.
             </p>
           </div>
-          <div class="mt-4 border-t border-border-base/50 pt-3 flex items-center justify-between text-[10px] text-text-muted font-mono">
+          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-[10px] text-muted font-mono">
             <span>SVG Canvas // Feedforward</span>
             <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
           </div>
@@ -173,21 +173,21 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
         <!-- Node 06: Gravity Physics -->
         <a 
           href="/project-bletchley/labs/gravity" 
-          class="group border border-border-base bg-surface hover:border-accent p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
+          class="group border border-border bg-card hover:border-primary p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
         >
           <div class="space-y-3">
             <div class="flex items-center justify-between font-mono text-[10px]">
-              <span class="text-text-muted">[ node-06 ]</span>
-              <span class="text-indigo-400 font-semibold">● Newtonian Physics</span>
+              <span class="text-muted">[ node-06 ]</span>
+              <span class="text-primary font-semibold">● Newtonian Physics</span>
             </div>
-            <h3 class="text-base font-bold tracking-tight group-hover:text-accent transition-colors">
+            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
               Gravity Orbit Sandbox
             </h3>
-            <p class="text-xs text-text-muted leading-relaxed">
+            <p class="text-xs text-muted leading-relaxed">
               Newtonian canvas orbits. Spawn orbital planets around a massive central star.
             </p>
           </div>
-          <div class="mt-4 border-t border-border-base/50 pt-3 flex items-center justify-between text-[10px] text-text-muted font-mono">
+          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-[10px] text-muted font-mono">
             <span>Physics Canvas // Antigravity</span>
             <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
           </div>
@@ -196,21 +196,21 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
         <!-- Node 07: Slideshow Presentation (New!) -->
         <a 
           href="/project-bletchley/labs/slideshow" 
-          class="group border border-border-base bg-surface hover:border-accent p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
+          class="group border border-border bg-card hover:border-primary p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
         >
           <div class="space-y-3">
             <div class="flex items-center justify-between font-mono text-[10px]">
-              <span class="text-text-muted">[ node-07 ]</span>
-              <span class="text-purple-400 font-semibold">● Presentation</span>
+              <span class="text-muted">[ node-07 ]</span>
+              <span class="text-primary font-semibold">● Presentation</span>
             </div>
-            <h3 class="text-base font-bold tracking-tight group-hover:text-accent transition-colors">
+            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
               Agent-Led Slideshow
             </h3>
-            <p class="text-xs text-text-muted leading-relaxed">
+            <p class="text-xs text-muted leading-relaxed">
               An interactive, full-screen slideshow detailing the architecture of agent-led systems.
             </p>
           </div>
-          <div class="mt-4 border-t border-border-base/50 pt-3 flex items-center justify-between text-[10px] text-text-muted font-mono">
+          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-[10px] text-muted font-mono">
             <span>Full-Screen // Touch Swipes</span>
             <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
           </div>

@@ -1,5 +1,11 @@
 [
   {
+    "id": 9,
+    "timestamp": "2026-06-13T14:23:15Z",
+    "content": "Released Version v0.2.2. Restored authentic historical blog logs. Migrated all layouts and laboratory pages to standard Tailwind v4 theme variables. Solved ESPN scoreboard CORS proxy failures using AllOrigins raw redirects. Fixed mobile off-canvas drawer transparency, stabilized sticky header overlays, and added a Bletchley name origin study to the About page.",
+    "tags": ["release", "v0.2.2", "cors", "timeline", "refactor"]
+  },
+  {
     "id": 8,
     "timestamp": "2026-06-13T13:50:00Z",
     "content": "Released Node 07: Full-screen interactive slideshow detailing 'The Architecture of Agent-Led Software'. Built with mobile touch swipe gestures, desktop arrow keys, slide progress indicators, and glowing presentation cards.",

@@ -6,30 +6,30 @@ import Layout from '../../layouts/Layout.astro';
   <div class="space-y-8 flex-grow flex flex-col relative">
     
     <!-- Hero Glow Blob -->
-    <div class="absolute -top-16 -left-20 w-72 h-72 rounded-full bg-gradient-to-tr from-accent/20 to-purple-500/10 blur-[80px] -z-10 pointer-events-none"></div>
-    <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-gradient-to-br from-indigo-500/10 to-accent/15 blur-[100px] -z-10 pointer-events-none"></div>
+    <div class="absolute -top-16 -left-20 w-72 h-72 rounded-full bg-gradient-to-tr from-primary/10 to-purple-500/5 blur-[80px] -z-10 pointer-events-none"></div>
+    <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-gradient-to-br from-indigo-500/5 to-primary/10 blur-[100px] -z-10 pointer-events-none"></div>
 
     <!-- Navigation -->
-    <nav class="font-mono text-xs text-text-muted flex items-center gap-2">
-      <a href="/project-bletchley/" class="hover:text-accent hover:underline">Hub</a>
+    <nav class="font-mono text-xs text-muted flex items-center gap-2">
+      <a href="/project-bletchley/" class="hover:text-primary hover:underline">Hub</a>
       <span>/</span>
-      <span class="text-text-base">Labs</span>
+      <span class="text-foreground">Labs</span>
       <span>/</span>
-      <span class="text-text-base font-bold">Neural Net Sandbox</span>
+      <span class="text-foreground font-bold">Neural Net Sandbox</span>
     </nav>
 
     <!-- Header -->
-    <header class="border-b border-border-base pb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <header class="border-b border-border pb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
       <div>
         <h1 class="text-3xl font-extrabold tracking-tight">Neural Network Sandbox</h1>
-        <p class="text-sm text-text-muted mt-2">
+        <p class="text-sm text-muted mt-2">
           An interactive, visual model of a feedforward neural network. Trigger signals, modify hidden layers, and adjust synapse weights.
         </p>
       </div>
       <div class="flex gap-2">
         <button
           id="fire-all-btn"
-          class="bg-accent text-white hover:bg-accent-hover text-xs font-mono px-4 py-2 rounded-md transition-colors cursor-pointer shadow-sm"
+          class="bg-primary text-white hover:bg-primary-hover text-xs font-mono px-4 py-2 rounded-md transition-colors cursor-pointer shadow-sm"
         >
           Pulse All Inputs
         </button>
@@ -40,9 +40,9 @@ import Layout from '../../layouts/Layout.astro';
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 flex-grow items-stretch">
       
       <!-- Left: Sidebar Controls -->
-      <section class="lg:col-span-4 border border-border-base bg-surface p-6 rounded-xl space-y-6 flex flex-col justify-between shadow-sm">
+      <section class="lg:col-span-4 border border-border bg-card p-6 rounded-xl space-y-6 flex flex-col justify-between shadow-sm">
         <div class="space-y-6">
-          <h2 class="font-mono text-xs font-bold uppercase tracking-wider border-b border-border-base pb-2 text-text-base">
+          <h2 class="font-mono text-xs font-bold uppercase tracking-wider border-b border-border pb-2 text-foreground">
             Network Configuration
           </h2>
 
@@ -50,8 +50,8 @@ import Layout from '../../layouts/Layout.astro';
           <div class="space-y-4">
             <div class="space-y-1">
               <div class="flex justify-between text-xs font-mono">
-                <label for="hidden-nodes-count" class="uppercase tracking-wider text-text-muted">Hidden Nodes</label>
-                <span id="hidden-nodes-val" class="font-bold">4</span>
+                <label for="hidden-nodes-count" class="uppercase tracking-wider text-muted">Hidden Nodes</label>
+                <span id="hidden-nodes-val" class="font-bold text-foreground">4</span>
               </div>
               <input
                 type="range"
@@ -60,15 +60,15 @@ import Layout from '../../layouts/Layout.astro';
                 max="8"
                 value="4"
                 step="1"
-                class="w-full h-1 bg-border-base appearance-none cursor-pointer accent-accent"
+                class="w-full h-1 bg-border appearance-none cursor-pointer accent-primary"
               />
             </div>
 
             <!-- Propagation Speed -->
             <div class="space-y-1">
               <div class="flex justify-between text-xs font-mono">
-                <label for="signal-speed" class="uppercase tracking-wider text-text-muted">Impulse Speed</label>
-                <span id="speed-val" class="font-bold">Medium</span>
+                <label for="signal-speed" class="uppercase tracking-wider text-muted">Impulse Speed</label>
+                <span id="speed-val" class="font-bold text-foreground">Medium</span>
               </div>
               <input
                 type="range"
@@ -77,63 +77,63 @@ import Layout from '../../layouts/Layout.astro';
                 max="5"
                 value="3"
                 step="1"
-                class="w-full h-1 bg-border-base appearance-none cursor-pointer accent-accent"
+                class="w-full h-1 bg-border appearance-none cursor-pointer accent-primary"
               />
             </div>
           </div>
 
           <!-- Activation Function dropdown -->
-          <div class="space-y-2 border-t border-border-base pt-4">
-            <label for="activation-select" class="block font-mono text-xs uppercase tracking-wider text-text-muted">
+          <div class="space-y-2 border-t border-border pt-4">
+            <label for="activation-select" class="block font-mono text-xs uppercase tracking-wider text-muted">
               Activation Function
             </label>
             <select
               id="activation-select"
-              class="w-full bg-base border border-border-base text-text-base px-3 py-2 text-xs font-mono rounded-md focus:border-accent outline-none"
+              class="w-full bg-background border border-border text-foreground px-3 py-2 text-xs font-mono rounded-md focus:border-primary outline-none"
             >
               <option value="relu">ReLU (Rectified Linear Unit)</option>
               <option value="sigmoid">Sigmoid</option>
               <option value="tanh">Hyperbolic Tangent (Tanh)</option>
             </select>
-            <p id="activation-formula" class="font-mono text-[9px] text-text-muted italic mt-1">
+            <p id="activation-formula" class="font-mono text-[9px] text-muted italic mt-1">
               f(x) = max(0, x)
             </p>
           </div>
 
           <!-- Synapse Status -->
-          <div class="space-y-2 border-t border-border-base pt-4 font-mono text-[10px] text-text-muted">
-            <span class="block uppercase tracking-wider text-text-base font-semibold">Active Metrics</span>
+          <div class="space-y-2 border-t border-border pt-4 font-mono text-[10px] text-muted">
+            <span class="block uppercase tracking-wider text-foreground font-semibold">Active Metrics</span>
             <div class="space-y-1">
               <div class="flex justify-between">
                 <span>Input Neurons:</span>
-                <span class="text-text-base">3</span>
+                <span class="text-foreground">3</span>
               </div>
               <div class="flex justify-between">
                 <span>Hidden Neurons:</span>
-                <span id="hidden-count-stat" class="text-text-base">4</span>
+                <span id="hidden-count-stat" class="text-foreground">4</span>
               </div>
               <div class="flex justify-between">
                 <span>Output Neurons:</span>
-                <span class="text-text-base">2</span>
+                <span class="text-foreground">2</span>
               </div>
               <div class="flex justify-between">
                 <span>Total Connections:</span>
-                <span id="connections-count" class="text-accent font-bold">20</span>
+                <span id="connections-count" class="text-primary font-bold">20</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="font-mono text-[9px] text-text-muted border-t border-border-base pt-4 leading-relaxed">
+        <div class="font-mono text-[9px] text-muted border-t border-border pt-4 leading-relaxed">
           Click on any input node on the far left of the canvas to trigger an isolated neural impulse.
         </div>
       </section>
 
       <!-- Right: Interactive Canvas -->
-      <section class="lg:col-span-8 border border-border-base bg-surface rounded-xl overflow-hidden shadow-sm flex flex-col items-stretch min-h-[400px]">
-        <div class="border-b border-border-base bg-base px-4 py-2 font-mono text-[10px] text-text-muted flex items-center justify-between">
+      <section class="lg:col-span-8 border border-border bg-card rounded-xl overflow-hidden shadow-sm flex flex-col items-stretch min-h-[400px]">
+        <div class="border-b border-border bg-background px-4 py-2 font-mono text-[10px] text-muted flex items-center justify-between">
           <span>Neural Visualizer Canvas</span>
-          <span class="text-accent uppercase tracking-widest font-bold">Feedforward Graph</span>
+          <span class="text-primary uppercase tracking-widest font-bold">Feedforward Graph</span>
         </div>
 
         <!-- SVG Container -->
@@ -148,8 +148,8 @@ import Layout from '../../layouts/Layout.astro';
           </svg>
         </div>
 
-        <div class="border-t border-border-base bg-base px-4 py-2.5 font-mono text-[10px] text-text-muted">
-          Active pulses: <span id="pulse-count" class="text-text-base">0</span> // Click node boundary to fire.
+        <div class="border-t border-border bg-background px-4 py-2.5 font-mono text-[10px] text-muted">
+          Active pulses: <span id="pulse-count" class="text-foreground">0</span> // Click node boundary to fire.
         </div>
       </section>
 
@@ -269,7 +269,7 @@ import Layout from '../../layouts/Layout.astro';
       line.setAttribute('y1', String(y1));
       line.setAttribute('x2', String(x2));
       line.setAttribute('y2', String(y2));
-      line.setAttribute('stroke', 'var(--border-base)');
+      line.setAttribute('stroke', 'var(--border)');
       line.setAttribute('stroke-width', String(weight * 3));
       line.setAttribute('opacity', '0.4');
       synapsesGroup.appendChild(line);
@@ -285,17 +285,17 @@ import Layout from '../../layouts/Layout.astro';
       
       // Node color
       if (type === 'input') {
-        circle.setAttribute('fill', 'var(--bg-surface)');
-        circle.setAttribute('stroke', 'var(--accent)');
+        circle.setAttribute('fill', 'var(--card)');
+        circle.setAttribute('stroke', 'var(--primary)');
         circle.setAttribute('stroke-width', '2');
         circle.style.cursor = 'pointer';
         circle.addEventListener('click', () => triggerImpulse(nodeCoords.inputs.find(n => n.x === x && n.y === y)));
       } else if (type === 'hidden') {
-        circle.setAttribute('fill', 'var(--bg-surface)');
-        circle.setAttribute('stroke', 'var(--border-base)');
+        circle.setAttribute('fill', 'var(--card)');
+        circle.setAttribute('stroke', 'var(--border)');
         circle.setAttribute('stroke-width', '2');
       } else {
-        circle.setAttribute('fill', 'var(--bg-surface)');
+        circle.setAttribute('fill', 'var(--card)');
         circle.setAttribute('stroke', '#8b5cf6'); // Violet stroke for output
         circle.setAttribute('stroke-width', '2');
       }
@@ -306,7 +306,7 @@ import Layout from '../../layouts/Layout.astro';
       text.setAttribute('text-anchor', 'middle');
       text.setAttribute('font-family', 'Geist Mono');
       text.setAttribute('font-size', '10px');
-      text.setAttribute('fill', 'var(--text-base)');
+      text.setAttribute('fill', 'var(--foreground)');
       text.setAttribute('pointer-events', 'none');
       text.textContent = labelText;
 
@@ -388,7 +388,7 @@ import Layout from '../../layouts/Layout.astro';
           dot.setAttribute('cx', String(px));
           dot.setAttribute('cy', String(py));
           dot.setAttribute('r', '4');
-          dot.setAttribute('fill', p.toNode.layer === 'output' ? '#a78bfa' : 'var(--accent)');
+          dot.setAttribute('fill', p.toNode.layer === 'output' ? '#a78bfa' : 'var(--primary)');
           particlesGroup.appendChild(dot);
         }
       }
@@ -400,7 +400,7 @@ import Layout from '../../layouts/Layout.astro';
       requestAnimationFrame(animate);
     }
 
-    function flashNode(x, y, color = 'var(--accent)') {
+    function flashNode(x, y, color = 'var(--primary)') {
       const flash = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       flash.setAttribute('cx', String(x));
       flash.setAttribute('cy', String(y));

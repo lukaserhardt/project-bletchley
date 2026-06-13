@@ -6,30 +6,30 @@ import Layout from '../../layouts/Layout.astro';
   <div class="space-y-8 flex-grow flex flex-col relative">
     
     <!-- Hero Glow Blob -->
-    <div class="absolute -top-16 -left-20 w-72 h-72 rounded-full bg-gradient-to-tr from-accent/20 to-purple-500/10 blur-[80px] -z-10 pointer-events-none"></div>
-    <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-gradient-to-br from-indigo-500/10 to-accent/15 blur-[100px] -z-10 pointer-events-none"></div>
+    <div class="absolute -top-16 -left-20 w-72 h-72 rounded-full bg-gradient-to-tr from-primary/10 to-purple-500/5 blur-[80px] -z-10 pointer-events-none"></div>
+    <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-gradient-to-br from-indigo-500/5 to-primary/10 blur-[100px] -z-10 pointer-events-none"></div>
 
     <!-- Navigation -->
-    <nav class="font-mono text-xs text-text-muted flex items-center gap-2">
-      <a href="/project-bletchley/" class="hover:text-accent hover:underline">Hub</a>
+    <nav class="font-mono text-xs text-muted flex items-center gap-2">
+      <a href="/project-bletchley/" class="hover:text-primary hover:underline">Hub</a>
       <span>/</span>
-      <span class="text-text-base">Labs</span>
+      <span class="text-foreground">Labs</span>
       <span>/</span>
-      <span class="text-text-base font-bold">Gravity Sandbox</span>
+      <span class="text-foreground font-bold">Gravity Sandbox</span>
     </nav>
 
     <!-- Header -->
-    <header class="border-b border-border-base pb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <header class="border-b border-border pb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
         <h1 class="text-3xl font-extrabold tracking-tight">Gravity Sandbox</h1>
-        <p class="text-sm text-text-muted mt-2">
+        <p class="text-sm text-muted mt-2">
           An interactive Newtonian gravity simulation. Drag and release to launch planets into orbit around a massive star.
         </p>
       </div>
       <div class="flex gap-2">
         <button
           id="clear-btn"
-          class="border border-border-base bg-surface hover:bg-base text-xs font-mono px-3 py-1.5 rounded-md transition-colors cursor-pointer hover:border-accent"
+          class="border border-border bg-card hover:bg-background text-xs font-mono px-3 py-1.5 rounded-md transition-colors cursor-pointer hover:border-primary text-foreground"
         >
           Clear Planets
         </button>
@@ -40,9 +40,9 @@ import Layout from '../../layouts/Layout.astro';
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch flex-grow">
       
       <!-- Control Panel -->
-      <section class="lg:col-span-4 border border-border-base bg-surface p-6 rounded-xl space-y-6 flex flex-col justify-between shadow-sm">
+      <section class="lg:col-span-4 border border-border bg-card p-6 rounded-xl space-y-6 flex flex-col justify-between shadow-sm">
         <div class="space-y-6">
-          <h2 class="font-mono text-xs font-bold uppercase tracking-wider border-b border-border-base pb-2 text-text-base">
+          <h2 class="font-mono text-xs font-bold uppercase tracking-wider border-b border-border pb-2 text-foreground">
             Simulation Parameters
           </h2>
 
@@ -50,8 +50,8 @@ import Layout from '../../layouts/Layout.astro';
             <!-- Gravity Strength G -->
             <div class="space-y-1">
               <div class="flex justify-between text-xs font-mono">
-                <label for="grav-g" class="uppercase tracking-wider text-text-muted">Gravity Constant (G)</label>
-                <span id="grav-g-val" class="font-bold">0.15</span>
+                <label for="grav-g" class="uppercase tracking-wider text-muted">Gravity Constant (G)</label>
+                <span id="grav-g-val" class="font-bold text-foreground">0.15</span>
               </div>
               <input
                 type="range"
@@ -60,15 +60,15 @@ import Layout from '../../layouts/Layout.astro';
                 max="0.5"
                 value="0.15"
                 step="0.01"
-                class="w-full h-1 bg-border-base appearance-none cursor-pointer accent-accent"
+                class="w-full h-1 bg-border appearance-none cursor-pointer accent-primary"
               />
             </div>
 
             <!-- Orbit Trail Length -->
             <div class="space-y-1">
               <div class="flex justify-between text-xs font-mono">
-                <label for="trail-len" class="uppercase tracking-wider text-text-muted">Trail Length</label>
-                <span id="trail-len-val" class="font-bold">120 frames</span>
+                <label for="trail-len" class="uppercase tracking-wider text-muted">Trail Length</label>
+                <span id="trail-len-val" class="font-bold text-foreground">120 frames</span>
               </div>
               <input
                 type="range"
@@ -77,15 +77,15 @@ import Layout from '../../layouts/Layout.astro';
                 max="300"
                 value="120"
                 step="10"
-                class="w-full h-1 bg-border-base appearance-none cursor-pointer accent-accent"
+                class="w-full h-1 bg-border appearance-none cursor-pointer accent-primary"
               />
             </div>
 
             <!-- Time Step Speed -->
             <div class="space-y-1">
               <div class="flex justify-between text-xs font-mono">
-                <label for="sim-speed" class="uppercase tracking-wider text-text-muted">Simulation Speed</label>
-                <span id="sim-speed-val" class="font-bold">1.0x</span>
+                <label for="sim-speed" class="uppercase tracking-wider text-muted">Simulation Speed</label>
+                <span id="sim-speed-val" class="font-bold text-foreground">1.0x</span>
               </div>
               <input
                 type="range"
@@ -94,42 +94,42 @@ import Layout from '../../layouts/Layout.astro';
                 max="2.0"
                 value="1.0"
                 step="0.1"
-                class="w-full h-1 bg-border-base appearance-none cursor-pointer accent-accent"
+                class="w-full h-1 bg-border appearance-none cursor-pointer accent-primary"
               />
             </div>
           </div>
 
           <!-- Presets -->
-          <div class="space-y-2 border-t border-border-base pt-4">
-            <span class="block font-mono text-[10px] uppercase tracking-wider text-text-muted">
+          <div class="space-y-2 border-t border-border pt-4">
+            <span class="block font-mono text-[10px] uppercase tracking-wider text-muted">
               Presets
             </span>
             <div class="grid grid-cols-2 gap-2 font-mono text-[10px]">
               <button
                 type="button"
                 id="preset-stable"
-                class="border border-border-base bg-base hover:border-accent p-2 text-left rounded-md transition-colors cursor-pointer"
+                class="border border-border bg-background hover:border-primary p-2 text-left rounded-md transition-colors cursor-pointer text-foreground"
               >
                 ■ Stable Orbits
               </button>
               <button
                 type="button"
                 id="preset-slingshot"
-                class="border border-border-base bg-base hover:border-accent p-2 text-left rounded-md transition-colors cursor-pointer"
+                class="border border-border bg-background hover:border-primary p-2 text-left rounded-md transition-colors cursor-pointer text-foreground"
               >
                 ■ Slingshots
               </button>
               <button
                 type="button"
                 id="preset-hyperbolic"
-                class="border border-border-base bg-base hover:border-accent p-2 text-left rounded-md transition-colors cursor-pointer"
+                class="border border-border bg-background hover:border-primary p-2 text-left rounded-md transition-colors cursor-pointer text-foreground"
               >
                 ■ Escape Velocity
               </button>
               <button
                 type="button"
                 id="preset-binary"
-                class="border border-border-base bg-base hover:border-accent p-2 text-left rounded-md transition-colors cursor-pointer"
+                class="border border-border bg-background hover:border-primary p-2 text-left rounded-md transition-colors cursor-pointer text-foreground"
               >
                 ■ Chaos Cluster
               </button>
@@ -137,16 +137,16 @@ import Layout from '../../layouts/Layout.astro';
           </div>
         </div>
 
-        <div class="font-mono text-[9px] text-text-muted border-t border-border-base pt-4 leading-relaxed">
+        <div class="font-mono text-[9px] text-muted border-t border-border pt-4 leading-relaxed">
           <strong>Interactive controls:</strong> Click and drag anywhere inside the canvas. The line length dictates the planetary velocity vector. Release to launch.
         </div>
       </section>
 
       <!-- Canvas Area -->
-      <section class="lg:col-span-8 border border-border-base bg-surface rounded-xl overflow-hidden shadow-sm flex flex-col items-stretch min-h-[450px]">
-        <div class="border-b border-border-base bg-base px-4 py-2 font-mono text-[10px] text-text-muted flex items-center justify-between">
+      <section class="lg:col-span-8 border border-border bg-card rounded-xl overflow-hidden shadow-sm flex flex-col items-stretch min-h-[450px]">
+        <div class="border-b border-border bg-background px-4 py-2 font-mono text-[10px] text-muted flex items-center justify-between">
           <span>Orbital Canvas</span>
-          <span class="text-accent uppercase tracking-widest font-bold font-mono text-[9px]" id="particle-status">Active Planets: 0</span>
+          <span class="text-primary uppercase tracking-widest font-bold font-mono text-[9px]" id="particle-status">Active Planets: 0</span>
         </div>
 
         <div class="flex-grow bg-[#020205] relative flex items-center justify-center cursor-crosshair">
@@ -227,7 +227,6 @@ import Layout from '../../layouts/Layout.astro';
         // Collision detection
         if (dist <= star.radius + p.radius) {
           // Planet absorbed by star
-          createShatter(p.x, p.y, p.color);
           planets.splice(i, 1);
           continue;
         }
@@ -301,8 +300,6 @@ import Layout from '../../layouts/Layout.astro';
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fill();
-
-        // Little vector indicator or name is not needed
       });
 
       // 3. Draw Drag Launch Line
@@ -310,7 +307,8 @@ import Layout from '../../layouts/Layout.astro';
         ctx.beginPath();
         ctx.moveTo(dragStart.x, dragStart.y);
         ctx.lineTo(dragCurrent.x, dragCurrent.y);
-        ctx.strokeStyle = '#6366f1';
+        // Draw sling indicator using theme color via canvas style property if possible
+        ctx.strokeStyle = '#6366f1'; 
         ctx.lineWidth = 2;
         ctx.stroke();
 
@@ -320,12 +318,6 @@ import Layout from '../../layouts/Layout.astro';
         ctx.arc(dragStart.x, dragStart.y, 4, 0, Math.PI * 2);
         ctx.fill();
       }
-    }
-
-    // Spawn shatter particles on collision
-    let shatters = [];
-    function createShatter(x, y, color) {
-      // Standard canvas draw for sparks is not necessary if we just clear
     }
 
     function launchPlanet(startX, startY, endX, endY) {
@@ -385,7 +377,6 @@ import Layout from '../../layouts/Layout.astro';
     // Preset Configs
     presetStable.addEventListener('click', () => {
       planets = [];
-      // Spawn two stable circular orbit planets
       const stableG = 0.15;
       gSlider.value = String(stableG);
 
