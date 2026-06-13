@@ -10,7 +10,7 @@ import Layout from '../../layouts/Layout.astro';
     <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-gradient-to-br from-indigo-500/5 to-primary/10 blur-[100px] -z-10 pointer-events-none"></div>
 
     <!-- Breadcrumbs / Navigation -->
-    <nav class="font-mono text-xs text-muted flex items-center gap-2">
+    <nav class="font-mono text-sm text-muted flex items-center gap-2">
       <a href="/project-bletchley/" class="hover:text-primary hover:underline">HUB</a>
       <span>/</span>
       <span class="text-foreground">LABS</span>
@@ -23,7 +23,7 @@ import Layout from '../../layouts/Layout.astro';
       <h1 class="text-3xl font-black uppercase tracking-tight">
         TYPOCRAFT PLAYGROUND
       </h1>
-      <p class="text-sm text-muted mt-2 max-w-xl">
+      <p class="text-base text-muted mt-2 max-w-xl">
         Experiment with variable axis weights, sizing, tracking, and leading of the Geist typography stack in real-time.
       </p>
     </header>
@@ -34,18 +34,18 @@ import Layout from '../../layouts/Layout.astro';
       <!-- Control Panel (Sidebar) -->
       <section class="lg:col-span-4 border border-border bg-card p-6 flex flex-col justify-between space-y-6">
         <div class="space-y-6">
-          <h2 class="font-mono text-xs font-bold uppercase tracking-wider border-b border-border pb-2 text-foreground">
+          <h2 class="font-mono text-sm font-bold uppercase tracking-wider border-b border-border pb-2 text-foreground">
             Typography Parameters
           </h2>
 
           <!-- Font Selection -->
           <div class="space-y-2">
-            <label for="font-family-select" class="block font-mono text-xs uppercase tracking-wider text-muted">
+            <label for="font-family-select" class="block font-mono text-sm uppercase tracking-wider text-muted">
               Font Family
             </label>
             <select
               id="font-family-select"
-              class="w-full bg-background border border-border text-foreground px-3 py-2 text-xs font-mono focus:border-primary outline-none"
+              class="w-full bg-background border border-border text-foreground px-3 py-2 text-sm font-mono focus:border-primary outline-none"
             >
               <option value="font-sans">Geist (Sans-Serif)</option>
               <option value="font-mono">Geist Mono (Monospace)</option>
@@ -56,7 +56,7 @@ import Layout from '../../layouts/Layout.astro';
           <div class="space-y-4">
             <!-- Weight (wght) -->
             <div class="space-y-1">
-              <div class="flex justify-between text-xs font-mono">
+              <div class="flex justify-between text-sm font-mono">
                 <label for="axis-weight" class="uppercase tracking-wider text-muted">Weight (wght)</label>
                 <span id="weight-val" class="font-bold text-foreground">400</span>
               </div>
@@ -73,7 +73,7 @@ import Layout from '../../layouts/Layout.astro';
 
             <!-- Font Size -->
             <div class="space-y-1">
-              <div class="flex justify-between text-xs font-mono">
+              <div class="flex justify-between text-sm font-mono">
                 <label for="axis-size" class="uppercase tracking-wider text-muted">Size (px)</label>
                 <span id="size-val" class="font-bold text-foreground">48px</span>
               </div>
@@ -90,7 +90,7 @@ import Layout from '../../layouts/Layout.astro';
 
             <!-- Line Height (Leading) -->
             <div class="space-y-1">
-              <div class="flex justify-between text-xs font-mono">
+              <div class="flex justify-between text-sm font-mono">
                 <label for="axis-leading" class="uppercase tracking-wider text-muted">Leading (Line Height)</label>
                 <span id="leading-val" class="font-bold text-foreground">1.2</span>
               </div>
@@ -107,7 +107,7 @@ import Layout from '../../layouts/Layout.astro';
 
             <!-- Letter Spacing (Tracking) -->
             <div class="space-y-1">
-              <div class="flex justify-between text-xs font-mono">
+              <div class="flex justify-between text-sm font-mono">
                 <label for="axis-tracking" class="uppercase tracking-wider text-muted">Tracking (Spacing)</label>
                 <span id="tracking-val" class="font-bold text-foreground">0.00em</span>
               </div>
@@ -125,35 +125,35 @@ import Layout from '../../layouts/Layout.astro';
 
           <!-- Presets -->
           <div class="space-y-2 border-t border-border pt-4">
-            <span class="block font-mono text-[10px] uppercase tracking-wider text-muted">
+            <span class="block font-mono text-xs uppercase tracking-wider text-muted">
               Design Presets
             </span>
-            <div class="grid grid-cols-2 gap-2 font-mono text-[10px]">
+            <div class="grid grid-cols-2 gap-2 font-mono text-xs">
               <button
                 type="button"
                 id="preset-display"
-                class="border border-border bg-background hover:border-primary p-2 text-left transition-colors cursor-pointer text-foreground"
+                class="border border-border bg-background hover:border-primary p-2 text-left transition-colors cursor-pointer text-foreground font-bold"
               >
                 ■ DISPLAY BOLD
               </button>
               <button
                 type="button"
                 id="preset-mono-header"
-                class="border border-border bg-background hover:border-primary p-2 text-left transition-colors cursor-pointer text-foreground"
+                class="border border-border bg-background hover:border-primary p-2 text-left transition-colors cursor-pointer text-foreground font-bold"
               >
                 ■ MONO HEADER
               </button>
               <button
                 type="button"
                 id="preset-editorial"
-                class="border border-border bg-background hover:border-primary p-2 text-left transition-colors cursor-pointer text-foreground"
+                class="border border-border bg-background hover:border-primary p-2 text-left transition-colors cursor-pointer text-foreground font-bold"
               >
                 ■ EDITORIAL LEAD
               </button>
               <button
                 type="button"
                 id="preset-caption"
-                class="border border-border bg-background hover:border-primary p-2 text-left transition-colors cursor-pointer text-foreground"
+                class="border border-border bg-background hover:border-primary p-2 text-left transition-colors cursor-pointer text-foreground font-bold"
               >
                 ■ TINY CAPTION
               </button>
@@ -164,23 +164,23 @@ import Layout from '../../layouts/Layout.astro';
         <!-- Generated CSS Export -->
         <div class="space-y-2 border-t border-border pt-4">
           <div class="flex justify-between items-center">
-            <span class="font-mono text-[10px] uppercase tracking-wider text-muted">Generated CSS</span>
+            <span class="font-mono text-xs uppercase tracking-wider text-muted">Generated CSS</span>
             <button
               id="copy-css-btn"
-              class="font-mono text-[9px] uppercase tracking-wider px-2 py-0.5 border border-border bg-background hover:border-primary transition-colors cursor-pointer text-foreground"
+              class="font-mono text-xs uppercase tracking-wider px-2 py-0.5 border border-border bg-background hover:border-primary transition-colors cursor-pointer text-foreground"
             >
               Copy CSS
             </button>
           </div>
-          <pre id="css-output" class="font-mono text-[9px] bg-background border border-border p-2 overflow-x-auto select-all text-muted"></pre>
+          <pre id="css-output" class="font-mono text-xs bg-background border border-border p-2 overflow-x-auto select-all text-muted"></pre>
         </div>
       </section>
 
       <!-- Live Preview Canvas -->
       <section class="lg:col-span-8 border border-border bg-card flex flex-col justify-between overflow-hidden">
-        <div class="border-b border-border bg-background px-4 py-2 font-mono text-[10px] text-muted flex items-center justify-between">
+        <div class="border-b border-border bg-background px-4 py-2 font-mono text-xs text-muted flex items-center justify-between">
           <span>CANVAS: EDITABLE PREVIEW</span>
-          <span class="uppercase tracking-widest text-primary font-bold" id="family-indicator">GEIST SANS</span>
+          <span class="uppercase tracking-widest text-primary font-bold animate-pulse" id="family-indicator">GEIST SANS</span>
         </div>
         
         <!-- Interactive text preview area -->
@@ -195,9 +195,9 @@ import Layout from '../../layouts/Layout.astro';
           </div>
         </div>
 
-        <div class="border-t border-border bg-background px-4 py-3 font-mono text-[10px] text-muted flex flex-col sm:flex-row sm:justify-between gap-2">
+        <div class="border-t border-border bg-background px-4 py-3 font-mono text-xs text-muted flex flex-col sm:flex-row sm:justify-between gap-2">
           <span>Click inside the canvas to edit sample text.</span>
-          <span>Axes: font-variation-settings: "wght" <span id="canvas-wght text-foreground">400</span></span>
+          <span>Axes: font-variation-settings: "wght" <span id="canvas-wght" class="text-foreground font-bold">400</span></span>
         </div>
       </section>
 

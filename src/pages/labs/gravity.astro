@@ -10,7 +10,7 @@ import Layout from '../../layouts/Layout.astro';
     <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-gradient-to-br from-indigo-500/5 to-primary/10 blur-[100px] -z-10 pointer-events-none"></div>
 
     <!-- Navigation -->
-    <nav class="font-mono text-xs text-muted flex items-center gap-2">
+    <nav class="font-mono text-sm text-muted flex items-center gap-2">
       <a href="/project-bletchley/" class="hover:text-primary hover:underline">Hub</a>
       <span>/</span>
       <span class="text-foreground">Labs</span>
@@ -29,7 +29,7 @@ import Layout from '../../layouts/Layout.astro';
       <div class="flex gap-2">
         <button
           id="clear-btn"
-          class="border border-border bg-card hover:bg-background text-xs font-mono px-3 py-1.5 rounded-md transition-colors cursor-pointer hover:border-primary text-foreground"
+          class="border border-border bg-card hover:bg-background text-sm font-mono px-3 py-1.5 rounded-md transition-colors cursor-pointer hover:border-primary text-foreground"
         >
           Clear Planets
         </button>
@@ -42,14 +42,14 @@ import Layout from '../../layouts/Layout.astro';
       <!-- Control Panel -->
       <section class="lg:col-span-4 border border-border bg-card p-6 rounded-xl space-y-6 flex flex-col justify-between shadow-sm">
         <div class="space-y-6">
-          <h2 class="font-mono text-xs font-bold uppercase tracking-wider border-b border-border pb-2 text-foreground">
+          <h2 class="font-mono text-sm font-bold uppercase tracking-wider border-b border-border pb-2 text-foreground">
             Simulation Parameters
           </h2>
 
           <div class="space-y-4">
             <!-- Gravity Strength G -->
             <div class="space-y-1">
-              <div class="flex justify-between text-xs font-mono">
+              <div class="flex justify-between text-sm font-mono">
                 <label for="grav-g" class="uppercase tracking-wider text-muted">Gravity Constant (G)</label>
                 <span id="grav-g-val" class="font-bold text-foreground">0.15</span>
               </div>
@@ -66,7 +66,7 @@ import Layout from '../../layouts/Layout.astro';
 
             <!-- Orbit Trail Length -->
             <div class="space-y-1">
-              <div class="flex justify-between text-xs font-mono">
+              <div class="flex justify-between text-sm font-mono">
                 <label for="trail-len" class="uppercase tracking-wider text-muted">Trail Length</label>
                 <span id="trail-len-val" class="font-bold text-foreground">120 frames</span>
               </div>
@@ -83,7 +83,7 @@ import Layout from '../../layouts/Layout.astro';
 
             <!-- Time Step Speed -->
             <div class="space-y-1">
-              <div class="flex justify-between text-xs font-mono">
+              <div class="flex justify-between text-sm font-mono">
                 <label for="sim-speed" class="uppercase tracking-wider text-muted">Simulation Speed</label>
                 <span id="sim-speed-val" class="font-bold text-foreground">1.0x</span>
               </div>
@@ -101,35 +101,35 @@ import Layout from '../../layouts/Layout.astro';
 
           <!-- Presets -->
           <div class="space-y-2 border-t border-border pt-4">
-            <span class="block font-mono text-[10px] uppercase tracking-wider text-muted">
+            <span class="block font-mono text-xs uppercase tracking-wider text-muted">
               Presets
             </span>
-            <div class="grid grid-cols-2 gap-2 font-mono text-[10px]">
+            <div class="grid grid-cols-2 gap-2 font-mono text-xs">
               <button
                 type="button"
                 id="preset-stable"
-                class="border border-border bg-background hover:border-primary p-2 text-left rounded-md transition-colors cursor-pointer text-foreground"
+                class="border border-border bg-background hover:border-primary p-2 text-left rounded-md transition-colors cursor-pointer text-foreground font-semibold"
               >
                 ■ Stable Orbits
               </button>
               <button
                 type="button"
                 id="preset-slingshot"
-                class="border border-border bg-background hover:border-primary p-2 text-left rounded-md transition-colors cursor-pointer text-foreground"
+                class="border border-border bg-background hover:border-primary p-2 text-left rounded-md transition-colors cursor-pointer text-foreground font-semibold"
               >
                 ■ Slingshots
               </button>
               <button
                 type="button"
                 id="preset-hyperbolic"
-                class="border border-border bg-background hover:border-primary p-2 text-left rounded-md transition-colors cursor-pointer text-foreground"
+                class="border border-border bg-background hover:border-primary p-2 text-left rounded-md transition-colors cursor-pointer text-foreground font-semibold"
               >
                 ■ Escape Velocity
               </button>
               <button
                 type="button"
                 id="preset-binary"
-                class="border border-border bg-background hover:border-primary p-2 text-left rounded-md transition-colors cursor-pointer text-foreground"
+                class="border border-border bg-background hover:border-primary p-2 text-left rounded-md transition-colors cursor-pointer text-foreground font-semibold"
               >
                 ■ Chaos Cluster
               </button>
@@ -137,16 +137,16 @@ import Layout from '../../layouts/Layout.astro';
           </div>
         </div>
 
-        <div class="font-mono text-[9px] text-muted border-t border-border pt-4 leading-relaxed">
+        <div class="font-mono text-xs text-muted border-t border-border pt-4 leading-relaxed">
           <strong>Interactive controls:</strong> Click and drag anywhere inside the canvas. The line length dictates the planetary velocity vector. Release to launch.
         </div>
       </section>
 
       <!-- Canvas Area -->
       <section class="lg:col-span-8 border border-border bg-card rounded-xl overflow-hidden shadow-sm flex flex-col items-stretch min-h-[450px]">
-        <div class="border-b border-border bg-background px-4 py-2 font-mono text-[10px] text-muted flex items-center justify-between">
+        <div class="border-b border-border bg-background px-4 py-2 font-mono text-xs text-muted flex items-center justify-between">
           <span>Orbital Canvas</span>
-          <span class="text-primary uppercase tracking-widest font-bold font-mono text-[9px]" id="particle-status">Active Planets: 0</span>
+          <span class="text-primary uppercase tracking-widest font-bold font-mono text-xs" id="particle-status">Active Planets: 0</span>
         </div>
 
         <div class="flex-grow bg-[#020205] relative flex items-center justify-center cursor-crosshair">

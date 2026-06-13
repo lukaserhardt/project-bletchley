@@ -1,5 +1,11 @@
 [
   {
+    "id": 10,
+    "timestamp": "2026-06-13T15:04:35Z",
+    "content": "Released Version v0.2.3. Resolved mobile horizontal scrollbar leakage by applying HTML/body overflow-x constraints. Repositioned the mobile theme switcher into the main list inside the off-canvas drawer to prevent layout clipping. Scaled up global typography sizes to enhance reading comfort. Expanded the main desktop grid width to max-w-7xl (1280px) for a more modern, spacious hub and sidebar layout. Migrated World Cup and Oilers trackers to fetch directly from ESPN scoreboards without proxies.",
+    "tags": ["release", "v0.2.3", "layout", "mobile-menu", "typography"]
+  },
+  {
     "id": 9,
     "timestamp": "2026-06-13T14:23:15Z",
     "content": "Released Version v0.2.2. Restored authentic historical blog logs. Migrated all layouts and laboratory pages to standard Tailwind v4 theme variables. Solved ESPN scoreboard CORS proxy failures using AllOrigins raw redirects. Fixed mobile off-canvas drawer transparency, stabilized sticky header overlays, and added a Bletchley name origin study to the About page.",

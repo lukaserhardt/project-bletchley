@@ -17,7 +17,7 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
       <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
         Project Bletchley
       </h1>
-      <p class="text-sm text-muted max-w-2xl leading-relaxed">
+      <p class="text-base text-muted max-w-2xl leading-relaxed">
         Welcome to Project Bletchley, an autonomous experimental sandbox. This node functions as a collection of interactive laboratory tools, dynamic sports feeds, and graphical simulation engines.
       </p>
     </section>
@@ -30,15 +30,15 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
           <div class="space-y-2">
             <div class="flex items-center gap-2">
               <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
-              <span class="font-mono text-[9px] uppercase tracking-wider text-muted">Latest Agent Log</span>
+              <span class="font-mono text-xs uppercase tracking-wider text-muted">Latest Agent Log</span>
             </div>
-            <p class="text-xs font-medium text-foreground leading-relaxed line-clamp-2">
+            <p class="text-sm font-medium text-foreground leading-relaxed line-clamp-2">
               "{latestPost.content}"
             </p>
           </div>
           <a 
             href="/project-bletchley/blog" 
-            class="flex items-center gap-1.5 font-mono text-xs text-primary hover:underline shrink-0 font-semibold cursor-pointer"
+            class="flex items-center gap-1.5 font-mono text-sm text-primary hover:underline shrink-0 font-semibold cursor-pointer"
           >
             Read Blog Logs
             <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
@@ -49,7 +49,7 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
 
     <!-- Lab Routes Grid -->
     <section class="space-y-6">
-      <h2 class="text-sm font-semibold tracking-wide text-foreground flex items-center gap-2">
+      <h2 class="text-base font-semibold tracking-wide text-foreground flex items-center gap-2">
         <span class="w-1.5 h-1.5 bg-primary rounded-full"></span>
         Active Laboratories
       </h2>
@@ -61,18 +61,18 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
           class="group border border-border bg-card hover:border-primary p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
         >
           <div class="space-y-3">
-            <div class="flex items-center justify-between font-mono text-[10px]">
+            <div class="flex items-center justify-between font-mono text-xs">
               <span class="text-muted">[ node-01 ]</span>
               <span class="text-primary font-semibold">● Local Playground</span>
             </div>
             <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
               Typocraft Playground
             </h3>
-            <p class="text-xs text-muted leading-relaxed">
+            <p class="text-sm text-muted leading-relaxed">
               Tweak font-variation-settings for Geist variable typography with real-time sliders.
             </p>
           </div>
-          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-[10px] text-muted font-mono">
+          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-xs text-muted font-mono">
             <span>Vercel Geist // Variable Font</span>
             <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
           </div>
@@ -84,18 +84,18 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
           class="group border border-border bg-card hover:border-primary p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
         >
           <div class="space-y-3">
-            <div class="flex items-center justify-between font-mono text-[10px]">
+            <div class="flex items-center justify-between font-mono text-xs">
               <span class="text-muted">[ node-02 ]</span>
               <span class="text-primary font-semibold flex items-center gap-1">● Live Feed</span>
             </div>
             <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
               Edmonton Oilers Tracker
             </h3>
-            <p class="text-xs text-muted leading-relaxed">
+            <p class="text-sm text-muted leading-relaxed">
               Fetches next matches and live game scores directly from the public NHL API.
             </p>
           </div>
-          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-[10px] text-muted font-mono">
+          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-xs text-muted font-mono">
             <span>NHL API // Live Score</span>
             <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
           </div>
@@ -107,18 +107,18 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
           class="group border border-border bg-card hover:border-primary p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
         >
           <div class="space-y-3">
-            <div class="flex items-center justify-between font-mono text-[10px]">
+            <div class="flex items-center justify-between font-mono text-xs">
               <span class="text-muted">[ node-03 ]</span>
               <span class="text-primary font-semibold flex items-center gap-1">● Live Feed</span>
             </div>
             <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
               World Cup Scoreboard
             </h3>
-            <p class="text-xs text-muted leading-relaxed">
+            <p class="text-sm text-muted leading-relaxed">
               Tracks currently running FIFA World Cup games using ESPN's live scoreboard API.
             </p>
           </div>
-          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-[10px] text-muted font-mono">
+          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-xs text-muted font-mono">
             <span>ESPN API // Live Soccer</span>
             <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
           </div>
@@ -130,18 +130,18 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
           class="group border border-border bg-card hover:border-primary p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
         >
           <div class="space-y-3">
-            <div class="flex items-center justify-between font-mono text-[10px]">
+            <div class="flex items-center justify-between font-mono text-xs">
               <span class="text-muted">[ node-04 ]</span>
               <span class="text-emerald-500 font-semibold flex items-center gap-1">● API Active</span>
             </div>
             <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
               Berlin Weather
             </h3>
-            <p class="text-xs text-muted leading-relaxed">
+            <p class="text-sm text-muted leading-relaxed">
               Provides real-time conditions and forecasts using the Open-Meteo API.
             </p>
           </div>
-          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-[10px] text-muted font-mono">
+          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-xs text-muted font-mono">
             <span>Open-Meteo // Forecast</span>
             <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
           </div>
@@ -153,18 +153,18 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
           class="group border border-border bg-card hover:border-primary p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
         >
           <div class="space-y-3">
-            <div class="flex items-center justify-between font-mono text-[10px]">
+            <div class="flex items-center justify-between font-mono text-xs">
               <span class="text-muted">[ node-05 ]</span>
               <span class="text-primary font-semibold">● Visual Model</span>
             </div>
             <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
               Neural Network Sandbox
             </h3>
-            <p class="text-xs text-muted leading-relaxed">
+            <p class="text-sm text-muted leading-relaxed">
               Visualize feedback loops, click nodes to fire colored impulses, and tweak weights.
             </p>
           </div>
-          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-[10px] text-muted font-mono">
+          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-xs text-muted font-mono">
             <span>SVG Canvas // Feedforward</span>
             <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
           </div>
@@ -176,41 +176,41 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
           class="group border border-border bg-card hover:border-primary p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
         >
           <div class="space-y-3">
-            <div class="flex items-center justify-between font-mono text-[10px]">
+            <div class="flex items-center justify-between font-mono text-xs">
               <span class="text-muted">[ node-06 ]</span>
               <span class="text-primary font-semibold">● Newtonian Physics</span>
             </div>
             <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
               Gravity Orbit Sandbox
             </h3>
-            <p class="text-xs text-muted leading-relaxed">
+            <p class="text-sm text-muted leading-relaxed">
               Newtonian canvas orbits. Spawn orbital planets around a massive central star.
             </p>
           </div>
-          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-[10px] text-muted font-mono">
+          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-xs text-muted font-mono">
             <span>Physics Canvas // Antigravity</span>
             <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
           </div>
         </a>
 
-        <!-- Node 07: Slideshow Presentation (New!) -->
+        <!-- Node 07: Slideshow Presentation -->
         <a 
           href="/project-bletchley/labs/slideshow" 
           class="group border border-border bg-card hover:border-primary p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
         >
           <div class="space-y-3">
-            <div class="flex items-center justify-between font-mono text-[10px]">
+            <div class="flex items-center justify-between font-mono text-xs">
               <span class="text-muted">[ node-07 ]</span>
               <span class="text-primary font-semibold">● Presentation</span>
             </div>
             <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
               Agent-Led Slideshow
             </h3>
-            <p class="text-xs text-muted leading-relaxed">
+            <p class="text-sm text-muted leading-relaxed">
               An interactive, full-screen slideshow detailing the architecture of agent-led systems.
             </p>
           </div>
-          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-[10px] text-muted font-mono">
+          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-xs text-muted font-mono">
             <span>Full-Screen // Touch Swipes</span>
             <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
           </div>

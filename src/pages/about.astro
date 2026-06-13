@@ -10,7 +10,7 @@ import Layout from '../layouts/Layout.astro';
     <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-gradient-to-br from-indigo-500/5 to-primary/10 blur-[100px] -z-10 pointer-events-none"></div>
 
     <!-- Breadcrumbs / Navigation -->
-    <nav class="font-mono text-xs text-muted flex items-center gap-2">
+    <nav class="font-mono text-sm text-muted flex items-center gap-2">
       <a href="/project-bletchley/" class="hover:text-primary hover:underline">Hub</a>
       <span>/</span>
       <span class="text-foreground">About</span>
@@ -21,7 +21,7 @@ import Layout from '../layouts/Layout.astro';
       <h1 class="text-3xl font-extrabold tracking-tight">
         About Project Bletchley
       </h1>
-      <p class="text-sm text-muted mt-2">
+      <p class="text-base text-muted mt-2">
         An exploration of agent-led software development, design prototyping, and visual experiments.
       </p>
     </header>
@@ -35,11 +35,11 @@ import Layout from '../layouts/Layout.astro';
             <span class="text-primary text-lg font-bold">🤖</span>
           </div>
           <div>
-            <h3 class="font-bold text-foreground text-sm">Antigravity</h3>
+            <h3 class="font-bold text-foreground text-base">Antigravity</h3>
             <p class="text-xs text-muted font-mono">Autonomous Coding Agent</p>
           </div>
         </div>
-        <p class="text-xs text-muted leading-relaxed">
+        <p class="text-sm text-muted leading-relaxed">
           Designed by the Google DeepMind team, Antigravity is a pair-programming assistant. In this workspace, Antigravity functions as the sole builder, managing file structures, configurations, and API integrations.
         </p>
       </div>
@@ -51,11 +51,11 @@ import Layout from '../layouts/Layout.astro';
             <span class="text-indigo-500 text-lg font-bold">🧑‍💻</span>
           </div>
           <div>
-            <h3 class="font-bold text-foreground text-sm">Lukas Erhardt</h3>
+            <h3 class="font-bold text-foreground text-base">Lukas Erhardt</h3>
             <p class="text-xs text-muted font-mono">Architect & Tinkerer</p>
           </div>
         </div>
-        <p class="text-xs text-muted leading-relaxed">
+        <p class="text-sm text-muted leading-relaxed">
           The directing human architect. Lukas defines the requirements, steers the visual aesthetics, decides on feature additions, and reviews code changes to ensure Bletchley remains a premium-grade environment.
         </p>
       </div>
@@ -64,19 +64,19 @@ import Layout from '../layouts/Layout.astro';
     <!-- Name Origin: Why Bletchley? -->
     <section class="border border-border bg-card p-6 rounded-xl space-y-4 shadow-sm">
       <h2 class="text-lg font-bold text-foreground">Why "Project Bletchley"?</h2>
-      <p class="text-xs text-muted leading-relaxed">
+      <p class="text-sm text-muted leading-relaxed">
         The project takes its name from <strong>Bletchley Park</strong>, the historic estate in Buckinghamshire that served as the principal center of Allied codebreaking during World War II. It was there that early pioneers of computer science—most famously Alan Turing—collaborated with electro-mechanical machinery like the Bombe and Colossus to decode ciphertexts and process information at speeds and scales never before possible.
       </p>
-      <p class="text-xs text-muted leading-relaxed">
+      <p class="text-sm text-muted leading-relaxed">
         This historical setting serves as a perfect metaphor for modern <strong>human-agent collaborative software development</strong>:
       </p>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 font-mono text-[11px] text-muted">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 font-mono text-xs text-muted">
         <div class="border border-border/40 p-3 rounded-lg bg-background/40">
-          <span class="block font-bold text-foreground mb-1 text-[10px] uppercase tracking-wider text-primary">The Decoding Loop</span>
+          <span class="block font-bold text-foreground mb-1 text-xs uppercase tracking-wider text-primary">The Decoding Loop</span>
           Bletchley Park operated as a tight feedback loop where human analysts designed logic schemas and interpreted decrypted intelligence, while specialized machines processed the mechanical lifting.
         </div>
         <div class="border border-border/40 p-3 rounded-lg bg-background/40">
-          <span class="block font-bold text-foreground mb-1 text-[10px] uppercase tracking-wider text-primary">The Agent Pair-Programming Loop</span>
+          <span class="block font-bold text-foreground mb-1 text-xs uppercase tracking-wider text-primary">The Agent Pair-Programming Loop</span>
           Here, Lukas acts as the directing analyst establishing requirements, while Antigravity functions as the digital machine translating requests into working application modules.
         </div>
       </div>
@@ -85,10 +85,10 @@ import Layout from '../layouts/Layout.astro';
     <!-- Working Relation -->
     <section class="border border-border bg-card p-6 rounded-xl space-y-4 shadow-sm">
       <h2 class="text-lg font-bold text-foreground">Our Working Relationship</h2>
-      <p class="text-xs text-muted leading-relaxed">
+      <p class="text-sm text-muted leading-relaxed">
         Project Bletchley is built in an <strong>agent-first paradigm</strong>. Instead of traditional coding, Lukas interacts with Antigravity using natural language prompts. Antigravity takes these specifications, researches API documentation, writes layout code, integrates design styles, runs build tests, and directly coordinates commits and branches.
       </p>
-      <p class="text-xs text-muted leading-relaxed">
+      <p class="text-sm text-muted leading-relaxed">
         The result is a fluid, rapid prototyping sandbox where the overhead of environment setup and library configuration is delegated to the AI, allowing the human developer to focus entirely on creative design, ideation, and feature selection.
       </p>
     </section>
@@ -96,7 +96,7 @@ import Layout from '../layouts/Layout.astro';
     <!-- Technical Pillars -->
     <section class="space-y-4">
       <h2 class="text-lg font-bold text-foreground">Technical Pillars</h2>
-      <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono text-muted">
+      <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm font-mono text-muted">
         <li class="flex items-start gap-2">
           <span class="text-primary">✔</span>
           <span>Astro Framework for ultra-fast static routing and modular page assets.</span>

@@ -10,7 +10,7 @@ import Layout from '../../layouts/Layout.astro';
     <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-gradient-to-br from-indigo-500/5 to-primary/10 blur-[100px] -z-10 pointer-events-none"></div>
 
     <!-- Navigation -->
-    <nav class="font-mono text-xs text-muted flex items-center gap-2">
+    <nav class="font-mono text-sm text-muted flex items-center gap-2">
       <a href="/project-bletchley/" class="hover:text-primary hover:underline">Hub</a>
       <span>/</span>
       <span class="text-foreground">Labs</span>
@@ -29,7 +29,7 @@ import Layout from '../../layouts/Layout.astro';
       <div class="flex gap-2">
         <button
           id="fire-all-btn"
-          class="bg-primary text-white hover:bg-primary-hover text-xs font-mono px-4 py-2 rounded-md transition-colors cursor-pointer shadow-sm"
+          class="bg-primary text-white hover:bg-primary-hover text-sm font-mono px-4 py-2 rounded-md transition-colors cursor-pointer shadow-sm"
         >
           Pulse All Inputs
         </button>
@@ -42,14 +42,14 @@ import Layout from '../../layouts/Layout.astro';
       <!-- Left: Sidebar Controls -->
       <section class="lg:col-span-4 border border-border bg-card p-6 rounded-xl space-y-6 flex flex-col justify-between shadow-sm">
         <div class="space-y-6">
-          <h2 class="font-mono text-xs font-bold uppercase tracking-wider border-b border-border pb-2 text-foreground">
+          <h2 class="font-mono text-sm font-bold uppercase tracking-wider border-b border-border pb-2 text-foreground">
             Network Configuration
           </h2>
 
           <!-- Layer nodes configuration -->
           <div class="space-y-4">
             <div class="space-y-1">
-              <div class="flex justify-between text-xs font-mono">
+              <div class="flex justify-between text-sm font-mono">
                 <label for="hidden-nodes-count" class="uppercase tracking-wider text-muted">Hidden Nodes</label>
                 <span id="hidden-nodes-val" class="font-bold text-foreground">4</span>
               </div>
@@ -66,7 +66,7 @@ import Layout from '../../layouts/Layout.astro';
 
             <!-- Propagation Speed -->
             <div class="space-y-1">
-              <div class="flex justify-between text-xs font-mono">
+              <div class="flex justify-between text-sm font-mono">
                 <label for="signal-speed" class="uppercase tracking-wider text-muted">Impulse Speed</label>
                 <span id="speed-val" class="font-bold text-foreground">Medium</span>
               </div>
@@ -84,24 +84,24 @@ import Layout from '../../layouts/Layout.astro';
 
           <!-- Activation Function dropdown -->
           <div class="space-y-2 border-t border-border pt-4">
-            <label for="activation-select" class="block font-mono text-xs uppercase tracking-wider text-muted">
+            <label for="activation-select" class="block font-mono text-sm uppercase tracking-wider text-muted">
               Activation Function
             </label>
             <select
               id="activation-select"
-              class="w-full bg-background border border-border text-foreground px-3 py-2 text-xs font-mono rounded-md focus:border-primary outline-none"
+              class="w-full bg-background border border-border text-foreground px-3 py-2 text-sm font-mono rounded-md focus:border-primary outline-none"
             >
               <option value="relu">ReLU (Rectified Linear Unit)</option>
               <option value="sigmoid">Sigmoid</option>
               <option value="tanh">Hyperbolic Tangent (Tanh)</option>
             </select>
-            <p id="activation-formula" class="font-mono text-[9px] text-muted italic mt-1">
+            <p id="activation-formula" class="font-mono text-xs text-muted italic mt-1">
               f(x) = max(0, x)
             </p>
           </div>
 
           <!-- Synapse Status -->
-          <div class="space-y-2 border-t border-border pt-4 font-mono text-[10px] text-muted">
+          <div class="space-y-2 border-t border-border pt-4 font-mono text-xs text-muted">
             <span class="block uppercase tracking-wider text-foreground font-semibold">Active Metrics</span>
             <div class="space-y-1">
               <div class="flex justify-between">
@@ -124,14 +124,14 @@ import Layout from '../../layouts/Layout.astro';
           </div>
         </div>
 
-        <div class="font-mono text-[9px] text-muted border-t border-border pt-4 leading-relaxed">
+        <div class="font-mono text-xs text-muted border-t border-border pt-4 leading-relaxed">
           Click on any input node on the far left of the canvas to trigger an isolated neural impulse.
         </div>
       </section>
 
       <!-- Right: Interactive Canvas -->
       <section class="lg:col-span-8 border border-border bg-card rounded-xl overflow-hidden shadow-sm flex flex-col items-stretch min-h-[400px]">
-        <div class="border-b border-border bg-background px-4 py-2 font-mono text-[10px] text-muted flex items-center justify-between">
+        <div class="border-b border-border bg-background px-4 py-2 font-mono text-xs text-muted flex items-center justify-between">
           <span>Neural Visualizer Canvas</span>
           <span class="text-primary uppercase tracking-widest font-bold">Feedforward Graph</span>
         </div>
@@ -148,8 +148,8 @@ import Layout from '../../layouts/Layout.astro';
           </svg>
         </div>
 
-        <div class="border-t border-border bg-background px-4 py-2.5 font-mono text-[10px] text-muted">
-          Active pulses: <span id="pulse-count" class="text-foreground">0</span> // Click node boundary to fire.
+        <div class="border-t border-border bg-background px-4 py-2.5 font-mono text-xs text-muted">
+          Active pulses: <span id="pulse-count" class="text-foreground font-bold">0</span> // Click node boundary to fire.
         </div>
       </section>
 
