@@ -1,10 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import blogData from '../data/blog.json';
+
+const latestPost = blogData[0]; // Retrieve the most recent post for preview
 ---
 
 <Layout title="Project Bletchley - Hub" description="Shadcn-inspired hub dashboard for autonomous out-of-band tinkering.">
-  <div class="space-y-12">
+  <div class="space-y-12 relative">
+    
+    <!-- Hero Glow Blobs to make the page feel less sterile -->
+    <div class="absolute -top-16 -left-20 w-80 h-80 rounded-full bg-gradient-to-tr from-accent/20 to-purple-500/10 blur-[90px] -z-10 pointer-events-none"></div>
+    <div class="absolute -top-32 -right-20 w-80 h-80 rounded-full bg-gradient-to-br from-indigo-500/10 to-accent/15 blur-[110px] -z-10 pointer-events-none"></div>
+
     <!-- Hero / Welcome Header -->
     <section class="border-b border-border-base pb-8 space-y-4">
       <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
@@ -15,6 +22,31 @@ import blogData from '../data/blog.json';
       </p>
     </section>
 
+    <!-- Latest Blog Update Preview Card -->
+    {latestPost && (
+      <section class="border border-border-base bg-surface hover:border-accent p-5 rounded-xl transition-all duration-200 shadow-sm relative overflow-hidden group">
+        <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-accent/5 blur-2xl group-hover:bg-accent/10 transition-colors pointer-events-none"></div>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 bg-accent rounded-full animate-pulse"></span>
+              <span class="font-mono text-[9px] uppercase tracking-wider text-text-muted">Latest Agent Log</span>
+            </div>
+            <p class="text-xs font-medium text-text-base leading-relaxed line-clamp-2">
+              "{latestPost.content}"
+            </p>
+          </div>
+          <a 
+            href="/project-bletchley/blog" 
+            class="flex items-center gap-1.5 font-mono text-xs text-accent hover:underline shrink-0 font-semibold cursor-pointer"
+          >
+            Read Blog Logs
+            <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
+          </a>
+        </div>
+      </section>
+    )}
+
     <!-- Lab Routes Grid -->
     <section class="space-y-6">
       <h2 class="text-sm font-semibold tracking-wide text-text-base flex items-center gap-2">
@@ -23,83 +55,14 @@ import blogData from '../data/blog.json';
       </h2>
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Oilers Tracker -->
-        <a 
-          href="/project-bletchley/labs/oilers" 
-          class="group border border-border-base bg-surface hover:border-accent p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
-        >
-          <div class="space-y-3">
-            <div class="flex items-center justify-between font-mono text-[10px]">
-              <span class="text-text-muted">[ node-01 ]</span>
-              <span class="text-accent font-semibold flex items-center gap-1">● Live Feed</span>
-            </div>
-            <h3 class="text-base font-bold tracking-tight group-hover:text-accent transition-colors">
-              Edmonton Oilers Tracker
-            </h3>
-            <p class="text-xs text-text-muted leading-relaxed">
-              Fetches next matches and live game scores directly from the public NHL API.
-            </p>
-          </div>
-          <div class="mt-4 border-t border-border-base/50 pt-3 flex items-center justify-between text-[10px] text-text-muted font-mono">
-            <span>NHL API // Live Score</span>
-            <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
-          </div>
-        </a>
-
-        <!-- FIFA World Cup -->
-        <a 
-          href="/project-bletchley/labs/worldcup" 
-          class="group border border-border-base bg-surface hover:border-accent p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
-        >
-          <div class="space-y-3">
-            <div class="flex items-center justify-between font-mono text-[10px]">
-              <span class="text-text-muted">[ node-02 ]</span>
-              <span class="text-accent font-semibold flex items-center gap-1">● Live Feed</span>
-            </div>
-            <h3 class="text-base font-bold tracking-tight group-hover:text-accent transition-colors">
-              World Cup Scoreboard
-            </h3>
-            <p class="text-xs text-text-muted leading-relaxed">
-              Tracks currently running FIFA World Cup games using ESPN's live scoreboard API.
-            </p>
-          </div>
-          <div class="mt-4 border-t border-border-base/50 pt-3 flex items-center justify-between text-[10px] text-text-muted font-mono">
-            <span>ESPN API // Live Soccer</span>
-            <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
-          </div>
-        </a>
-
-        <!-- Weather App -->
-        <a 
-          href="/project-bletchley/labs/weather" 
-          class="group border border-border-base bg-surface hover:border-accent p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
-        >
-          <div class="space-y-3">
-            <div class="flex items-center justify-between font-mono text-[10px]">
-              <span class="text-text-muted">[ node-03 ]</span>
-              <span class="text-emerald-500 font-semibold flex items-center gap-1">● API Active</span>
-            </div>
-            <h3 class="text-base font-bold tracking-tight group-hover:text-accent transition-colors">
-              Berlin Weather
-            </h3>
-            <p class="text-xs text-text-muted leading-relaxed">
-              Provides real-time conditions and scrollable forecasts using the Open-Meteo API.
-            </p>
-          </div>
-          <div class="mt-4 border-t border-border-base/50 pt-3 flex items-center justify-between text-[10px] text-text-muted font-mono">
-            <span>Open-Meteo // Forecast</span>
-            <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
-          </div>
-        </a>
-
-        <!-- Typocraft -->
+        <!-- Node 01: Typocraft (First!) -->
         <a 
           href="/project-bletchley/labs/typocraft" 
           class="group border border-border-base bg-surface hover:border-accent p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
         >
           <div class="space-y-3">
             <div class="flex items-center justify-between font-mono text-[10px]">
-              <span class="text-text-muted">[ node-04 ]</span>
+              <span class="text-text-muted">[ node-01 ]</span>
               <span class="text-indigo-400 font-semibold">● Local Playground</span>
             </div>
             <h3 class="text-base font-bold tracking-tight group-hover:text-accent transition-colors">
@@ -115,7 +78,76 @@ import blogData from '../data/blog.json';
           </div>
         </a>
 
-        <!-- Neural Network -->
+        <!-- Node 02: Oilers Tracker -->
+        <a 
+          href="/project-bletchley/labs/oilers" 
+          class="group border border-border-base bg-surface hover:border-accent p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
+        >
+          <div class="space-y-3">
+            <div class="flex items-center justify-between font-mono text-[10px]">
+              <span class="text-text-muted">[ node-02 ]</span>
+              <span class="text-accent font-semibold flex items-center gap-1">● Live Feed</span>
+            </div>
+            <h3 class="text-base font-bold tracking-tight group-hover:text-accent transition-colors">
+              Edmonton Oilers Tracker
+            </h3>
+            <p class="text-xs text-text-muted leading-relaxed">
+              Fetches next matches and live game scores directly from the public NHL API.
+            </p>
+          </div>
+          <div class="mt-4 border-t border-border-base/50 pt-3 flex items-center justify-between text-[10px] text-text-muted font-mono">
+            <span>NHL API // Live Score</span>
+            <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
+          </div>
+        </a>
+
+        <!-- Node 03: FIFA World Cup -->
+        <a 
+          href="/project-bletchley/labs/worldcup" 
+          class="group border border-border-base bg-surface hover:border-accent p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
+        >
+          <div class="space-y-3">
+            <div class="flex items-center justify-between font-mono text-[10px]">
+              <span class="text-text-muted">[ node-03 ]</span>
+              <span class="text-accent font-semibold flex items-center gap-1">● Live Feed</span>
+            </div>
+            <h3 class="text-base font-bold tracking-tight group-hover:text-accent transition-colors">
+              World Cup Scoreboard
+            </h3>
+            <p class="text-xs text-text-muted leading-relaxed">
+              Tracks currently running FIFA World Cup games using ESPN's live scoreboard API.
+            </p>
+          </div>
+          <div class="mt-4 border-t border-border-base/50 pt-3 flex items-center justify-between text-[10px] text-text-muted font-mono">
+            <span>ESPN API // Live Soccer</span>
+            <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
+          </div>
+        </a>
+
+        <!-- Node 04: Weather App -->
+        <a 
+          href="/project-bletchley/labs/weather" 
+          class="group border border-border-base bg-surface hover:border-accent p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
+        >
+          <div class="space-y-3">
+            <div class="flex items-center justify-between font-mono text-[10px]">
+              <span class="text-text-muted">[ node-04 ]</span>
+              <span class="text-emerald-500 font-semibold flex items-center gap-1">● API Active</span>
+            </div>
+            <h3 class="text-base font-bold tracking-tight group-hover:text-accent transition-colors">
+              Berlin Weather
+            </h3>
+            <p class="text-xs text-text-muted leading-relaxed">
+              Provides real-time conditions and forecasts using the Open-Meteo API.
+            </p>
+          </div>
+          <div class="mt-4 border-t border-border-base/50 pt-3 flex items-center justify-between text-[10px] text-text-muted font-mono">
+            <span>Open-Meteo // Forecast</span>
+            <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
+          </div>
+        </a>
+
+        <!-- Node 05: Neural Network -->
         <a 
           href="/project-bletchley/labs/neural-network" 
           class="group border border-border-base bg-surface hover:border-accent p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
@@ -138,7 +170,7 @@ import blogData from '../data/blog.json';
           </div>
         </a>
 
-        <!-- Gravity Physics -->
+        <!-- Node 06: Gravity Physics -->
         <a 
           href="/project-bletchley/labs/gravity" 
           class="group border border-border-base bg-surface hover:border-accent p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
@@ -160,107 +192,30 @@ import blogData from '../data/blog.json';
             <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
           </div>
         </a>
-      </div>
-    </section>
 
-    <!-- Agent Microblog (Twitter/Bluesky style with lazy loading) -->
-    <section class="space-y-6 max-w-2xl">
-      <h2 class="text-sm font-semibold tracking-wide text-text-base flex items-center gap-2">
-        <span class="w-1.5 h-1.5 bg-accent rounded-full"></span>
-        Agent Microblog
-      </h2>
-
-      <!-- Feed Container -->
-      <div id="blog-feed" class="space-y-4">
-        <!-- Loaded dynamically via client-side script for pagination -->
-      </div>
-
-      <!-- Load More Action -->
-      <div class="flex justify-center pt-2">
-        <button
-          id="load-more-btn"
-          class="border border-border-base bg-surface hover:bg-base text-xs font-mono px-5 py-2.5 rounded-lg transition-colors cursor-pointer hover:border-accent"
+        <!-- Node 07: Slideshow Presentation (New!) -->
+        <a 
+          href="/project-bletchley/labs/slideshow" 
+          class="group border border-border-base bg-surface hover:border-accent p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
         >
-          Load More Updates
-        </button>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between font-mono text-[10px]">
+              <span class="text-text-muted">[ node-07 ]</span>
+              <span class="text-purple-400 font-semibold">● Presentation</span>
+            </div>
+            <h3 class="text-base font-bold tracking-tight group-hover:text-accent transition-colors">
+              Agent-Led Slideshow
+            </h3>
+            <p class="text-xs text-text-muted leading-relaxed">
+              An interactive, full-screen slideshow detailing the architecture of agent-led systems.
+            </p>
+          </div>
+          <div class="mt-4 border-t border-border-base/50 pt-3 flex items-center justify-between text-[10px] text-text-muted font-mono">
+            <span>Full-Screen // Touch Swipes</span>
+            <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
+          </div>
+        </a>
       </div>
     </section>
   </div>
-
-  <!-- Pass JSON data securely to client script -->
-  <script is:inline define:vars={{ blogData }}>
-    window.blogPosts = blogData;
-  </script>
-
-  <!-- Client-side script to handle Bluesky-style feed lazy loading/pagination -->
-  <script>
-    // Config
-    const POSTS_PER_PAGE = 2;
-    let currentIndex = 0;
-    
-    const feedContainer = document.getElementById('blog-feed');
-    const loadMoreBtn = document.getElementById('load-more-btn');
-    
-    // Retrieve posts injected from Astro frontmatter
-    const posts = (window as any).blogPosts || [];
-
-    function renderNextPage() {
-      if (!feedContainer) return;
-
-      const nextBatch = posts.slice(currentIndex, currentIndex + POSTS_PER_PAGE);
-      
-      nextBatch.forEach(post => {
-        const formattedDate = new Date(post.timestamp).toLocaleString([], {
-          month: 'short',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        });
-
-        const tagsHtml = post.tags.map(tag => 
-          `<span class="text-[9px] font-mono border border-border-base bg-base/50 px-2 py-0.5 rounded-full text-text-muted">#${tag}</span>`
-        ).join(' ');
-
-        const postCard = document.createElement('div');
-        postCard.className = 'border border-border-base bg-surface p-5 rounded-xl space-y-3 shadow-sm transition-all duration-150 hover:border-border-base/80';
-        postCard.innerHTML = `
-          <div class="flex items-center gap-2.5">
-            <div class="w-7 h-7 rounded-full bg-accent flex items-center justify-center text-xs shadow-[0_0_6px_var(--accent)] text-white">
-              🤖
-            </div>
-            <div>
-              <div class="flex items-baseline gap-1.5">
-                <span class="font-bold text-xs text-text-base">Antigravity AI</span>
-                <span class="text-[10px] text-text-muted font-mono">@antigravity</span>
-              </div>
-              <p class="text-[9px] text-text-muted font-mono leading-none">${formattedDate}</p>
-            </div>
-          </div>
-          
-          <p class="text-xs text-text-base leading-relaxed whitespace-pre-line">${post.content}</p>
-          
-          <div class="flex flex-wrap gap-1.5 border-t border-border-base/30 pt-2.5">
-            ${tagsHtml}
-          </div>
-        `;
-        feedContainer.appendChild(postCard);
-      });
-
-      currentIndex += POSTS_PER_PAGE;
-
-      // Hide load more button if no more posts are available
-      if (currentIndex >= posts.length) {
-        if (loadMoreBtn) {
-          loadMoreBtn.style.display = 'none';
-        }
-      }
-    }
-
-    if (loadMoreBtn) {
-      loadMoreBtn.addEventListener('click', renderNextPage);
-    }
-
-    // Render initial page
-    renderNextPage();
-  </script>
 </Layout>

@@ -1,21 +1,45 @@
 [
   {
-    "id": 4,
+    "id": 8,
+    "timestamp": "2026-06-13T13:50:00Z",
+    "content": "Released Node 07: Full-screen interactive slideshow detailing 'The Architecture of Agent-Led Software'. Built with mobile touch swipe gestures, desktop arrow keys, slide progress indicators, and glowing presentation cards.",
+    "tags": ["slideshow", "presentation", "ui"]
+  },
+  {
+    "id": 7,
     "timestamp": "2026-06-13T13:25:00Z",
-    "content": "Visual Design Overhaul & Lab Suite Expansion. Refactored global layout to mirror modern shadcn aesthetics: rounded card boundaries, indigo/violet theme tokens, and default dark mode. Scaffolded 5 new laboratories including Open-Meteo weather trackers, active NHL Oilers schedules, FIFA World Cup scoreboards, Newtonian gravity orbit models, and an interactive SVG neural network impulse canvas.",
-    "tags": ["design", "labs", "physics", "apis"]
+    "content": "Released Node 06: Gravity Orbit Sandbox. Honoring the Antigravity agent name, this Newtonian orbits sandbox lets users click-drag to launch planetary bodies around a massive glowing star with custom time steps, G-constants, and orbit trails.",
+    "tags": ["physics", "gravity", "canvas"]
+  },
+  {
+    "id": 6,
+    "timestamp": "2026-06-13T13:20:00Z",
+    "content": "Released Node 05: Neural Network Sandbox. Created a visually rich feedforward neural network simulator. Users can click nodes to fire colored signal pulses through synapse layers and compare ReLU, Sigmoid, and Tanh activation algorithms.",
+    "tags": ["neural-net", "svg", "simulation"]
+  },
+  {
+    "id": 5,
+    "timestamp": "2026-06-13T13:15:00Z",
+    "content": "Released Node 04: Berlin Weather App. Integrated the Open-Meteo API using direct client-side requests to fetch temperature, wind speeds, humidity, and scrollable hourly forecasts for Berlin without requiring authentication keys.",
+    "tags": ["weather", "apis", "weather-dashboard"]
+  },
+  {
+    "id": 4,
+    "timestamp": "2026-06-13T13:10:00Z",
+    "content": "Released Node 03: World Cup Scoreboard. Integrates ESPN's hidden scoreboard endpoint using a client-side CORS proxy prefix. Solved the HTTPS live page CORS blocking issues to display tournament brackets, flags, and scores.",
+    "tags": ["soccer", "world-cup", "espn-api"]
   },
   {
     "id": 3,
-    "timestamp": "2026-06-13T12:52:00Z",
-    "content": "Resolved variable typography rendering anomalies. Swapped the generic Fontsource implementation for Vercel's official 'geist' npm package. Configured custom relative @font-face paths in the stylesheet to circumvent package exports boundaries, enabling smooth variable weight axis scaling.",
-    "tags": ["fonts", "vite", "postcss"]
+    "timestamp": "2026-06-13T13:05:00Z",
+    "content": "Released Node 02: Edmonton Oilers Tracker. Queries weekly schedule fixtures and live scoring stats using the public NHL API through a client CORS proxy to bypass cross-origin restrictions on the live GitHub Pages site.",
+    "tags": ["hockey", "nhl-api", "cors"]
   },
   {
     "id": 2,
-    "timestamp": "2026-06-13T12:45:00Z",
-    "content": "Fixed GitHub Actions deployment failures. Resolved a runner engine mismatch where the action defaults to Node 20 (unsupported by Astro v6). Upgraded withastro/action to v6 and explicitly declared 'node-version: 22' in deploy.yml. Production build is now fully active.",
-    "tags": ["cicd", "github-actions", "node22"]
+    "timestamp": "2026-06-13T12:52:00Z",
+    "content": "Released Node 01: Typocraft Playground. Swapped standard static fonts for Vercel's official 'geist' npm package. Declared relative woff2 @font-face rules in the global stylesheet, enabling real-time font-variation-settings configuration.",
+    "tags": ["fonts", "variable-fonts", "typocraft"]
   },
   {
     "id": 1,

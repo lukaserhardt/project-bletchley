@@ -13,7 +13,7 @@ const { title = 'Project Bletchley', description = 'Autonomous Tinkering & Exper
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
@@ -25,7 +25,7 @@ const { title = 'Project Bletchley', description = 'Autonomous Tinkering & Exper
         if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
           return localStorage.getItem('theme');
         }
-        return 'dark'; // Dark mode is now default
+        return 'dark'; // Dark mode is default
       };
       
       const theme = getTheme();
@@ -38,25 +38,29 @@ const { title = 'Project Bletchley', description = 'Autonomous Tinkering & Exper
   </head>
   <body class="bg-base text-base min-h-screen flex flex-col font-sans selection:bg-accent selection:text-white">
     
-    <div class="flex-grow flex flex-col max-w-5xl w-full mx-auto px-4 sm:px-6 md:px-8 border-x border-border-base">
+    <div class="flex-grow flex flex-col max-w-5xl w-full mx-auto px-4 sm:px-6 md:px-8 border-x border-border-base relative">
       
-      <!-- Header -->
-      <header class="border-b border-border-base py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <!-- Sticky Header -->
+      <header class="sticky top-0 z-40 bg-base/80 backdrop-blur-md border-b border-border-base py-4 flex items-center justify-between gap-4 -mx-4 sm:-mx-6 md:-mx-8 px-4 sm:px-6 md:px-8">
         <div>
           <div class="flex items-center gap-2.5">
             <span class="w-2 h-2 bg-accent rounded-full shadow-[0_0_8px_var(--accent)]"></span>
-            <a href="/project-bletchley/" class="text-lg font-bold tracking-tight hover:text-accent transition-colors">
+            <a href="/project-bletchley/" class="text-base font-bold tracking-tight hover:text-accent transition-colors">
               Project Bletchley
             </a>
           </div>
-          <p class="text-[11px] text-text-muted font-mono mt-0.5">
+          <p class="text-[10px] text-text-muted font-mono mt-0.5">
             Autonomous Tinkering Node & Sandbox
           </p>
         </div>
         
-        <nav class="flex items-center gap-5 font-mono text-xs">
+        <!-- Desktop Nav -->
+        <nav class="hidden md:flex items-center gap-5 font-mono text-xs">
           <a href="/project-bletchley/" class="hover:text-accent hover:underline decoration-2 underline-offset-4 transition-colors">
             Hub
+          </a>
+          <a href="/project-bletchley/blog" class="hover:text-accent hover:underline decoration-2 underline-offset-4 transition-colors">
+            Blog
           </a>
           <a href="/project-bletchley/about" class="hover:text-accent hover:underline decoration-2 underline-offset-4 transition-colors">
             About
@@ -72,7 +76,54 @@ const { title = 'Project Bletchley', description = 'Autonomous Tinkering & Exper
             <span class="theme-label text-[10px] uppercase tracking-wider font-semibold">Theme</span>
           </button>
         </nav>
+
+        <!-- Mobile Hamburger Button -->
+        <button 
+          id="mobile-menu-btn" 
+          class="md:hidden p-2 text-text-base hover:text-accent focus:outline-none cursor-pointer rounded-md border border-border-base bg-surface" 
+          aria-label="Open menu"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
       </header>
+
+      <!-- Off-Canvas Drawer (Mobile) -->
+      <div id="drawer-backdrop" class="fixed inset-0 bg-black/60 z-40 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+      
+      <div 
+        id="mobile-drawer" 
+        class="fixed inset-y-0 right-0 w-64 bg-surface border-l border-border-base z-50 p-6 transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl flex flex-col justify-between"
+      >
+        <div class="space-y-8">
+          <div class="flex items-center justify-between border-b border-border-base pb-4">
+            <span class="font-bold text-sm tracking-tight">Navigation</span>
+            <button 
+              id="mobile-drawer-close" 
+              class="p-1 text-text-muted hover:text-text-base cursor-pointer font-mono text-xs border border-border-base rounded-md px-2 py-0.5 bg-base" 
+              aria-label="Close menu"
+            >
+              Close ✕
+            </button>
+          </div>
+          <nav class="flex flex-col gap-4 font-mono text-xs uppercase tracking-wider">
+            <a href="/project-bletchley/" class="hover:text-accent py-2 transition-colors border-b border-border-base/30">Hub</a>
+            <a href="/project-bletchley/blog" class="hover:text-accent py-2 transition-colors border-b border-border-base/30">Blog</a>
+            <a href="/project-bletchley/about" class="hover:text-accent py-2 transition-colors border-b border-border-base/30">About</a>
+          </nav>
+        </div>
+        
+        <div class="pt-6 border-t border-border-base">
+          <button
+            id="theme-toggle-mobile"
+            class="w-full border border-border-base bg-base hover:bg-surface text-text-base px-3 py-2 rounded-md flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:border-accent"
+          >
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-accent theme-dot"></span>
+            <span class="theme-label-mobile text-[10px] uppercase tracking-wider font-semibold">Theme</span>
+          </button>
+        </div>
+      </div>
 
       <!-- Main Content -->
       <main class="flex-grow py-8 md:py-10 flex flex-col">
@@ -94,12 +145,40 @@ const { title = 'Project Bletchley', description = 'Autonomous Tinkering & Exper
       </footer>
     </div>
 
-    <!-- Theme Switcher Logic Script -->
+    <!-- Script powering drawer, layout menus and theme switcher -->
     <script>
-      const toggle = document.getElementById('theme-toggle');
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileDrawer = document.getElementById('mobile-drawer');
+      const drawerBackdrop = document.getElementById('drawer-backdrop');
+      const mobileDrawerClose = document.getElementById('mobile-drawer-close');
+
+      function openDrawer() {
+        mobileDrawer?.classList.remove('translate-x-full');
+        drawerBackdrop?.classList.remove('opacity-0', 'pointer-events-none');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeDrawer() {
+        mobileDrawer?.classList.add('translate-x-full');
+        drawerBackdrop?.classList.add('opacity-0', 'pointer-events-none');
+        document.body.style.overflow = '';
+      }
+
+      mobileMenuBtn?.addEventListener('click', openDrawer);
+      mobileDrawerClose?.addEventListener('click', closeDrawer);
+      drawerBackdrop?.addEventListener('click', closeDrawer);
+
+      // Close drawer on navigation links click (in case of anchor navigation)
+      const navLinks = mobileDrawer?.querySelectorAll('a');
+      navLinks?.forEach(link => {
+        link.addEventListener('click', closeDrawer);
+      });
+
+      // Unified theme toggle logic
+      const themeButtons = document.querySelectorAll('#theme-toggle, #theme-toggle-mobile');
       
-      if (toggle) {
-        toggle.addEventListener('click', () => {
+      themeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
           const currentTheme = document.documentElement.getAttribute('data-theme');
           const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
           
@@ -108,10 +187,10 @@ const { title = 'Project Bletchley', description = 'Autonomous Tinkering & Exper
           
           updateThemeUI(nextTheme);
         });
-      }
+      });
 
       function updateThemeUI(theme: string) {
-        const labels = document.querySelectorAll('.theme-label');
+        const labels = document.querySelectorAll('.theme-label, .theme-label-mobile');
         labels.forEach(label => {
           label.textContent = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
         });

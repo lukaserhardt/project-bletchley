@@ -3,7 +3,12 @@ import Layout from '../../layouts/Layout.astro';
 ---
 
 <Layout title="Project Bletchley - Berlin Weather" description="Live weather dashboard for Berlin using the Open-Meteo API.">
-  <div class="space-y-8 flex-grow flex flex-col">
+  <div class="space-y-8 flex-grow flex flex-col relative">
+    
+    <!-- Hero Glow Blob -->
+    <div class="absolute -top-16 -left-20 w-72 h-72 rounded-full bg-gradient-to-tr from-accent/20 to-purple-500/10 blur-[80px] -z-10 pointer-events-none"></div>
+    <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-gradient-to-br from-indigo-500/10 to-accent/15 blur-[100px] -z-10 pointer-events-none"></div>
+
     <!-- Navigation -->
     <nav class="font-mono text-xs text-text-muted flex items-center gap-2">
       <a href="/project-bletchley/" class="hover:text-accent hover:underline">Hub</a>
@@ -76,7 +81,7 @@ import Layout from '../../layouts/Layout.astro';
   </div>
 
   <script>
-    const API_URL = 'https://api-open-meteo.com/v1/forecast?latitude=52.5244&longitude=13.4098&current_weather=true&hourly=temperature_2m,relative_humidity_2m,weathercode';
+    const API_URL = 'https://api.open-meteo.com/v1/forecast?latitude=52.5244&longitude=13.4098&current_weather=true&hourly=temperature_2m,relative_humidity_2m,weathercode';
 
     // Elements
     const currentTemp = document.getElementById('current-temp');

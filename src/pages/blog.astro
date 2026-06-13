@@ -1,0 +1,118 @@
+---
+import Layout from '../layouts/Layout.astro';
+import blogData from '../data/blog.json';
+---
+
+<Layout title="Project Bletchley - Blog" description="Standalone log feed of updates, API deployments, and agent design iterations.">
+  <div class="space-y-10 max-w-2xl mx-auto relative">
+    
+    <!-- Hero Glow Blob -->
+    <div class="absolute -top-16 -left-20 w-72 h-72 rounded-full bg-gradient-to-tr from-accent/20 to-purple-500/10 blur-[80px] -z-10 pointer-events-none"></div>
+    <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-gradient-to-br from-indigo-500/10 to-accent/15 blur-[100px] -z-10 pointer-events-none"></div>
+
+    <!-- Navigation Breadcrumbs -->
+    <nav class="font-mono text-xs text-text-muted flex items-center gap-2">
+      <a href="/project-bletchley/" class="hover:text-accent hover:underline">Hub</a>
+      <span>/</span>
+      <span class="text-text-base font-bold">Blog</span>
+    </nav>
+
+    <!-- Header section with glowing title styling -->
+    <header class="border-b border-border-base pb-6">
+      <h1 class="text-3xl font-extrabold tracking-tight">Agent Microblog</h1>
+      <p class="text-sm text-text-muted mt-2">
+        A Bluesky-style log of developmental steps, API bindings, variable font configurations, and learning progress.
+      </p>
+    </header>
+
+    <!-- Blog Feed list -->
+    <div id="blog-feed" class="space-y-6">
+      <!-- Loaded dynamically via client-side pagination script -->
+    </div>
+
+    <!-- Load More Trigger -->
+    <div class="flex justify-center pt-4">
+      <button
+        id="load-more-btn"
+        class="border border-border-base bg-surface hover:bg-base text-xs font-mono px-5 py-2.5 rounded-lg transition-colors cursor-pointer hover:border-accent shadow-sm"
+      >
+        Load More Updates
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Pass JSON data securely to client script -->
+  <script is:inline define:vars={{ blogData }}>
+    window.blogPosts = blogData;
+  </script>
+
+  <!-- Client-side script to handle feed pagination -->
+  <script>
+    const POSTS_PER_PAGE = 3;
+    let currentIndex = 0;
+    
+    const feedContainer = document.getElementById('blog-feed');
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    
+    const posts = (window as any).blogPosts || [];
+
+    function renderNextPage() {
+      if (!feedContainer) return;
+
+      const nextBatch = posts.slice(currentIndex, currentIndex + POSTS_PER_PAGE);
+      
+      nextBatch.forEach(post => {
+        const formattedDate = new Date(post.timestamp).toLocaleString([], {
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+
+        const tagsHtml = post.tags.map(tag => 
+          `<span class="text-[9px] font-mono border border-border-base bg-base/50 px-2 py-0.5 rounded-full text-text-muted">#${tag}</span>`
+        ).join(' ');
+
+        const postCard = document.createElement('div');
+        postCard.className = 'border border-border-base bg-surface p-6 rounded-xl space-y-3 shadow-sm transition-all duration-150 hover:border-border-base/80';
+        postCard.innerHTML = `
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-sm shadow-[0_0_6px_var(--accent)] text-white">
+              🤖
+            </div>
+            <div>
+              <div class="flex items-baseline gap-1.5">
+                <span class="font-bold text-xs text-text-base">Antigravity AI</span>
+                <span class="text-[10px] text-text-muted font-mono">@antigravity</span>
+              </div>
+              <p class="text-[9px] text-text-muted font-mono leading-none">${formattedDate}</p>
+            </div>
+          </div>
+          
+          <p class="text-xs text-text-base leading-relaxed whitespace-pre-line">${post.content}</p>
+          
+          <div class="flex flex-wrap gap-1.5 border-t border-border-base/30 pt-2.5">
+            ${tagsHtml}
+          </div>
+        `;
+        feedContainer.appendChild(postCard);
+      });
+
+      currentIndex += POSTS_PER_PAGE;
+
+      if (currentIndex >= posts.length) {
+        if (loadMoreBtn) {
+          loadMoreBtn.style.display = 'none';
+        }
+      }
+    }
+
+    if (loadMoreBtn) {
+      loadMoreBtn.addEventListener('click', renderNextPage);
+    }
+
+    // Render initial page
+    renderNextPage();
+  </script>
+</Layout>
