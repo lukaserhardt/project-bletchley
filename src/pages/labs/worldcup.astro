@@ -1,0 +1,326 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Project Bletchley - World Cup Tracker" description="Live scores and schedule for the FIFA World Cup.">
+  <div class="space-y-8 flex-grow flex flex-col">
+    <!-- Navigation -->
+    <nav class="font-mono text-xs text-text-muted flex items-center gap-2">
+      <a href="/project-bletchley/" class="hover:text-accent hover:underline">Hub</a>
+      <span>/</span>
+      <span class="text-text-base">Labs</span>
+      <span>/</span>
+      <span class="text-text-base font-bold">World Cup Tracker</span>
+    </nav>
+
+    <!-- Header -->
+    <header class="border-b border-border-base pb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h1 class="text-3xl font-extrabold tracking-tight">World Cup Tracker</h1>
+        <p class="text-sm text-text-muted mt-2">
+          Real-time tournament updates, groups, live scores, and schedules from the FIFA World Cup.
+        </p>
+      </div>
+      <button
+        id="demo-toggle"
+        class="border border-border-base bg-surface hover:bg-base text-xs font-mono px-3 py-1.5 rounded-md transition-colors cursor-pointer hover:border-accent"
+      >
+        Simulate Live Match
+      </button>
+    </header>
+
+    <!-- Live Matches Section -->
+    <section class="space-y-4">
+      <h2 class="font-mono text-xs font-bold uppercase tracking-wider border-b border-border-base pb-2 text-text-base">
+        Live Scoreboard
+      </h2>
+      <div id="live-scoreboard" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Filled dynamically -->
+        <p class="text-text-muted text-xs font-mono py-4">Checking scoreboard...</p>
+      </div>
+    </section>
+
+    <!-- Calendar Section -->
+    <section class="space-y-4 flex-grow">
+      <h2 class="font-mono text-xs font-bold uppercase tracking-wider border-b border-border-base pb-2 text-text-base">
+        Tournament Schedule
+      </h2>
+      <div class="border border-border-base bg-surface rounded-xl overflow-hidden shadow-sm">
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs font-mono text-left">
+            <thead class="bg-base border-b border-border-base text-text-muted">
+              <tr>
+                <th class="p-4">Match</th>
+                <th class="p-4">Status</th>
+                <th class="p-4">Score</th>
+                <th class="p-4 text-right">Kickoff</th>
+              </tr>
+            </thead>
+            <tbody id="schedule-table-body" class="divide-y divide-border-base text-text-base">
+              <tr>
+                <td colspan="4" class="p-8 text-center text-text-muted">Fetching tournament fixtures...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    const API_URL = 'https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard';
+
+    const liveScoreboard = document.getElementById('live-scoreboard');
+    const scheduleTableBody = document.getElementById('schedule-table-body');
+    const demoToggle = document.getElementById('demo-toggle');
+
+    let demoMode = false;
+    let originalData = null;
+
+    async function fetchWorldCupData() {
+      try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error('API failed');
+        const data = await response.json();
+        originalData = data;
+        renderData(data);
+      } catch (err) {
+        console.error(err);
+        renderFallback();
+      }
+    }
+
+    function renderData(data) {
+      if (demoMode) return;
+
+      const events = data.events || [];
+      if (events.length === 0) {
+        renderEmptyState();
+        return;
+      }
+
+      // Filter live and upcoming
+      const liveEvents = events.filter(e => e.status.type.state === 'in');
+      const otherEvents = events.filter(e => e.status.type.state !== 'in');
+
+      renderLive(liveEvents);
+      renderSchedule(events);
+    }
+
+    function renderLive(liveEvents) {
+      liveScoreboard.innerHTML = '';
+      
+      if (liveEvents.length === 0) {
+        liveScoreboard.innerHTML = `
+          <div class="border border-border-base bg-surface/30 p-6 rounded-xl text-center md:col-span-2 shadow-sm">
+            <p class="text-xs text-text-muted font-mono">No matches currently in progress. Tap 'Simulate Live Match' to see the active view.</p>
+          </div>
+        `;
+        return;
+      }
+
+      liveEvents.forEach(event => {
+        const homeTeam = event.competitors[0];
+        const awayTeam = event.competitors[1];
+        const period = event.status.period;
+        const clock = event.status.displayClock;
+
+        const matchCard = document.createElement('div');
+        matchCard.className = 'border border-border-base bg-surface p-6 rounded-xl flex flex-col justify-between shadow-sm relative overflow-hidden';
+        matchCard.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="font-mono text-[9px] bg-red-600/10 border border-red-500/20 text-red-500 px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold animate-pulse">● LIVE</span>
+            <span class="font-mono text-[10px] text-text-muted">${clock || '00:00'} - ${period}H</span>
+          </div>
+
+          <div class="flex items-center justify-between my-4 font-sans">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">${getTeamEmoji(homeTeam.team.name)}</span>
+              <span class="font-bold text-sm text-text-base">${homeTeam.team.displayName}</span>
+            </div>
+            <span class="font-mono text-2xl font-bold">${homeTeam.score}</span>
+          </div>
+
+          <div class="flex items-center justify-between font-sans">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">${getTeamEmoji(awayTeam.team.name)}</span>
+              <span class="font-bold text-sm text-text-base">${awayTeam.team.displayName}</span>
+            </div>
+            <span class="font-mono text-2xl font-bold">${awayTeam.score}</span>
+          </div>
+
+          <div class="border-t border-border-base pt-3 mt-4 flex items-center justify-between font-mono text-[9px] text-text-muted">
+            <span>Group Stage</span>
+            <span>Broadcast: ESPN / Fox</span>
+          </div>
+        `;
+        liveScoreboard.appendChild(matchCard);
+      });
+    }
+
+    function renderSchedule(events) {
+      scheduleTableBody.innerHTML = '';
+      
+      events.forEach(event => {
+        const homeTeam = event.competitors[0];
+        const awayTeam = event.competitors[1];
+        const state = event.status.type.state;
+        const score = state === 'pre' ? '- : -' : `${homeTeam.score} - ${awayTeam.score}`;
+        const gameDate = new Date(event.date).toLocaleDateString([], { month: 'short', day: 'numeric' });
+        const gameTime = new Date(event.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        const statusLabel = state === 'in' ? 'LIVE' : state === 'post' ? 'FINAL' : 'SCHEDULED';
+        const statusClass = state === 'in' ? 'text-red-500 font-bold' : 'text-text-muted';
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="p-4 flex items-center gap-3">
+            <span class="text-lg">${getTeamEmoji(homeTeam.team.name)}</span>
+            <span class="font-semibold">${homeTeam.team.displayName}</span>
+            <span class="text-text-muted mx-1">vs</span>
+            <span class="text-lg">${getTeamEmoji(awayTeam.team.name)}</span>
+            <span class="font-semibold">${awayTeam.team.displayName}</span>
+          </td>
+          <td class="p-4 font-semibold ${statusClass}">${statusLabel}</td>
+          <td class="p-4 font-bold">${score}</td>
+          <td class="p-4 text-right text-text-muted">${gameDate} at ${gameTime}</td>
+        `;
+        scheduleTableBody.appendChild(row);
+      });
+    }
+
+    function renderEmptyState() {
+      liveScoreboard.innerHTML = `
+        <div class="border border-border-base bg-surface/30 p-6 rounded-xl text-center md:col-span-2 shadow-sm">
+          <p class="text-xs text-text-muted font-mono">No matches scheduled today.</p>
+        </div>
+      `;
+      scheduleTableBody.innerHTML = `
+        <tr>
+          <td colspan="4" class="p-8 text-center text-text-muted">No scheduled tournament fixtures available for today.</td>
+        </tr>
+      `;
+    }
+
+    function renderFallback() {
+      // Fallback data
+      const mockData = {
+        events: [
+          {
+            date: new Date().toISOString(),
+            competitors: [
+              { team: { name: 'USA', displayName: 'United States' }, score: 1 },
+              { team: { name: 'England', displayName: 'England' }, score: 1 }
+            ],
+            status: { type: { state: 'pre' } }
+          },
+          {
+            date: new Date().toISOString(),
+            competitors: [
+              { team: { name: 'Germany', displayName: 'Germany' }, score: 2 },
+              { team: { name: 'Argentina', displayName: 'Argentina' }, score: 3 }
+            ],
+            status: { type: { state: 'post' } }
+          }
+        ]
+      };
+      renderData(mockData);
+    }
+
+    function getTeamEmoji(name) {
+      const nameLower = name.toLowerCase();
+      if (nameLower.includes('usa') || nameLower.includes('states')) return '🇺🇸';
+      if (nameLower.includes('england')) return '🏴󠁧󠁢󠁥󠁮󠁧󠁿';
+      if (nameLower.includes('germany')) return '🇩🇪';
+      if (nameLower.includes('argentina')) return '🇦🇷';
+      if (nameLower.includes('france')) return '🇫🇷';
+      if (nameLower.includes('mexico')) return '🇲🇽';
+      if (nameLower.includes('canada')) return '🇨🇦';
+      if (nameLower.includes('spain')) return '🇪🇸';
+      if (nameLower.includes('brazil')) return '🇧🇷';
+      if (nameLower.includes('italy')) return '🇮🇹';
+      return '⚽';
+    }
+
+    // Live Simulation Mode
+    demoToggle.addEventListener('click', () => {
+      demoMode = !demoMode;
+      
+      if (demoMode) {
+        demoToggle.textContent = "Exit Simulation";
+        demoToggle.classList.add('border-accent', 'text-accent');
+        
+        // Render simulated matches
+        liveScoreboard.innerHTML = `
+          <div class="border border-border-base bg-surface p-6 rounded-xl flex flex-col justify-between shadow-sm relative overflow-hidden">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-[9px] bg-red-600/10 border border-red-500/20 text-red-500 px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold animate-pulse">● LIVE</span>
+              <span class="font-mono text-[10px] text-text-muted">73' - 2nd Half</span>
+            </div>
+
+            <div class="flex items-center justify-between my-4 font-sans">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl">🇩🇪</span>
+                <span class="font-bold text-sm text-text-base">Germany</span>
+              </div>
+              <span class="font-mono text-2xl font-bold">2</span>
+            </div>
+
+            <div class="flex items-center justify-between font-sans">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl">🇦🇷</span>
+                <span class="font-bold text-sm text-text-base">Argentina</span>
+              </div>
+              <span class="font-mono text-2xl font-bold">1</span>
+            </div>
+
+            <div class="border-t border-border-base pt-3 mt-4 flex items-center justify-between font-mono text-[9px] text-text-muted">
+              <span>Group B</span>
+              <span>Broadcast: FOX / Telemundo</span>
+            </div>
+          </div>
+
+          <div class="border border-border-base bg-surface p-6 rounded-xl flex flex-col justify-between shadow-sm relative overflow-hidden">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-[9px] bg-red-600/10 border border-red-500/20 text-red-500 px-2 py-0.5 rounded-full uppercase tracking-wider font-semibold animate-pulse">● LIVE</span>
+              <span class="font-mono text-[10px] text-text-muted">12' - 1st Half</span>
+            </div>
+
+            <div class="flex items-center justify-between my-4 font-sans">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl">🇺🇸</span>
+                <span class="font-bold text-sm text-text-base">United States</span>
+              </div>
+              <span class="font-mono text-2xl font-bold">0</span>
+            </div>
+
+            <div class="flex items-center justify-between font-sans">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl">🇫🇷</span>
+                <span class="font-bold text-sm text-text-base">France</span>
+              </div>
+              <span class="font-mono text-2xl font-bold">0</span>
+            </div>
+
+            <div class="border-t border-border-base pt-3 mt-4 flex items-center justify-between font-mono text-[9px] text-text-muted">
+              <span>Group A</span>
+              <span>Broadcast: FOX / Telemundo</span>
+            </div>
+          </div>
+        `;
+      } else {
+        demoToggle.textContent = "Simulate Live Match";
+        demoToggle.classList.remove('border-accent', 'text-accent');
+        if (originalData) {
+          renderData(originalData);
+        } else {
+          fetchWorldCupData();
+        }
+      }
+    });
+
+    // Run
+    fetchWorldCupData();
+  </script>
+</Layout>

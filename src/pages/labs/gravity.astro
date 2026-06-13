@@ -1,0 +1,484 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Project Bletchley - Gravity Physics Sandbox" description="Interactive Newtonian gravity orbit simulation.">
+  <div class="space-y-8 flex-grow flex flex-col">
+    <!-- Navigation -->
+    <nav class="font-mono text-xs text-text-muted flex items-center gap-2">
+      <a href="/project-bletchley/" class="hover:text-accent hover:underline">Hub</a>
+      <span>/</span>
+      <span class="text-text-base">Labs</span>
+      <span>/</span>
+      <span class="text-text-base font-bold">Gravity Sandbox</span>
+    </nav>
+
+    <!-- Header -->
+    <header class="border-b border-border-base pb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <h1 class="text-3xl font-extrabold tracking-tight">Gravity Sandbox</h1>
+        <p class="text-sm text-text-muted mt-2">
+          An interactive Newtonian gravity simulation. Drag and release to launch planets into orbit around a massive star.
+        </p>
+      </div>
+      <div class="flex gap-2">
+        <button
+          id="clear-btn"
+          class="border border-border-base bg-surface hover:bg-base text-xs font-mono px-3 py-1.5 rounded-md transition-colors cursor-pointer hover:border-accent"
+        >
+          Clear Planets
+        </button>
+      </div>
+    </header>
+
+    <!-- Simulation workspace -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch flex-grow">
+      
+      <!-- Control Panel -->
+      <section class="lg:col-span-4 border border-border-base bg-surface p-6 rounded-xl space-y-6 flex flex-col justify-between shadow-sm">
+        <div class="space-y-6">
+          <h2 class="font-mono text-xs font-bold uppercase tracking-wider border-b border-border-base pb-2 text-text-base">
+            Simulation Parameters
+          </h2>
+
+          <div class="space-y-4">
+            <!-- Gravity Strength G -->
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs font-mono">
+                <label for="grav-g" class="uppercase tracking-wider text-text-muted">Gravity Constant (G)</label>
+                <span id="grav-g-val" class="font-bold">0.15</span>
+              </div>
+              <input
+                type="range"
+                id="grav-g"
+                min="0.01"
+                max="0.5"
+                value="0.15"
+                step="0.01"
+                class="w-full h-1 bg-border-base appearance-none cursor-pointer accent-accent"
+              />
+            </div>
+
+            <!-- Orbit Trail Length -->
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs font-mono">
+                <label for="trail-len" class="uppercase tracking-wider text-text-muted">Trail Length</label>
+                <span id="trail-len-val" class="font-bold">120 frames</span>
+              </div>
+              <input
+                type="range"
+                id="trail-len"
+                min="0"
+                max="300"
+                value="120"
+                step="10"
+                class="w-full h-1 bg-border-base appearance-none cursor-pointer accent-accent"
+              />
+            </div>
+
+            <!-- Time Step Speed -->
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs font-mono">
+                <label for="sim-speed" class="uppercase tracking-wider text-text-muted">Simulation Speed</label>
+                <span id="sim-speed-val" class="font-bold">1.0x</span>
+              </div>
+              <input
+                type="range"
+                id="sim-speed"
+                min="0.1"
+                max="2.0"
+                value="1.0"
+                step="0.1"
+                class="w-full h-1 bg-border-base appearance-none cursor-pointer accent-accent"
+              />
+            </div>
+          </div>
+
+          <!-- Presets -->
+          <div class="space-y-2 border-t border-border-base pt-4">
+            <span class="block font-mono text-[10px] uppercase tracking-wider text-text-muted">
+              Presets
+            </span>
+            <div class="grid grid-cols-2 gap-2 font-mono text-[10px]">
+              <button
+                type="button"
+                id="preset-stable"
+                class="border border-border-base bg-base hover:border-accent p-2 text-left rounded-md transition-colors cursor-pointer"
+              >
+                ■ Stable Orbits
+              </button>
+              <button
+                type="button"
+                id="preset-slingshot"
+                class="border border-border-base bg-base hover:border-accent p-2 text-left rounded-md transition-colors cursor-pointer"
+              >
+                ■ Slingshots
+              </button>
+              <button
+                type="button"
+                id="preset-hyperbolic"
+                class="border border-border-base bg-base hover:border-accent p-2 text-left rounded-md transition-colors cursor-pointer"
+              >
+                ■ Escape Velocity
+              </button>
+              <button
+                type="button"
+                id="preset-binary"
+                class="border border-border-base bg-base hover:border-accent p-2 text-left rounded-md transition-colors cursor-pointer"
+              >
+                ■ Chaos Cluster
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="font-mono text-[9px] text-text-muted border-t border-border-base pt-4 leading-relaxed">
+          <strong>Interactive controls:</strong> Click and drag anywhere inside the canvas. The line length dictates the planetary velocity vector. Release to launch.
+        </div>
+      </section>
+
+      <!-- Canvas Area -->
+      <section class="lg:col-span-8 border border-border-base bg-surface rounded-xl overflow-hidden shadow-sm flex flex-col items-stretch min-h-[450px]">
+        <div class="border-b border-border-base bg-base px-4 py-2 font-mono text-[10px] text-text-muted flex items-center justify-between">
+          <span>Orbital Canvas</span>
+          <span class="text-accent uppercase tracking-widest font-bold font-mono text-[9px]" id="particle-status">Active Planets: 0</span>
+        </div>
+
+        <div class="flex-grow bg-[#020205] relative flex items-center justify-center cursor-crosshair">
+          <canvas id="gravity-canvas" class="w-full h-full block min-h-[380px]"></canvas>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script>
+    // Canvas setup
+    const canvas = document.getElementById('gravity-canvas') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d');
+    const particleStatus = document.getElementById('particle-status');
+
+    // Controls
+    const gSlider = document.getElementById('grav-g') as HTMLInputElement;
+    const trailSlider = document.getElementById('trail-len') as HTMLInputElement;
+    const speedSlider = document.getElementById('sim-speed') as HTMLInputElement;
+
+    const gVal = document.getElementById('grav-g-val');
+    const trailVal = document.getElementById('trail-len-val');
+    const speedVal = document.getElementById('sim-speed-val');
+
+    const clearBtn = document.getElementById('clear-btn');
+    const presetStable = document.getElementById('preset-stable');
+    const presetSlingshot = document.getElementById('preset-slingshot');
+    const presetHyperbolic = document.getElementById('preset-hyperbolic');
+    const presetBinary = document.getElementById('preset-binary');
+
+    // Simulation state
+    let star = { x: 0, y: 0, mass: 12000, radius: 22 };
+    let planets = [];
+    let G = 0.15;
+    let trailLen = 120;
+    let speed = 1.0;
+
+    // Mouse launch states
+    let isDragging = false;
+    let dragStart = { x: 0, y: 0 };
+    let dragCurrent = { x: 0, y: 0 };
+
+    function resizeCanvas() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      star.x = canvas.width / 2;
+      star.y = canvas.height / 2;
+    }
+
+    // Initialize size and resize listeners
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Newton's Gravity Update
+    function updatePhysics() {
+      // Read sliders
+      G = parseFloat(gSlider.value);
+      trailLen = parseInt(trailSlider.value);
+      speed = parseFloat(speedSlider.value);
+
+      gVal.textContent = String(G);
+      trailVal.textContent = `${trailLen} frames`;
+      speedVal.textContent = `${speed.toFixed(1)}x`;
+
+      const dt = 0.5 * speed;
+
+      for (let i = planets.length - 1; i >= 0; i--) {
+        const p = planets[i];
+
+        // Vector to star
+        const dx = star.x - p.x;
+        const dy = star.y - p.y;
+        const distSq = dx * dx + dy * dy;
+        const dist = Math.sqrt(distSq);
+
+        // Collision detection
+        if (dist <= star.radius + p.radius) {
+          // Planet absorbed by star
+          createShatter(p.x, p.y, p.color);
+          planets.splice(i, 1);
+          continue;
+        }
+
+        if (dist > 2500) {
+          // Planet escaped
+          planets.splice(i, 1);
+          continue;
+        }
+
+        // Acceleration: F = G*(m1*m2)/r^2 -> a = F/m2 = G*m1/r^2
+        const accel = (G * star.mass) / distSq;
+        
+        // Velocity update
+        p.vx += (dx / dist) * accel * dt;
+        p.vy += (dy / dist) * accel * dt;
+
+        // Position update
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+
+        // Record trails
+        p.trail.push({ x: p.x, y: p.y });
+        if (p.trail.length > trailLen) {
+          p.trail.shift();
+        }
+      }
+
+      particleStatus.textContent = `Active Planets: ${planets.length}`;
+    }
+
+    function draw() {
+      ctx.fillStyle = 'rgba(2, 2, 5, 0.25)'; // slight fade for orbits
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // 1. Draw Star with radial glow
+      const glow = ctx.createRadialGradient(star.x, star.y, 2, star.x, star.y, star.radius * 2);
+      glow.addColorStop(0, '#ffffff');
+      glow.addColorStop(0.2, '#f59e0b'); // amber star glow
+      glow.addColorStop(1, 'rgba(245, 158, 11, 0)');
+      
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.radius * 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Core star body
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 2. Draw Planets & Trails
+      planets.forEach(p => {
+        // Orbit trail
+        if (p.trail.length > 1) {
+          ctx.beginPath();
+          ctx.moveTo(p.trail[0].x, p.trail[0].y);
+          for (let i = 1; i < p.trail.length; i++) {
+            ctx.lineTo(p.trail[i].x, p.trail[i].y);
+          }
+          ctx.strokeStyle = p.color;
+          ctx.lineWidth = 1;
+          ctx.globalAlpha = 0.35;
+          ctx.stroke();
+          ctx.globalAlpha = 1.0;
+        }
+
+        // Planet Body
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Little vector indicator or name is not needed
+      });
+
+      // 3. Draw Drag Launch Line
+      if (isDragging) {
+        ctx.beginPath();
+        ctx.moveTo(dragStart.x, dragStart.y);
+        ctx.lineTo(dragCurrent.x, dragCurrent.y);
+        ctx.strokeStyle = '#6366f1';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Draw helper dot where it will launch
+        ctx.fillStyle = '#6366f1';
+        ctx.beginPath();
+        ctx.arc(dragStart.x, dragStart.y, 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Spawn shatter particles on collision
+    let shatters = [];
+    function createShatter(x, y, color) {
+      // Standard canvas draw for sparks is not necessary if we just clear
+    }
+
+    function launchPlanet(startX, startY, endX, endY) {
+      // Velocity vector goes backwards relative to dragging direction (like a slingshot)
+      const dx = startX - endX;
+      const dy = startY - endY;
+      
+      // Scale velocity
+      const scale = 0.12; 
+      const vx = dx * scale;
+      const vy = dy * scale;
+
+      const randomColor = `hsl(${Math.random() * 360}, 85%, 65%)`;
+
+      planets.push({
+        x: startX,
+        y: startY,
+        vx: vx,
+        vy: vy,
+        radius: Math.random() * 4 + 3,
+        color: randomColor,
+        trail: []
+      });
+    }
+
+    // Canvas Interaction
+    canvas.addEventListener('mousedown', e => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      isDragging = true;
+      dragStart = { x: x, y: y };
+      dragCurrent = { x: x, y: y };
+    });
+
+    canvas.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      const rect = canvas.getBoundingClientRect();
+      dragCurrent.x = e.clientX - rect.left;
+      dragCurrent.y = e.clientY - rect.top;
+    });
+
+    canvas.addEventListener('mouseup', e => {
+      if (!isDragging) return;
+      isDragging = false;
+      const rect = canvas.getBoundingClientRect();
+      const endX = e.clientX - rect.left;
+      const endY = e.clientY - rect.top;
+      launchPlanet(dragStart.x, dragStart.y, endX, endY);
+    });
+
+    clearBtn.addEventListener('click', () => {
+      planets = [];
+    });
+
+    // Preset Configs
+    presetStable.addEventListener('click', () => {
+      planets = [];
+      // Spawn two stable circular orbit planets
+      const stableG = 0.15;
+      gSlider.value = String(stableG);
+
+      // Planet 1: Closer
+      const r1 = 120;
+      const v1 = Math.sqrt((stableG * star.mass) / r1);
+      planets.push({
+        x: star.x,
+        y: star.y - r1,
+        vx: v1,
+        vy: 0,
+        radius: 4,
+        color: '#38bdf8', // Light Blue
+        trail: []
+      });
+
+      // Planet 2: Farther
+      const r2 = 200;
+      const v2 = Math.sqrt((stableG * star.mass) / r2);
+      planets.push({
+        x: star.x,
+        y: star.y - r2,
+        vx: v2,
+        vy: 0,
+        radius: 6,
+        color: '#ec4899', // Pink
+        trail: []
+      });
+    });
+
+    presetSlingshot.addEventListener('click', () => {
+      planets = [];
+      const stableG = 0.15;
+      gSlider.value = String(stableG);
+
+      // Launch a planet on a highly eccentric comet-like orbit
+      planets.push({
+        x: star.x - 220,
+        y: star.y - 120,
+        vx: 1.8,
+        vy: -2.2,
+        radius: 5,
+        color: '#f59e0b',
+        trail: []
+      });
+    });
+
+    presetHyperbolic.addEventListener('click', () => {
+      planets = [];
+      // Hyperbolic escape path
+      planets.push({
+        x: star.x - 250,
+        y: star.y + 100,
+        vx: 4.8,
+        vy: -1.2,
+        radius: 5,
+        color: '#10b981',
+        trail: []
+      });
+    });
+
+    presetBinary.addEventListener('click', () => {
+      planets = [];
+      const stableG = 0.15;
+      gSlider.value = String(stableG);
+
+      // Spawn 5 random planets to watch chaotic multi-body interaction
+      for (let i = 0; i < 6; i++) {
+        const radius = Math.random() * 80 + 100;
+        const angle = Math.random() * Math.PI * 2;
+        const px = star.x + Math.cos(angle) * radius;
+        const py = star.y + Math.sin(angle) * radius;
+        
+        // Velocity perpendicular to star vector
+        const v = Math.sqrt((stableG * star.mass) / radius) * (0.8 + Math.random() * 0.4);
+        const vx = -Math.sin(angle) * v;
+        const vy = Math.cos(angle) * v;
+
+        planets.push({
+          x: px,
+          y: py,
+          vx: vx,
+          vy: vy,
+          radius: Math.random() * 3 + 3,
+          color: `hsl(${Math.random() * 360}, 80%, 60%)`,
+          trail: []
+        });
+      }
+    });
+
+    // Render loop
+    function loop() {
+      updatePhysics();
+      draw();
+      requestAnimationFrame(loop);
+    }
+    
+    // Start
+    loop();
+  </script>
+</Layout>

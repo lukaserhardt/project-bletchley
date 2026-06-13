@@ -1,0 +1,451 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Project Bletchley - Neural Network Sandbox" description="Interactive SVG neural network simulation and visual impulses.">
+  <div class="space-y-8 flex-grow flex flex-col">
+    <!-- Navigation -->
+    <nav class="font-mono text-xs text-text-muted flex items-center gap-2">
+      <a href="/project-bletchley/" class="hover:text-accent hover:underline">Hub</a>
+      <span>/</span>
+      <span class="text-text-base">Labs</span>
+      <span>/</span>
+      <span class="text-text-base font-bold">Neural Net Sandbox</span>
+    </nav>
+
+    <!-- Header -->
+    <header class="border-b border-border-base pb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div>
+        <h1 class="text-3xl font-extrabold tracking-tight">Neural Network Sandbox</h1>
+        <p class="text-sm text-text-muted mt-2">
+          An interactive, visual model of a feedforward neural network. Trigger signals, modify hidden layers, and adjust synapse weights.
+        </p>
+      </div>
+      <div class="flex gap-2">
+        <button
+          id="fire-all-btn"
+          class="bg-accent text-white hover:bg-accent-hover text-xs font-mono px-4 py-2 rounded-md transition-colors cursor-pointer shadow-sm"
+        >
+          Pulse All Inputs
+        </button>
+      </div>
+    </header>
+
+    <!-- Playground Workspace -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 flex-grow items-stretch">
+      
+      <!-- Left: Sidebar Controls -->
+      <section class="lg:col-span-4 border border-border-base bg-surface p-6 rounded-xl space-y-6 flex flex-col justify-between shadow-sm">
+        <div class="space-y-6">
+          <h2 class="font-mono text-xs font-bold uppercase tracking-wider border-b border-border-base pb-2 text-text-base">
+            Network Configuration
+          </h2>
+
+          <!-- Layer nodes configuration -->
+          <div class="space-y-4">
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs font-mono">
+                <label for="hidden-nodes-count" class="uppercase tracking-wider text-text-muted">Hidden Nodes</label>
+                <span id="hidden-nodes-val" class="font-bold">4</span>
+              </div>
+              <input
+                type="range"
+                id="hidden-nodes-count"
+                min="2"
+                max="8"
+                value="4"
+                step="1"
+                class="w-full h-1 bg-border-base appearance-none cursor-pointer accent-accent"
+              />
+            </div>
+
+            <!-- Propagation Speed -->
+            <div class="space-y-1">
+              <div class="flex justify-between text-xs font-mono">
+                <label for="signal-speed" class="uppercase tracking-wider text-text-muted">Impulse Speed</label>
+                <span id="speed-val" class="font-bold">Medium</span>
+              </div>
+              <input
+                type="range"
+                id="signal-speed"
+                min="1"
+                max="5"
+                value="3"
+                step="1"
+                class="w-full h-1 bg-border-base appearance-none cursor-pointer accent-accent"
+              />
+            </div>
+          </div>
+
+          <!-- Activation Function dropdown -->
+          <div class="space-y-2 border-t border-border-base pt-4">
+            <label for="activation-select" class="block font-mono text-xs uppercase tracking-wider text-text-muted">
+              Activation Function
+            </label>
+            <select
+              id="activation-select"
+              class="w-full bg-base border border-border-base text-text-base px-3 py-2 text-xs font-mono rounded-md focus:border-accent outline-none"
+            >
+              <option value="relu">ReLU (Rectified Linear Unit)</option>
+              <option value="sigmoid">Sigmoid</option>
+              <option value="tanh">Hyperbolic Tangent (Tanh)</option>
+            </select>
+            <p id="activation-formula" class="font-mono text-[9px] text-text-muted italic mt-1">
+              f(x) = max(0, x)
+            </p>
+          </div>
+
+          <!-- Synapse Status -->
+          <div class="space-y-2 border-t border-border-base pt-4 font-mono text-[10px] text-text-muted">
+            <span class="block uppercase tracking-wider text-text-base font-semibold">Active Metrics</span>
+            <div class="space-y-1">
+              <div class="flex justify-between">
+                <span>Input Neurons:</span>
+                <span class="text-text-base">3</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Hidden Neurons:</span>
+                <span id="hidden-count-stat" class="text-text-base">4</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Output Neurons:</span>
+                <span class="text-text-base">2</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Total Connections:</span>
+                <span id="connections-count" class="text-accent font-bold">20</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="font-mono text-[9px] text-text-muted border-t border-border-base pt-4 leading-relaxed">
+          Click on any input node on the far left of the canvas to trigger an isolated neural impulse.
+        </div>
+      </section>
+
+      <!-- Right: Interactive Canvas -->
+      <section class="lg:col-span-8 border border-border-base bg-surface rounded-xl overflow-hidden shadow-sm flex flex-col items-stretch min-h-[400px]">
+        <div class="border-b border-border-base bg-base px-4 py-2 font-mono text-[10px] text-text-muted flex items-center justify-between">
+          <span>Neural Visualizer Canvas</span>
+          <span class="text-accent uppercase tracking-widest font-bold">Feedforward Graph</span>
+        </div>
+
+        <!-- SVG Container -->
+        <div class="flex-grow relative bg-slate-950/20 flex items-center justify-center p-6 select-none">
+          <svg id="network-svg" class="w-full h-full max-h-[450px]" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid meet">
+            <!-- Connection Lines (Synapses) -->
+            <g id="synapses-group"></g>
+            <!-- Impulse Particles -->
+            <g id="particles-group"></g>
+            <!-- Neurons (Nodes) -->
+            <g id="neurons-group"></g>
+          </svg>
+        </div>
+
+        <div class="border-t border-border-base bg-base px-4 py-2.5 font-mono text-[10px] text-text-muted">
+          Active pulses: <span id="pulse-count" class="text-text-base">0</span> // Click node boundary to fire.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script>
+    // SVG references
+    const svg = document.getElementById('network-svg');
+    const synapsesGroup = document.getElementById('synapses-group');
+    const neuronsGroup = document.getElementById('neurons-group');
+    const particlesGroup = document.getElementById('particles-group');
+
+    // Control references
+    const hiddenNodesSlider = document.getElementById('hidden-nodes-count') as HTMLInputElement;
+    const speedSlider = document.getElementById('signal-speed') as HTMLInputElement;
+    const activationSelect = document.getElementById('activation-select') as HTMLSelectElement;
+
+    // Value outputs
+    const hiddenNodesVal = document.getElementById('hidden-nodes-val');
+    const speedVal = document.getElementById('speed-val');
+    const hiddenCountStat = document.getElementById('hidden-count-stat');
+    const connectionsCount = document.getElementById('connections-count');
+    const pulseCountEl = document.getElementById('pulse-count');
+    const fireAllBtn = document.getElementById('fire-all-btn');
+    const activationFormula = document.getElementById('activation-formula');
+
+    // Config parameters
+    let numInputs = 3;
+    let numHidden = 4;
+    let numOutputs = 2;
+    let speedMult = 3; // 1 to 5
+
+    // Node Positions
+    let nodeCoords = {
+      inputs: [],
+      hidden: [],
+      outputs: []
+    };
+
+    // Connections List
+    let synapses = [];
+
+    // Particles list
+    let particles = [];
+
+    function buildNetwork() {
+      // Clear SVG children
+      synapsesGroup.innerHTML = '';
+      neuronsGroup.innerHTML = '';
+      particlesGroup.innerHTML = '';
+      particles = [];
+
+      nodeCoords.inputs = [];
+      nodeCoords.hidden = [];
+      nodeCoords.outputs = [];
+      synapses = [];
+
+      // Update counters
+      numHidden = parseInt(hiddenNodesSlider.value);
+      hiddenNodesVal.textContent = String(numHidden);
+      hiddenCountStat.textContent = String(numHidden);
+      connectionsCount.textContent = String((numInputs * numHidden) + (numHidden * numOutputs));
+
+      const svgW = 600;
+      const svgH = 400;
+
+      // X positions
+      const xInput = 100;
+      const xHidden = 300;
+      const xOutput = 500;
+
+      // Calculate coordinates
+      for (let i = 0; i < numInputs; i++) {
+        const y = (svgH / (numInputs + 1)) * (i + 1);
+        nodeCoords.inputs.push({ x: xInput, y: y, id: `in-${i}`, layer: 'input' });
+      }
+
+      for (let i = 0; i < numHidden; i++) {
+        const y = (svgH / (numHidden + 1)) * (i + 1);
+        nodeCoords.hidden.push({ x: xHidden, y: y, id: `hid-${i}`, layer: 'hidden' });
+      }
+
+      for (let i = 0; i < numOutputs; i++) {
+        const y = (svgH / (numOutputs + 1)) * (i + 1);
+        nodeCoords.outputs.push({ x: xOutput, y: y, id: `out-${i}`, layer: 'output' });
+      }
+
+      // Render connection lines
+      // Layer 1 -> Layer 2
+      nodeCoords.inputs.forEach((input) => {
+        nodeCoords.hidden.forEach((hidden) => {
+          const weight = Math.random() * 0.8 + 0.2; // random weight
+          synapses.push({ from: input, to: hidden, weight: weight });
+          createLine(input.x, input.y, hidden.x, hidden.y, weight);
+        });
+      });
+
+      // Layer 2 -> Layer 3
+      nodeCoords.hidden.forEach((hidden) => {
+        nodeCoords.outputs.forEach((output) => {
+          const weight = Math.random() * 0.8 + 0.2;
+          synapses.push({ from: hidden, to: output, weight: weight });
+          createLine(hidden.x, hidden.y, output.x, output.y, weight);
+        });
+      });
+
+      // Render Nodes
+      nodeCoords.inputs.forEach((node, idx) => createNode(node.x, node.y, 'input', `x${idx + 1}`));
+      nodeCoords.hidden.forEach((node, idx) => createNode(node.x, node.y, 'hidden', `h${idx + 1}`));
+      nodeCoords.outputs.forEach((node, idx) => createNode(node.x, node.y, 'output', `y${idx + 1}`));
+    }
+
+    function createLine(x1, y1, x2, y2, weight) {
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', String(x1));
+      line.setAttribute('y1', String(y1));
+      line.setAttribute('x2', String(x2));
+      line.setAttribute('y2', String(y2));
+      line.setAttribute('stroke', 'var(--border-base)');
+      line.setAttribute('stroke-width', String(weight * 3));
+      line.setAttribute('opacity', '0.4');
+      synapsesGroup.appendChild(line);
+    }
+
+    function createNode(x, y, type, labelText) {
+      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', String(x));
+      circle.setAttribute('cy', String(y));
+      circle.setAttribute('r', '18');
+      
+      // Node color
+      if (type === 'input') {
+        circle.setAttribute('fill', 'var(--bg-surface)');
+        circle.setAttribute('stroke', 'var(--accent)');
+        circle.setAttribute('stroke-width', '2');
+        circle.style.cursor = 'pointer';
+        circle.addEventListener('click', () => triggerImpulse(nodeCoords.inputs.find(n => n.x === x && n.y === y)));
+      } else if (type === 'hidden') {
+        circle.setAttribute('fill', 'var(--bg-surface)');
+        circle.setAttribute('stroke', 'var(--border-base)');
+        circle.setAttribute('stroke-width', '2');
+      } else {
+        circle.setAttribute('fill', 'var(--bg-surface)');
+        circle.setAttribute('stroke', '#8b5cf6'); // Violet stroke for output
+        circle.setAttribute('stroke-width', '2');
+      }
+
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', String(x));
+      text.setAttribute('y', String(y + 4));
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('font-family', 'Geist Mono');
+      text.setAttribute('font-size', '10px');
+      text.setAttribute('fill', 'var(--text-base)');
+      text.setAttribute('pointer-events', 'none');
+      text.textContent = labelText;
+
+      g.appendChild(circle);
+      g.appendChild(text);
+      neuronsGroup.appendChild(g);
+    }
+
+    function triggerImpulse(startNode) {
+      if (!startNode) return;
+
+      // Find all connected synapses from this node
+      const outputs = synapses.filter(s => s.from.id === startNode.id);
+      
+      outputs.forEach(s => {
+        particles.push({
+          x: s.from.x,
+          y: s.from.y,
+          fromNode: s.from,
+          toNode: s.to,
+          progress: 0,
+          weight: s.weight
+        });
+      });
+    }
+
+    // Main animation loop
+    function animate() {
+      // Clear particle group drawing
+      particlesGroup.innerHTML = '';
+
+      // Update speed multiplier
+      speedMult = parseInt(speedSlider.value);
+      if (speedVal) {
+        speedVal.textContent = speedMult === 1 ? 'Very Slow' : speedMult === 2 ? 'Slow' : speedMult === 3 ? 'Medium' : speedMult === 4 ? 'Fast' : 'Instant';
+      }
+
+      const step = 0.005 * speedMult;
+      
+      // Update particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.progress += step;
+
+        if (p.progress >= 1) {
+          // Reached destination node
+          const reachedNode = p.toNode;
+          
+          // Trigger next layer propagation if reached node is a hidden neuron
+          if (reachedNode.layer === 'hidden') {
+            // Flash node temporarily
+            flashNode(reachedNode.x, reachedNode.y);
+            
+            // Push signals forward to outputs
+            const nextSynapses = synapses.filter(s => s.from.id === reachedNode.id);
+            nextSynapses.forEach(s => {
+              particles.push({
+                x: s.from.x,
+                y: s.from.y,
+                fromNode: s.from,
+                toNode: s.to,
+                progress: 0,
+                weight: s.weight
+              });
+            });
+          } else if (reachedNode.layer === 'output') {
+            // Flash output node
+            flashNode(reachedNode.x, reachedNode.y, '#8b5cf6');
+          }
+
+          // Remove particle
+          particles.splice(i, 1);
+        } else {
+          // Draw particle
+          const px = p.fromNode.x + (p.toNode.x - p.fromNode.x) * p.progress;
+          const py = p.fromNode.y + (p.toNode.y - p.fromNode.y) * p.progress;
+
+          const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          dot.setAttribute('cx', String(px));
+          dot.setAttribute('cy', String(py));
+          dot.setAttribute('r', '4');
+          dot.setAttribute('fill', p.toNode.layer === 'output' ? '#a78bfa' : 'var(--accent)');
+          particlesGroup.appendChild(dot);
+        }
+      }
+
+      if (pulseCountEl) {
+        pulseCountEl.textContent = String(particles.length);
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    function flashNode(x, y, color = 'var(--accent)') {
+      const flash = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      flash.setAttribute('cx', String(x));
+      flash.setAttribute('cy', String(y));
+      flash.setAttribute('r', '18');
+      flash.setAttribute('fill', 'none');
+      flash.setAttribute('stroke', color);
+      flash.setAttribute('stroke-width', '4');
+      flash.setAttribute('opacity', '0.8');
+      
+      neuronsGroup.appendChild(flash);
+
+      let scale = 1;
+      let opacity = 0.8;
+      
+      function fadeOut() {
+        scale += 0.05;
+        opacity -= 0.05;
+        flash.setAttribute('r', String(18 * scale));
+        flash.setAttribute('opacity', String(opacity));
+        
+        if (opacity > 0) {
+          requestAnimationFrame(fadeOut);
+        } else {
+          flash.remove();
+        }
+      }
+      
+      fadeOut();
+    }
+
+    // Activation selection triggers formula description changes
+    activationSelect.addEventListener('change', () => {
+      const formulas = {
+        relu: 'f(x) = max(0, x)',
+        sigmoid: 'f(x) = 1 / (1 + e^-x)',
+        tanh: 'f(x) = (e^x - e^-x) / (e^x + e^-x)'
+      };
+      activationFormula.textContent = formulas[activationSelect.value] || '';
+    });
+
+    // Fire all inputs trigger
+    fireAllBtn.addEventListener('click', () => {
+      nodeCoords.inputs.forEach(node => triggerImpulse(node));
+    });
+
+    // Rebuild net on hidden node count sliders change
+    hiddenNodesSlider.addEventListener('input', buildNetwork);
+
+    // Initial build and loop launch
+    buildNetwork();
+    animate();
+  </script>
+</Layout>

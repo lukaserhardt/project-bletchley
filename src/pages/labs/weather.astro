@@ -1,0 +1,191 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Project Bletchley - Berlin Weather" description="Live weather dashboard for Berlin using the Open-Meteo API.">
+  <div class="space-y-8 flex-grow flex flex-col">
+    <!-- Navigation -->
+    <nav class="font-mono text-xs text-text-muted flex items-center gap-2">
+      <a href="/project-bletchley/" class="hover:text-accent hover:underline">Hub</a>
+      <span>/</span>
+      <span class="text-text-base">Labs</span>
+      <span>/</span>
+      <span class="text-text-base font-bold">Berlin Weather</span>
+    </nav>
+
+    <!-- Header -->
+    <header class="border-b border-border-base pb-6">
+      <h1 class="text-3xl font-extrabold tracking-tight">Berlin Weather</h1>
+      <p class="text-sm text-text-muted mt-2">
+        Real-time atmospheric readings, weather descriptions, and hourly forecast data for Berlin, Germany.
+      </p>
+    </header>
+
+    <!-- Weather Dashboard Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
+      
+      <!-- Current Condition Card -->
+      <section class="md:col-span-7 border border-border-base bg-surface rounded-xl p-8 flex flex-col justify-between shadow-sm">
+        <div class="flex items-center justify-between">
+          <span class="font-mono text-[10px] text-text-muted uppercase tracking-wider">Current Weather</span>
+          <span class="font-mono text-[10px] text-accent font-semibold uppercase">Berlin, DE</span>
+        </div>
+
+        <div class="my-8 flex items-center justify-between gap-4">
+          <div>
+            <div class="text-5xl sm:text-6xl font-black tracking-tighter font-sans flex items-baseline">
+              <span id="current-temp">--</span>
+              <span class="text-accent text-3xl sm:text-4xl">°C</span>
+            </div>
+            <p class="text-sm font-semibold mt-2 text-text-base" id="weather-description">Loading weather description...</p>
+          </div>
+          <div class="text-6xl sm:text-7xl" id="weather-icon">
+            ⛅
+          </div>
+        </div>
+
+        <!-- Metric Details -->
+        <div class="border-t border-border-base pt-6 grid grid-cols-3 gap-4 font-mono text-[11px] text-text-muted">
+          <div>
+            <p class="uppercase text-[9px] tracking-wider">Wind Speed</p>
+            <p class="font-semibold text-text-base mt-0.5" id="wind-speed">-- km/h</p>
+          </div>
+          <div>
+            <p class="uppercase text-[9px] tracking-wider">Humidity</p>
+            <p class="font-semibold text-text-base mt-0.5" id="humidity">--%</p>
+          </div>
+          <div>
+            <p class="uppercase text-[9px] tracking-wider">Updated</p>
+            <p class="font-semibold text-text-base mt-0.5" id="update-time">--:--</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Hourly Forecast Card -->
+      <section class="md:col-span-5 border border-border-base bg-surface rounded-xl p-6 flex flex-col shadow-sm">
+        <h2 class="font-mono text-xs font-bold uppercase tracking-wider border-b border-border-base pb-2 text-text-base mb-4">
+          Hourly Forecast (Next 12 Hours)
+        </h2>
+        
+        <div id="hourly-list" class="flex-grow space-y-3 overflow-y-auto max-h-[300px] pr-2 scrollbar-thin">
+          <p class="text-text-muted text-xs font-mono text-center py-8">Fetching hourly forecast...</p>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'https://api-open-meteo.com/v1/forecast?latitude=52.5244&longitude=13.4098&current_weather=true&hourly=temperature_2m,relative_humidity_2m,weathercode';
+
+    // Elements
+    const currentTemp = document.getElementById('current-temp');
+    const weatherDescription = document.getElementById('weather-description');
+    const weatherIcon = document.getElementById('weather-icon');
+    const windSpeed = document.getElementById('wind-speed');
+    const humidity = document.getElementById('humidity');
+    const updateTime = document.getElementById('update-time');
+    const hourlyList = document.getElementById('hourly-list');
+
+    async function fetchWeather() {
+      try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error('Failed to fetch weather');
+        const data = await response.json();
+        renderWeather(data);
+      } catch (err) {
+        console.error(err);
+        if (weatherDescription) weatherDescription.textContent = 'Failed to load weather data.';
+      }
+    }
+
+    function renderWeather(data) {
+      const current = data.current_weather;
+      if (!current) return;
+
+      const temp = Math.round(current.temperature);
+      const code = current.weathercode;
+      const wind = current.windspeed;
+      
+      // Get current humidity (closest to current hour)
+      const currentHourStr = current.time.slice(0, 13) + ':00';
+      const hourIndex = data.hourly.time.findIndex(t => t.startsWith(currentHourStr)) || 0;
+      const humid = data.hourly.relative_humidity_2m[hourIndex] || 60;
+
+      const dateObj = new Date(current.time);
+      const formattedTime = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      // Map Weather Code
+      const condition = getWeatherCondition(code);
+
+      // Render
+      if (currentTemp) currentTemp.textContent = String(temp);
+      if (weatherDescription) weatherDescription.textContent = condition.desc;
+      if (weatherIcon) weatherIcon.textContent = condition.icon;
+      if (windSpeed) windSpeed.textContent = `${wind} km/h`;
+      if (humidity) humidity.textContent = `${humid}%`;
+      if (updateTime) updateTime.textContent = formattedTime;
+
+      // Render Hourly
+      renderHourly(data.hourly, hourIndex);
+    }
+
+    function renderHourly(hourly, startIndex) {
+      if (!hourlyList) return;
+      hourlyList.innerHTML = '';
+
+      for (let i = startIndex + 1; i < startIndex + 13; i++) {
+        if (!hourly.time[i]) break;
+
+        const time = new Date(hourly.time[i]).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const temp = Math.round(hourly.temperature_2m[i]);
+        const code = hourly.weathercode[i];
+        const condition = getWeatherCondition(code);
+
+        const hourItem = document.createElement('div');
+        hourItem.className = 'flex items-center justify-between border-b border-border-base/50 pb-2 text-xs font-mono';
+        hourItem.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="text-lg w-6 text-center">${condition.icon}</span>
+            <span class="text-text-muted">${time}</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="text-text-muted text-[10px] uppercase">${condition.desc.split(' ')[0]}</span>
+            <span class="font-bold text-text-base">${temp}°C</span>
+          </div>
+        `;
+        hourlyList.appendChild(hourItem);
+      }
+    }
+
+    function getWeatherCondition(code) {
+      // WMO Weather interpretation codes (https://open-meteo.com/en/docs)
+      const mapping = {
+        0: { desc: 'Clear Sky', icon: '☀️' },
+        1: { desc: 'Mainly Clear', icon: '🌤️' },
+        2: { desc: 'Partly Cloudy', icon: '⛅' },
+        3: { desc: 'Overcast', icon: '☁️' },
+        45: { desc: 'Foggy', icon: '🌫️' },
+        48: { desc: 'Depositing Rime Fog', icon: '🌫️' },
+        51: { desc: 'Light Drizzle', icon: '🌧️' },
+        53: { desc: 'Moderate Drizzle', icon: '🌧️' },
+        55: { desc: 'Dense Drizzle', icon: '🌧️' },
+        61: { desc: 'Slight Rain', icon: '🌧️' },
+        63: { desc: 'Moderate Rain', icon: '🌧️' },
+        65: { desc: 'Heavy Rain', icon: '🌧️' },
+        71: { desc: 'Slight Snow Fall', icon: '❄️' },
+        73: { desc: 'Moderate Snow Fall', icon: '❄️' },
+        75: { desc: 'Heavy Snow Fall', icon: '❄️' },
+        80: { desc: 'Slight Rain Showers', icon: '🌦️' },
+        81: { desc: 'Moderate Rain Showers', icon: '🌦️' },
+        82: { desc: 'Violent Rain Showers', icon: '🌦️' },
+        95: { desc: 'Thunderstorm', icon: '⛈️' },
+      };
+
+      return mapping[code] || { desc: 'Unknown', icon: '🌡️' };
+    }
+
+    // Run
+    fetchWeather();
+  </script>
+</Layout>

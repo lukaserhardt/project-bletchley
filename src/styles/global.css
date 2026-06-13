@@ -29,28 +29,32 @@
   --color-border-base: var(--border-base);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
+  
+  --radius-lg: 0.75rem;
+  --radius-md: 0.5rem;
+  --radius-sm: 0.25rem;
 }
 
-/* Light theme defaults (Neo-grotesque: high contrast, neutral, structured) */
+/* Default Dark Theme (Modern, deep slate/indigo hues) */
 :root {
-  --bg-base: #f9f9fb;
-  --bg-surface: #ffffff;
-  --text-base: #111111;
-  --text-muted: #666666;
-  --border-base: #e2e2e5;
-  --accent: #000000;
-  --accent-hover: #333333;
+  --bg-base: #030712;       /* Deep slate-blue/indigo-950 */
+  --bg-surface: #0b0f19;    /* Lighter indigo-900 base for cards */
+  --text-base: #f3f4f6;     /* Cool grey-100 */
+  --text-muted: #9ca3af;    /* Grey-400 */
+  --border-base: #1f2937;   /* Grey-800 */
+  --accent: #6366f1;        /* Indigo-500 */
+  --accent-hover: #818cf8;  /* Indigo-400 */
 }
 
-/* Dark theme overrides */
-:root[data-theme="dark"] {
-  --bg-base: #0b0b0c;
-  --bg-surface: #121214;
-  --text-base: #f4f4f7;
-  --text-muted: #a0a0aa;
-  --border-base: #242427;
-  --accent: #ffffff;
-  --accent-hover: #dddddd;
+/* Optional Light Theme (Sleek slate-blue hues) */
+:root[data-theme="light"] {
+  --bg-base: #f8fafc;       /* Slate-50 */
+  --bg-surface: #ffffff;    /* Pure white */
+  --text-base: #0f172a;     /* Slate-900 */
+  --text-muted: #64748b;    /* Slate-500 */
+  --border-base: #e2e8f0;   /* Slate-200 */
+  --accent: #4f46e5;        /* Indigo-600 */
+  --accent-hover: #3730a3;  /* Indigo-800 */
 }
 
 /* Smooth transitions for theme switching */

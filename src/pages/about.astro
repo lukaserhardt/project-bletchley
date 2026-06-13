@@ -1,0 +1,93 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Project Bletchley - About" description="About the creators and system relation powering Project Bletchley.">
+  <div class="space-y-10 max-w-3xl mx-auto">
+    <!-- Breadcrumbs / Navigation -->
+    <nav class="font-mono text-xs text-text-muted flex items-center gap-2">
+      <a href="/project-bletchley/" class="hover:text-accent hover:underline">Hub</a>
+      <span>/</span>
+      <span class="text-text-base">About</span>
+    </nav>
+
+    <!-- Title Header -->
+    <header class="border-b border-border-base pb-6">
+      <h1 class="text-3xl font-extrabold tracking-tight">
+        About Project Bletchley
+      </h1>
+      <p class="text-sm text-text-muted mt-2">
+        An exploration of agent-led software development, design prototyping, and visual experiments.
+      </p>
+    </header>
+
+    <!-- Collaborative Entities -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Agent Card -->
+      <div class="border border-border-base bg-surface p-6 rounded-xl space-y-4 shadow-sm">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
+            <span class="text-accent text-lg font-bold">🤖</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-text-base text-sm">Antigravity</h3>
+            <p class="text-xs text-text-muted font-mono">Autonomous Coding Agent</p>
+          </div>
+        </div>
+        <p class="text-xs text-text-muted leading-relaxed">
+          Designed by the Google DeepMind team, Antigravity is a pair-programming assistant. In this workspace, Antigravity functions as the sole builder, managing file structures, configurations, and API integrations.
+        </p>
+      </div>
+
+      <!-- User Card -->
+      <div class="border border-border-base bg-surface p-6 rounded-xl space-y-4 shadow-sm">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
+            <span class="text-indigo-500 text-lg font-bold">🧑‍💻</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-text-base text-sm">Lukas Erhardt</h3>
+            <p class="text-xs text-text-muted font-mono">Architect & Tinkerer</p>
+          </div>
+        </div>
+        <p class="text-xs text-text-muted leading-relaxed">
+          The directing human architect. Lukas defines the requirements, steers the visual aesthetics, decides on feature additions, and reviews code changes to ensure Bletchley remains a premium-grade environment.
+        </p>
+      </div>
+    </section>
+
+    <!-- Working Relation -->
+    <section class="border border-border-base bg-surface p-6 rounded-xl space-y-4 shadow-sm">
+      <h2 class="text-lg font-bold">Our Working Relationship</h2>
+      <p class="text-xs text-text-muted leading-relaxed">
+        Project Bletchley is built in an <strong>agent-first paradigm</strong>. Instead of traditional coding, Lukas interacts with Antigravity using natural language prompts. Antigravity takes these specifications, researches API documentation, writes layout code, integrates design styles, runs build tests, and directly coordinates commits and branches.
+      </p>
+      <p class="text-xs text-text-muted leading-relaxed">
+        The result is a fluid, rapid prototyping sandbox where the overhead of environment setup and library configuration is delegated to the AI, allowing the human developer to focus entirely on creative design, ideation, and feature selection.
+      </p>
+    </section>
+
+    <!-- Technical Pillars -->
+    <section class="space-y-4">
+      <h2 class="text-lg font-bold">Technical Pillars</h2>
+      <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono text-text-muted">
+        <li class="flex items-start gap-2">
+          <span class="text-accent">✔</span>
+          <span>Astro Framework for ultra-fast static routing and modular page assets.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-accent">✔</span>
+          <span>Tailwind CSS v4 using CSS theme properties for responsive, layout-wide style tokens.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-accent">✔</span>
+          <span>GitHub Actions for automatic compile and instant deployment to GitHub Pages.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-accent">✔</span>
+          <span>Self-hosted Vercel Geist Variable Fonts for a modern, neo-grotesque visual hierarchy.</span>
+        </li>
+      </ul>
+    </section>
+  </div>
+</Layout>

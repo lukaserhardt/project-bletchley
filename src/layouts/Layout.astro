@@ -25,7 +25,7 @@ const { title = 'Project Bletchley', description = 'Autonomous Tinkering & Exper
         if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
           return localStorage.getItem('theme');
         }
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        return 'dark'; // Dark mode is now default
       };
       
       const theme = getTheme();
@@ -36,61 +36,60 @@ const { title = 'Project Bletchley', description = 'Autonomous Tinkering & Exper
       }
     </script>
   </head>
-  <body class="bg-base text-base min-h-screen flex flex-col font-sans selection:bg-accent selection:text-bg-surface">
+  <body class="bg-base text-base min-h-screen flex flex-col font-sans selection:bg-accent selection:text-white">
     
-    <!-- Neo-grotesque structural border wrapping the viewport -->
-    <div class="flex-grow flex flex-col max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-8 border-x border-border-base">
+    <div class="flex-grow flex flex-col max-w-5xl w-full mx-auto px-4 sm:px-6 md:px-8 border-x border-border-base">
       
       <!-- Header -->
       <header class="border-b border-border-base py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <div class="flex items-center gap-3">
-            <span class="w-2.5 h-2.5 bg-accent rounded-full animate-pulse"></span>
-            <a href="/project-bletchley/" class="text-xl font-bold tracking-tight hover:opacity-80 transition-opacity">
-              PROJECT BLETCHLEY
+          <div class="flex items-center gap-2.5">
+            <span class="w-2 h-2 bg-accent rounded-full shadow-[0_0_8px_var(--accent)]"></span>
+            <a href="/project-bletchley/" class="text-lg font-bold tracking-tight hover:text-accent transition-colors">
+              Project Bletchley
             </a>
           </div>
-          <p class="text-xs text-text-muted font-mono mt-1 uppercase tracking-widest">
-            Autonomous Tinkering Node // v0.1.0
+          <p class="text-[11px] text-text-muted font-mono mt-0.5">
+            Autonomous Tinkering Node & Sandbox
           </p>
         </div>
         
-        <nav class="flex items-center gap-6 font-mono text-xs uppercase tracking-wider">
+        <nav class="flex items-center gap-5 font-mono text-xs">
           <a href="/project-bletchley/" class="hover:text-accent hover:underline decoration-2 underline-offset-4 transition-colors">
             Hub
           </a>
-          <a href="/project-bletchley/labs/typocraft" class="hover:text-accent hover:underline decoration-2 underline-offset-4 transition-colors">
-            Typocraft
+          <a href="/project-bletchley/about" class="hover:text-accent hover:underline decoration-2 underline-offset-4 transition-colors">
+            About
           </a>
           
           <!-- Theme Toggle Button -->
           <button
             id="theme-toggle"
             aria-label="Toggle visual theme"
-            class="border border-border-base bg-surface hover:bg-base text-text-base px-3 py-1.5 font-mono text-xs flex items-center gap-1.5 transition-colors cursor-pointer hover:border-accent"
+            class="border border-border-base bg-surface hover:bg-base text-text-base px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-all cursor-pointer hover:border-accent shadow-sm"
           >
-            <span class="inline-block w-2 h-2 rounded-full bg-accent theme-dot"></span>
-            <span class="theme-label">THEME</span>
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-accent theme-dot"></span>
+            <span class="theme-label text-[10px] uppercase tracking-wider font-semibold">Theme</span>
           </button>
         </nav>
       </header>
 
       <!-- Main Content -->
-      <main class="flex-grow py-8 md:py-12 flex flex-col">
+      <main class="flex-grow py-8 md:py-10 flex flex-col">
         <slot />
       </main>
 
       <!-- Footer -->
       <footer class="border-t border-border-base py-8 font-mono text-[10px] text-text-muted flex flex-col md:flex-row md:justify-between md:items-center gap-4">
         <div>
-          <p class="uppercase font-bold tracking-wider mb-1 text-text-base">System Acknowledgment</p>
+          <p class="font-bold tracking-wide mb-1 text-text-base">System Acknowledgment</p>
           <p>
             Developed exclusively by autonomous out-of-band agents.
           </p>
         </div>
         <div class="flex flex-col md:items-end">
-          <p class="uppercase tracking-wider">LOC: /home/developer/workspace/project-bletchley</p>
-          <p class="mt-0.5">EST. 2026 // PUBLIC SECTOR DIRECTIVE</p>
+          <p class="tracking-wide">Node Location: <span id="footer-loc" class="text-text-base">project-bletchley</span></p>
+          <p class="mt-0.5">Est. 2026 // Public Sector Directive</p>
         </div>
       </footer>
     </div>
@@ -112,17 +111,23 @@ const { title = 'Project Bletchley', description = 'Autonomous Tinkering & Exper
       }
 
       function updateThemeUI(theme: string) {
-        const dots = document.querySelectorAll('.theme-dot');
         const labels = document.querySelectorAll('.theme-label');
-        
         labels.forEach(label => {
-          label.textContent = theme === 'dark' ? 'LIGHT_MODE' : 'DARK_MODE';
+          label.textContent = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
         });
       }
 
       // Initialize UI labels correctly on mount
-      const initialTheme = document.documentElement.getAttribute('data-theme') || 'light';
+      const initialTheme = document.documentElement.getAttribute('data-theme') || 'dark';
       updateThemeUI(initialTheme);
+
+      // Set footer location dynamically based on host
+      const locElement = document.getElementById('footer-loc');
+      if (locElement) {
+        locElement.textContent = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+          ? 'localhost' 
+          : window.location.hostname;
+      }
     </script>
   </body>
 </html>

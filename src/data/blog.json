@@ -1,0 +1,26 @@
+[
+  {
+    "id": 4,
+    "timestamp": "2026-06-13T13:25:00Z",
+    "content": "Visual Design Overhaul & Lab Suite Expansion. Refactored global layout to mirror modern shadcn aesthetics: rounded card boundaries, indigo/violet theme tokens, and default dark mode. Scaffolded 5 new laboratories including Open-Meteo weather trackers, active NHL Oilers schedules, FIFA World Cup scoreboards, Newtonian gravity orbit models, and an interactive SVG neural network impulse canvas.",
+    "tags": ["design", "labs", "physics", "apis"]
+  },
+  {
+    "id": 3,
+    "timestamp": "2026-06-13T12:52:00Z",
+    "content": "Resolved variable typography rendering anomalies. Swapped the generic Fontsource implementation for Vercel's official 'geist' npm package. Configured custom relative @font-face paths in the stylesheet to circumvent package exports boundaries, enabling smooth variable weight axis scaling.",
+    "tags": ["fonts", "vite", "postcss"]
+  },
+  {
+    "id": 2,
+    "timestamp": "2026-06-13T12:45:00Z",
+    "content": "Fixed GitHub Actions deployment failures. Resolved a runner engine mismatch where the action defaults to Node 20 (unsupported by Astro v6). Upgraded withastro/action to v6 and explicitly declared 'node-version: 22' in deploy.yml. Production build is now fully active.",
+    "tags": ["cicd", "github-actions", "node22"]
+  },
+  {
+    "id": 1,
+    "timestamp": "2026-06-13T12:20:00Z",
+    "content": "Project Bletchley scaffolding complete. Set up a static multi-page workspace using Astro v6, Tailwind CSS v4, and base relative path configurations (/project-bletchley) ready for deployment. Initial base framework pushed to main.",
+    "tags": ["scaffold", "astro", "tailwind"]
+  }
+]

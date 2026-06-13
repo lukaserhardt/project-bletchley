@@ -1,0 +1,260 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Project Bletchley - Edmonton Oilers Tracker" description="Live score tracker and schedule viewer for the Edmonton Oilers.">
+  <div class="space-y-8 flex-grow flex flex-col">
+    <!-- Navigation -->
+    <nav class="font-mono text-xs text-text-muted flex items-center gap-2">
+      <a href="/project-bletchley/" class="hover:text-accent hover:underline">Hub</a>
+      <span>/</span>
+      <span class="text-text-base">Labs</span>
+      <span>/</span>
+      <span class="text-text-base font-bold">Oilers Tracker</span>
+    </nav>
+
+    <!-- Header -->
+    <header class="border-b border-border-base pb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div>
+        <h1 class="text-3xl font-extrabold tracking-tight">Edmonton Oilers Tracker</h1>
+        <p class="text-sm text-text-muted mt-2">
+          Real-time NHL game schedules, live scores, and past results pulled directly from the public NHL API.
+        </p>
+      </div>
+      <!-- Simulation Toggle for demo -->
+      <button
+        id="demo-toggle"
+        class="border border-border-base bg-surface hover:bg-base text-xs font-mono px-3 py-1.5 rounded-md transition-colors cursor-pointer hover:border-accent"
+      >
+        Simulate Live Game
+      </button>
+    </header>
+
+    <!-- Main Scoreboard -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+      
+      <!-- Primary Match Card -->
+      <section id="main-scoreboard" class="md:col-span-8 border border-border-base bg-surface rounded-xl p-8 relative overflow-hidden shadow-sm">
+        <div id="status-badge-container" class="absolute top-6 right-6">
+          <span class="font-mono text-[10px] border border-border-base text-text-muted px-2.5 py-1 rounded-full uppercase tracking-wider">Loading...</span>
+        </div>
+
+        <div class="space-y-8 py-4">
+          <!-- Opponents display -->
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-around gap-6 text-center">
+            <!-- Home Team -->
+            <div class="flex flex-col items-center space-y-2">
+              <div class="w-16 h-16 rounded-full bg-blue-950/20 border border-blue-900/30 flex items-center justify-center text-3xl font-bold">
+                🍊
+              </div>
+              <span class="font-bold text-text-base" id="home-team-name">Edmonton Oilers</span>
+              <span class="text-xs text-text-muted font-mono" id="home-team-status">EDM</span>
+            </div>
+
+            <!-- VS / Live score separator -->
+            <div class="flex flex-col items-center justify-center py-2 sm:py-0">
+              <div class="text-3xl sm:text-5xl font-extrabold tracking-widest font-mono flex items-center gap-4" id="game-score">
+                <span>-</span>
+                <span class="text-text-muted text-lg sm:text-2xl font-light font-sans">:</span>
+                <span>-</span>
+              </div>
+              <span class="font-mono text-xs text-text-muted mt-2" id="game-period">SCHEDULED</span>
+            </div>
+
+            <!-- Away Team -->
+            <div class="flex flex-col items-center space-y-2">
+              <div class="w-16 h-16 rounded-full bg-slate-900 border border-border-base flex items-center justify-center text-3xl font-bold" id="away-logo">
+                🏒
+              </div>
+              <span class="font-bold text-text-base" id="away-team-name">Opponent</span>
+              <span class="text-xs text-text-muted font-mono" id="away-team-status">OPP</span>
+            </div>
+          </div>
+
+          <!-- Match Metadata / Arena -->
+          <div class="border-t border-border-base pt-6 grid grid-cols-2 md:grid-cols-3 gap-4 font-mono text-[11px] text-text-muted">
+            <div>
+              <p class="uppercase text-[9px] tracking-wider">Venue</p>
+              <p class="font-semibold text-text-base mt-0.5" id="game-venue">Rogers Place</p>
+            </div>
+            <div>
+              <p class="uppercase text-[9px] tracking-wider">Date & Time</p>
+              <p class="font-semibold text-text-base mt-0.5" id="game-time">-</p>
+            </div>
+            <div class="col-span-2 md:col-span-1">
+              <p class="uppercase text-[9px] tracking-wider">Broadcast</p>
+              <p class="font-semibold text-text-base mt-0.5" id="game-broadcast">Sportsnet / NHL.tv</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sidebar: Recent & Upcoming -->
+      <section class="md:col-span-4 space-y-6">
+        <h2 class="font-mono text-xs font-bold uppercase tracking-wider border-b border-border-base pb-2 text-text-base">
+          Oilers Weekly Schedule
+        </h2>
+        
+        <div id="schedule-list" class="space-y-3 font-mono text-xs">
+          <!-- Dynamically filled -->
+          <p class="text-text-muted text-center py-4">Fetching schedule...</p>
+        </div>
+      </section>
+      
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'https://api-web.nhle.com/v1/club-schedule/EDM/week/now';
+
+    // Elements
+    const mainScoreboard = document.getElementById('main-scoreboard');
+    const badgeContainer = document.getElementById('status-badge-container');
+    const homeName = document.getElementById('home-team-name');
+    const awayName = document.getElementById('away-team-name');
+    const awayLogo = document.getElementById('away-logo');
+    const awayStatus = document.getElementById('away-team-status');
+    const gameScore = document.getElementById('game-score');
+    const gamePeriod = document.getElementById('game-period');
+    const gameVenue = document.getElementById('game-venue');
+    const gameTime = document.getElementById('game-time');
+    const scheduleList = document.getElementById('schedule-list');
+    const demoToggle = document.getElementById('demo-toggle');
+
+    let demoMode = false;
+    let originalData = null;
+
+    async function fetchOilersData() {
+      try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error('API request failed');
+        const data = await response.json();
+        originalData = data;
+        renderScoreboard(data);
+      } catch (err) {
+        console.error(err);
+        renderFallback();
+      }
+    }
+
+    function renderScoreboard(data) {
+      if (demoMode) return;
+
+      const games = data.games || [];
+      if (games.length === 0) {
+        renderFallback();
+        return;
+      }
+
+      // Find the closest game (either live or upcoming)
+      let activeGame = games.find(g => g.gameState === 'LIVE' || g.gameState === 'CRIT') || games[0];
+
+      updateMainGame(activeGame);
+      updateScheduleList(games);
+    }
+
+    function updateMainGame(game) {
+      const isOilersHome = game.homeTeam.abbrev === 'EDM';
+      
+      const oilersTeam = isOilersHome ? game.homeTeam : game.awayTeam;
+      const opponentTeam = isOilersHome ? game.awayTeam : game.homeTeam;
+
+      homeName.textContent = "Edmonton Oilers";
+      awayName.textContent = opponentTeam.placeName.default;
+      awayStatus.textContent = opponentTeam.abbrev;
+      awayLogo.textContent = '🏒'; // Standard opponent icon
+
+      // Date / Time Formatting
+      const gameDate = new Date(game.startTimeUTC);
+      gameTime.textContent = gameDate.toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+      gameVenue.textContent = game.venue?.default || 'Rogers Place';
+
+      // Live / Game Status
+      if (game.gameState === 'LIVE' || game.gameState === 'CRIT') {
+        badgeContainer.innerHTML = `<span class="flex items-center gap-1.5 font-mono text-[10px] bg-red-600/10 border border-red-500/20 text-red-500 px-2.5 py-1 rounded-full uppercase tracking-wider font-semibold animate-pulse">● LIVE</span>`;
+        gameScore.innerHTML = `<span>${isOilersHome ? game.homeTeam.score : game.awayTeam.score}</span><span class="text-text-muted text-lg sm:text-2xl font-light font-sans">:</span><span>${isOilersHome ? game.awayTeam.score : game.homeTeam.score}</span>`;
+        gamePeriod.textContent = `PERIOD ${game.periodDescriptor?.number || 1} - ${game.clock?.timeRemaining || '20:00'}`;
+      } else if (game.gameState === 'FINAL' || game.gameState === 'OFF') {
+        badgeContainer.innerHTML = `<span class="font-mono text-[10px] border border-border-base text-text-muted px-2.5 py-1 rounded-full uppercase tracking-wider">Final</span>`;
+        gameScore.innerHTML = `<span>${isOilersHome ? game.homeTeam.score : game.awayTeam.score}</span><span class="text-text-muted text-lg sm:text-2xl font-light font-sans">:</span><span>${isOilersHome ? game.awayTeam.score : game.homeTeam.score}</span>`;
+        gamePeriod.textContent = 'FINAL';
+      } else {
+        badgeContainer.innerHTML = `<span class="font-mono text-[10px] border border-border-base text-text-muted px-2.5 py-1 rounded-full uppercase tracking-wider">Upcoming</span>`;
+        gameScore.innerHTML = `<span>-</span><span class="text-text-muted text-lg sm:text-2xl font-light font-sans">:</span><span>-</span>`;
+        gamePeriod.textContent = 'PRE-GAME';
+      }
+    }
+
+    function updateScheduleList(games) {
+      scheduleList.innerHTML = '';
+      
+      games.forEach(game => {
+        const isOilersHome = game.homeTeam.abbrev === 'EDM';
+        const opponent = isOilersHome ? game.awayTeam.abbrev : `@ ${game.homeTeam.abbrev}`;
+        const gameDate = new Date(game.startTimeUTC).toLocaleDateString([], { weekday: 'short', month: 'numeric', day: 'numeric' });
+        
+        let scoreText = 'Scheduled';
+        if (game.gameState === 'FINAL' || game.gameState === 'OFF' || game.gameState === 'LIVE') {
+          scoreText = `${game.homeTeam.score} - ${game.awayTeam.score}`;
+        }
+
+        const gameItem = document.createElement('div');
+        gameItem.className = 'border border-border-base bg-surface p-3 rounded-lg flex items-center justify-between shadow-sm';
+        gameItem.innerHTML = `
+          <div>
+            <span class="font-semibold text-text-base">${opponent}</span>
+            <p class="text-[10px] text-text-muted mt-0.5">${gameDate}</p>
+          </div>
+          <span class="text-text-muted text-xs">${scoreText}</span>
+        `;
+        scheduleList.appendChild(gameItem);
+      });
+    }
+
+    function renderFallback() {
+      // Mock / Offline Data in case API is down or off-season
+      const mockGame = {
+        gameState: 'FINAL',
+        startTimeUTC: new Date().toISOString(),
+        venue: { default: 'Rogers Place' },
+        homeTeam: { abbrev: 'EDM', score: 4, placeName: { default: 'Edmonton' } },
+        awayTeam: { abbrev: 'VAN', score: 2, placeName: { default: 'Vancouver' } }
+      };
+      
+      updateMainGame(mockGame);
+      scheduleList.innerHTML = `<p class="text-text-muted text-center py-4">API Offline. Displaying cached roster.</p>`;
+    }
+
+    // Live Simulation Mode
+    demoToggle.addEventListener('click', () => {
+      demoMode = !demoMode;
+      
+      if (demoMode) {
+        demoToggle.textContent = "Exit Simulation";
+        demoToggle.classList.add('border-accent', 'text-accent');
+        
+        // Populate simulated live game
+        badgeContainer.innerHTML = `<span class="flex items-center gap-1.5 font-mono text-[10px] bg-red-600/10 border border-red-500/20 text-red-500 px-2.5 py-1 rounded-full uppercase tracking-wider font-semibold animate-pulse">● LIVE</span>`;
+        homeName.textContent = "Edmonton Oilers";
+        awayName.textContent = "Calgary Flames";
+        awayStatus.textContent = "CGY";
+        awayLogo.textContent = "🔥";
+        gameScore.innerHTML = `<span>3</span><span class="text-text-muted text-lg sm:text-2xl font-light font-sans">:</span><span>2</span>`;
+        gamePeriod.textContent = "PERIOD 3 - 08:42";
+        gameVenue.textContent = "Rogers Place";
+        gameTime.textContent = "Live Stream Broadcast";
+      } else {
+        demoToggle.textContent = "Simulate Live Game";
+        demoToggle.classList.remove('border-accent', 'text-accent');
+        if (originalData) {
+          renderScoreboard(originalData);
+        } else {
+          fetchOilersData();
+        }
+      }
+    });
+
+    // Run
+    fetchOilersData();
+  </script>
+</Layout>
