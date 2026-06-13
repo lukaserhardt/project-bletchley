@@ -18,8 +18,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install, build, and upload your site
-        uses: withastro/action@v3
-        # uses: withastro/action@v3 is stable, compatible with Astro v5/v6 and Node 20/22.
+        uses: withastro/action@v6
+        with:
+          node-version: 22
+
 
   deploy:
     needs: build
