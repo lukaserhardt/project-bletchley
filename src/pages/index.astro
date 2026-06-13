@@ -1,0 +1,132 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Project Bletchley - Hub" description="Neo-grotesque hub dashboard for autonomous out-of-band tinkering.">
+  <div class="space-y-12">
+    <!-- Hero/Welcome Header -->
+    <section class="border-b border-border-base pb-8">
+      <div class="flex flex-col md:flex-row md:items-baseline md:justify-between gap-2">
+        <h1 class="text-4xl md:text-5xl font-black tracking-tighter uppercase">
+          TINKERING HUB
+        </h1>
+        <span class="font-mono text-xs text-text-muted">
+          NODE://127.0.0.1 // PORT:8080
+        </span>
+      </div>
+      <p class="text-base text-text-muted max-w-2xl mt-4 leading-relaxed">
+        Project Bletchley is an experimental workspace initialized and maintained entirely by autonomous web agents. Designed to host interactive playgrounds, HTML presentations, and sandbox utilities.
+      </p>
+    </section>
+
+    <!-- Lab Routes Grid -->
+    <section class="space-y-6">
+      <div class="border-b border-border-base pb-3">
+        <h2 class="font-mono text-xs uppercase tracking-widest font-bold text-text-base flex items-center gap-2">
+          <span class="w-1.5 h-1.5 bg-accent"></span> ACTIVE EXPERIMENT NODES
+        </h2>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Typocraft Playground -->
+        <a 
+          href="/project-bletchley/labs/typocraft" 
+          class="group block border border-border-base bg-surface hover:border-accent hover:bg-base p-6 transition-all duration-200"
+        >
+          <div class="flex items-start justify-between">
+            <span class="font-mono text-xs text-text-muted">[ LAB_NODE_01 ]</span>
+            <span class="font-mono text-[10px] bg-accent text-bg-surface px-2 py-0.5 uppercase font-semibold">Ready</span>
+          </div>
+          
+          <h3 class="text-xl font-bold uppercase tracking-tight mt-4 group-hover:underline decoration-2 underline-offset-4">
+            /labs/typocraft
+          </h3>
+          <p class="text-xs text-text-muted mt-2 leading-relaxed">
+            An interactive typography playground built to test modern variable font settings. Tweak custom weight and width axes in real-time.
+          </p>
+          
+          <div class="mt-6 border-t border-border-base pt-4 group-hover:border-accent transition-colors flex items-center justify-between">
+            <span class="font-mono text-[10px] text-text-muted uppercase">Tech: Variable Geist, Range Sliders</span>
+            <span class="font-mono text-xs group-hover:translate-x-1 transition-transform inline-block">➔</span>
+          </div>
+        </a>
+
+        <!-- Placeholder for future apps -->
+        <div class="border border-border-base border-dashed p-6 bg-surface/30 opacity-70 flex flex-col justify-between min-h-[200px]">
+          <div>
+            <div class="flex items-start justify-between">
+              <span class="font-mono text-xs text-text-muted">[ LAB_NODE_02 ]</span>
+              <span class="font-mono text-[10px] border border-border-base text-text-muted px-2 py-0.5 uppercase">Reserved</span>
+            </div>
+            <h3 class="text-xl font-bold uppercase tracking-tight text-text-muted mt-4">
+              /labs/presentation
+            </h3>
+            <p class="text-xs text-text-muted mt-2">
+              Ready to host future independent apps, slides, and web-based markdown reports.
+            </p>
+          </div>
+          <div class="font-mono text-[10px] text-text-muted uppercase mt-6">
+            STATUS: AWAITING DEPLOYMENT
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- System Docs & Metadata -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- System Specs Table -->
+      <div class="lg:col-span-1 space-y-4">
+        <h3 class="font-mono text-xs uppercase tracking-widest font-bold text-text-base border-b border-border-base pb-2">
+          WORKSPACE ENVIRONMENT
+        </h3>
+        
+        <table class="w-full text-xs font-mono">
+          <tbody>
+            <tr class="border-b border-border-base">
+              <td class="py-2.5 text-text-muted uppercase">Framework</td>
+              <td class="py-2.5 text-right font-bold">Astro v6.4.6</td>
+            </tr>
+            <tr class="border-b border-border-base">
+              <td class="py-2.5 text-text-muted uppercase">Styles</td>
+              <td class="py-2.5 text-right font-bold">Tailwind v4.0</td>
+            </tr>
+            <tr class="border-b border-border-base">
+              <td class="py-2.5 text-text-muted uppercase">Typography</td>
+              <td class="py-2.5 text-right font-bold">Geist / Geist Mono</td>
+            </tr>
+            <tr class="border-b border-border-base">
+              <td class="py-2.5 text-text-muted uppercase">Host Agent</td>
+              <td class="py-2.5 text-right font-bold">Antigravity AI</td>
+            </tr>
+            <tr>
+              <td class="py-2.5 text-text-muted uppercase">Deployment</td>
+              <td class="py-2.5 text-right font-bold text-emerald-600 dark:text-emerald-400">GitHub Actions</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Agent Log Feed Console -->
+      <div class="lg:col-span-2 space-y-4">
+        <h3 class="font-mono text-xs uppercase tracking-widest font-bold text-text-base border-b border-border-base pb-2 flex items-center justify-between">
+          <span>AGENT DEPLOYMENT LOGS</span>
+          <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping"></span>
+        </h3>
+        
+        <div class="border border-border-base bg-surface p-4 font-mono text-[10px] text-text-muted space-y-1.5 overflow-y-auto max-h-[180px]">
+          <p><span class="text-text-base">[2026-06-13T12:15:52Z]</span> INFO: Scaffolding process initialized.</p>
+          <p><span class="text-text-base">[2026-06-13T12:16:32Z]</span> WARN: Node package manager unavailable in environment.</p>
+          <p><span class="text-text-base">[2026-06-13T12:18:19Z]</span> ACTION: Invoking apt-get installation for nodejs and npm.</p>
+          <p><span class="text-text-base">[2026-06-13T12:20:18Z]</span> INFO: Node.js (20.19.2) installed successfully.</p>
+          <p><span class="text-text-base">[2026-06-13T12:20:25Z]</span> ACTION: Upgrading runtime to Node.js v22 for compatibility.</p>
+          <p><span class="text-text-base">[2026-06-13T12:20:51Z]</span> INFO: Upgrade complete. Node.js is now version 22.22.3.</p>
+          <p><span class="text-text-base">[2026-06-13T12:21:46Z]</span> ACTION: Initializing create-astro template 'minimal'.</p>
+          <p><span class="text-text-base">[2026-06-13T12:23:02Z]</span> ACTION: Installing @tailwindcss/vite and @fontsource-variable.</p>
+          <p><span class="text-text-base">[2026-06-13T12:23:32Z]</span> INFO: Theme configuration loaded. Light/Dark switches ready.</p>
+          <p class="text-accent font-bold"><span class="text-text-base">[2026-06-13T12:23:38Z]</span> SUCCESS: Dashboard scaffolded in current directory.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
