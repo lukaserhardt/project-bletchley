@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 ---
 
-<Layout title="Project Bletchley - Loan Calculator" description="Calculate loan repayments, analyze interest/principal payment composition over time, and model extra payments.">
+<Layout title="Project Bletchley - Loan Calculator" description="Model loan repayments, analyze interest/principal payment composition over time, and compare term-based and payment-based payoff schedules in EUR.">
   <div class="space-y-8 flex-grow flex flex-col relative">
     
     <!-- Hero Glow Blobs -->
@@ -23,7 +23,7 @@ import Layout from '../../layouts/Layout.astro';
       <div>
         <h1 class="text-3xl font-extrabold tracking-tight">Loan Composition & Payoff Simulator</h1>
         <p class="text-sm text-muted mt-2">
-          Visualize how your loan payments split between principal and interest over time, and see how extra payments accelerate payoff.
+          Model loan amortization, see principal vs. interest breakdown, and project payoff dates based on custom payment schedules in EUR (€).
         </p>
       </div>
     </header>
@@ -31,24 +31,42 @@ import Layout from '../../layouts/Layout.astro';
     <!-- Main Content Layout -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
       
-      <!-- Left side: Inputs (4 cols on lg) -->
-      <section class="lg:col-span-4 border border-border bg-card rounded-xl p-6 flex flex-col justify-between shadow-sm space-y-6">
+      <!-- Left side: Parameters Control (5 cols on lg) -->
+      <section class="lg:col-span-5 border border-border bg-card rounded-xl p-5 flex flex-col justify-between shadow-sm space-y-6">
         <div class="space-y-6">
-          <h2 class="font-mono text-sm font-bold uppercase tracking-wider border-b border-border pb-2 text-foreground">
-            Loan Parameters
-          </h2>
+          <div class="border-b border-border pb-2 flex items-center justify-between">
+            <h2 class="font-mono text-xs font-bold uppercase tracking-wider text-foreground">
+              Simulation Mode
+            </h2>
+          </div>
 
-          <!-- Loan Amount -->
+          <!-- Mode Tab Switcher -->
+          <div class="grid grid-cols-2 gap-2 bg-background border border-border p-1 rounded-md">
+            <button 
+              id="btn-mode-term" 
+              class="text-xs font-mono py-2 rounded transition-colors cursor-pointer text-center font-bold bg-primary text-white"
+            >
+              Calculate Payment
+            </button>
+            <button 
+              id="btn-mode-payoff" 
+              class="text-xs font-mono py-2 rounded transition-colors cursor-pointer text-center text-muted hover:text-foreground"
+            >
+              Calculate Payoff Date
+            </button>
+          </div>
+
+          <!-- Shared Input: Loan Sum -->
           <div class="space-y-1.5">
             <div class="flex justify-between text-xs font-mono">
-              <label for="loan-amount" class="uppercase tracking-wider text-muted">Loan Amount</label>
-              <span class="font-bold text-foreground" id="loan-amount-val">$250,000</span>
+              <label for="loan-amount" class="uppercase tracking-wider text-muted font-semibold">Loan Sum (€)</label>
+              <span class="font-bold text-foreground" id="loan-amount-val">€250.000</span>
             </div>
             <input
               type="range"
               id="loan-amount"
               min="5000"
-              max="1000000"
+              max="1500000"
               value="250000"
               step="5000"
               class="w-full h-1 bg-border appearance-none cursor-pointer accent-primary"
@@ -61,71 +79,142 @@ import Layout from '../../layouts/Layout.astro';
             />
           </div>
 
-          <!-- Interest Rate -->
+          <!-- Shared Input: Interest Rate -->
           <div class="space-y-1.5">
             <div class="flex justify-between text-xs font-mono">
-              <label for="interest-rate" class="uppercase tracking-wider text-muted">Interest Rate (Annual)</label>
-              <span class="font-bold text-foreground" id="interest-rate-val">6.5%</span>
+              <label for="interest-rate" class="uppercase tracking-wider text-muted font-semibold">Interest Rate (Annual %)</label>
+              <span class="font-bold text-foreground" id="interest-rate-val">4,5%</span>
             </div>
             <input
               type="range"
               id="interest-rate"
               min="0.1"
               max="15.0"
-              value="6.5"
+              value="4.5"
               step="0.1"
               class="w-full h-1 bg-border appearance-none cursor-pointer accent-primary"
             />
             <input 
               type="number" 
               id="interest-rate-input" 
-              value="6.5"
+              value="4.5"
               step="0.1"
               class="w-full bg-background border border-border rounded px-2.5 py-1 text-xs font-mono focus:border-primary focus:outline-none text-foreground mt-1" 
             />
           </div>
 
-          <!-- Loan Term -->
-          <div class="space-y-1.5">
-            <div class="flex justify-between text-xs font-mono">
-              <label for="loan-term" class="uppercase tracking-wider text-muted">Loan Term (Years)</label>
-              <span class="font-bold text-foreground" id="loan-term-val">30 Years</span>
+          <!-- DYNAMIC PANEL A: Term-based Inputs -->
+          <div class="space-y-4" id="panel-term-mode">
+            <!-- Loan Term -->
+            <div class="space-y-1.5">
+              <div class="flex justify-between text-xs font-mono">
+                <label for="loan-term" class="uppercase tracking-wider text-muted font-semibold">Loan Term (Years)</label>
+                <span class="font-bold text-foreground" id="loan-term-val">25 Years</span>
+              </div>
+              <input
+                type="range"
+                id="loan-term"
+                min="1"
+                max="30"
+                value="25"
+                step="1"
+                class="w-full h-1 bg-border appearance-none cursor-pointer accent-primary"
+              />
             </div>
-            <input
-              type="range"
-              id="loan-term"
-              min="1"
-              max="30"
-              value="30"
-              step="1"
-              class="w-full h-1 bg-border appearance-none cursor-pointer accent-primary"
-            />
+
+            <!-- Extra Monthly Payment -->
+            <div class="space-y-1.5 pt-3 border-t border-border/40">
+              <div class="flex justify-between text-xs font-mono">
+                <label for="extra-payment" class="uppercase tracking-wider text-primary font-semibold flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+                  Extra Monthly Payment (€)
+                </label>
+                <span class="font-bold text-primary" id="extra-payment-val">€0</span>
+              </div>
+              <input
+                type="range"
+                id="extra-payment"
+                min="0"
+                max="3000"
+                value="0"
+                step="50"
+                class="w-full h-1 bg-border appearance-none cursor-pointer accent-primary"
+              />
+              <input 
+                type="number" 
+                id="extra-payment-input" 
+                value="0"
+                class="w-full bg-background border border-border rounded px-2.5 py-1 text-xs font-mono focus:border-primary focus:outline-none text-foreground mt-1" 
+              />
+            </div>
           </div>
 
-          <!-- Extra Monthly Payments -->
-          <div class="space-y-1.5 pt-4 border-t border-border/50">
-            <div class="flex justify-between text-xs font-mono">
-              <label for="extra-payment" class="uppercase tracking-wider text-primary font-semibold flex items-center gap-1.5">
-                <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
-                Extra Monthly Payment
-              </label>
-              <span class="font-bold text-primary" id="extra-payment-val">$150</span>
+          <!-- DYNAMIC PANEL B: Payment-based Inputs -->
+          <div class="space-y-4 hidden" id="panel-payoff-mode">
+            <!-- Monthly Base Payment -->
+            <div class="space-y-1.5">
+              <div class="flex justify-between text-xs font-mono">
+                <label for="monthly-payment-target" class="uppercase tracking-wider text-muted font-semibold">Target Monthly Payment (€)</label>
+                <span class="font-bold text-foreground" id="monthly-payment-target-val">€1.200</span>
+              </div>
+              <input
+                type="range"
+                id="monthly-payment-target"
+                min="100"
+                max="10000"
+                value="1200"
+                step="50"
+                class="w-full h-1 bg-border appearance-none cursor-pointer accent-primary"
+              />
+              <input 
+                type="number" 
+                id="monthly-payment-target-input" 
+                value="1200"
+                class="w-full bg-background border border-border rounded px-2.5 py-1 text-xs font-mono focus:border-primary focus:outline-none text-foreground mt-1" 
+              />
             </div>
-            <input
-              type="range"
-              id="extra-payment"
-              min="0"
-              max="2000"
-              value="150"
-              step="25"
-              class="w-full h-1 bg-border appearance-none cursor-pointer accent-primary"
-            />
-            <input 
-              type="number" 
-              id="extra-payment-input" 
-              value="150"
-              class="w-full bg-background border border-border rounded px-2.5 py-1 text-xs font-mono focus:border-primary focus:outline-none text-foreground mt-1" 
-            />
+
+            <!-- Annual Extra Payment (Sondertilgung) -->
+            <div class="space-y-1.5 pt-3 border-t border-border/40">
+              <div class="flex justify-between text-xs font-mono">
+                <label for="annual-lump-sum" class="uppercase tracking-wider text-primary font-semibold flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 bg-primary rounded-full"></span>
+                  Annual Extra Payment (Lump Sum)
+                </label>
+                <span class="font-bold text-primary" id="annual-lump-sum-val">€2.500</span>
+              </div>
+              <input
+                type="range"
+                id="annual-lump-sum"
+                min="0"
+                max="25000"
+                value="2500"
+                step="250"
+                class="w-full h-1 bg-border appearance-none cursor-pointer accent-primary"
+              />
+              <input 
+                type="number" 
+                id="annual-lump-sum-input" 
+                value="2500"
+                class="w-full bg-background border border-border rounded px-2.5 py-1 text-xs font-mono focus:border-primary focus:outline-none text-foreground mt-1" 
+              />
+            </div>
+
+            <!-- Month of Lump Sum Payment -->
+            <div class="space-y-1.5">
+              <label for="lump-sum-month" class="font-mono text-xs uppercase tracking-wider text-muted block">
+                Extra Payment Month
+              </label>
+              <select 
+                id="lump-sum-month" 
+                class="w-full bg-background border border-border rounded px-2.5 py-2 text-xs font-mono text-foreground focus:border-primary focus:outline-none"
+              >
+                <option value="12">December (Month 12)</option>
+                <option value="11">November (Month 11)</option>
+                <option value="6">June (Month 6)</option>
+                <option value="1">January (Month 1)</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -133,45 +222,33 @@ import Layout from '../../layouts/Layout.astro';
           id="reset-calculator-btn"
           class="w-full border border-border bg-background hover:bg-card hover:border-primary text-xs font-mono py-2 rounded-md transition-colors cursor-pointer text-foreground flex items-center justify-center gap-1.5"
         >
-          Reset parameters
+          Reset Parameters
         </button>
       </section>
 
-      <!-- Right side: Graph & Summary (8 cols on lg) -->
-      <section class="lg:col-span-8 flex flex-col gap-6 justify-between">
+      <!-- Right side: Graph & Summary (7 cols on lg) -->
+      <section class="lg:col-span-7 flex flex-col gap-6 justify-between">
         
         <!-- Summary Cards Grid -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div class="border border-border bg-card p-4 rounded-xl shadow-sm">
-            <span class="text-[10px] font-mono text-muted uppercase block">Monthly Payment</span>
-            <span class="text-lg font-bold text-foreground mt-1 block" id="out-monthly">--</span>
-            <span class="text-[9px] font-mono text-muted block mt-0.5" id="out-monthly-base">Base: --</span>
-          </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4" id="calculator-summary-grid">
+          <!-- Populated by JS -->
+        </div>
 
-          <div class="border border-border bg-card p-4 rounded-xl shadow-sm">
-            <span class="text-[10px] font-mono text-muted uppercase block">Total Cost</span>
-            <span class="text-lg font-bold text-foreground mt-1 block" id="out-total-cost">--</span>
-            <span class="text-[9px] font-mono text-muted block mt-0.5">Principal + Interest</span>
-          </div>
-
-          <div class="border border-border bg-card p-4 rounded-xl shadow-sm">
-            <span class="text-[10px] font-mono text-primary font-semibold uppercase block">Interest Saved</span>
-            <span class="text-lg font-bold text-primary mt-1 block" id="out-interest-saved">--</span>
-            <span class="text-[9px] font-mono text-muted block mt-0.5" id="out-term-saved">Term reduced: --</span>
-          </div>
-
-          <div class="border border-border bg-card p-4 rounded-xl shadow-sm">
-            <span class="text-[10px] font-mono text-emerald-500 font-semibold uppercase block">Effective Term</span>
-            <span class="text-lg font-bold text-emerald-500 mt-1 block" id="out-effective-term">--</span>
-            <span class="text-[9px] font-mono text-muted block mt-0.5" id="out-payoff-date">Payoff date: --</span>
-          </div>
+        <!-- Warning / Notification Box -->
+        <div id="negative-amortization-warning" class="border border-red-500/20 bg-red-500/5 p-4 rounded-xl hidden">
+          <p class="text-xs text-red-400 font-mono flex items-center gap-2">
+            <svg class="w-4 h-4 shrink-0 text-red-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <span id="warning-text">Warning: Target payment is lower than monthly interest. The loan balance will grow indefinitely.</span>
+          </p>
         </div>
 
         <!-- Payment Composition Chart Card -->
         <div class="border border-border bg-card rounded-xl p-6 shadow-sm flex-grow flex flex-col justify-between">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-border pb-4 mb-6 gap-2">
             <h3 class="font-mono text-sm font-bold uppercase tracking-wider text-foreground">
-              Annual Payment Composition over time
+              Payment Composition Over Time
             </h3>
             
             <div class="flex items-center gap-4 text-[10px] font-mono text-muted">
@@ -185,7 +262,7 @@ import Layout from '../../layouts/Layout.astro';
               </span>
               <span class="flex items-center gap-1">
                 <span class="w-2.5 h-2.5 bg-emerald-500 rounded-sm inline-block"></span>
-                Extra Pay
+                Extra (Monthly/Lump)
               </span>
             </div>
           </div>
@@ -209,7 +286,7 @@ import Layout from '../../layouts/Layout.astro';
               <p class="flex justify-between gap-4"><span class="text-muted">Principal:</span> <span class="text-primary font-bold" id="l-tooltip-principal">--</span></p>
               <p class="flex justify-between gap-4"><span class="text-muted">Interest:</span> <span class="text-rose-500 font-bold" id="l-tooltip-interest">--</span></p>
               <p class="flex justify-between gap-4"><span class="text-muted">Extra Paid:</span> <span class="text-emerald-500 font-bold" id="l-tooltip-extra">--</span></p>
-              <p class="flex justify-between gap-4 border-t border-border/50 pt-1 mt-1"><span class="text-muted">Bal Remaining:</span> <span class="text-foreground font-semibold" id="l-tooltip-balance">--</span></p>
+              <p class="flex justify-between gap-4 border-t border-border/50 pt-1 mt-1"><span class="text-muted">Ending Bal:</span> <span class="text-foreground font-semibold" id="l-tooltip-balance">--</span></p>
             </div>
           </div>
         </div>
@@ -242,7 +319,7 @@ import Layout from '../../layouts/Layout.astro';
             <tr class="border-b border-border text-muted uppercase tracking-wider sticky top-0 bg-card z-10">
               <th class="py-3 px-4" id="th-period">Period</th>
               <th class="py-3 px-4 text-right">Starting Balance</th>
-              <th class="py-3 px-4 text-right">Payment</th>
+              <th class="py-3 px-4 text-right">Total Payments</th>
               <th class="py-3 px-4 text-right text-primary">Principal Paid</th>
               <th class="py-3 px-4 text-right text-rose-500">Interest Paid</th>
               <th class="py-3 px-4 text-right text-emerald-500">Extra Paid</th>
@@ -260,12 +337,25 @@ import Layout from '../../layouts/Layout.astro';
 
   <script>
     // State Variables
+    let activeMode = 'term'; // 'term' or 'payoff'
     let loanAmount = 250000;
-    let interestRate = 6.5;
-    let loanTermYears = 30;
-    let extraMonthly = 150;
+    let interestRate = 4.5;
+    
+    // Panel A State (Calculate Payment Mode)
+    let loanTermYears = 25;
+    let extraMonthly = 0;
+    
+    // Panel B State (Calculate Payoff Date Mode)
+    let targetMonthlyPayment = 1200;
+    let annualLumpSum = 2500;
+    let lumpSumMonth = 12; // December
 
-    // Elements
+    // DOM Elements
+    const btnModeTerm = document.getElementById('btn-mode-term');
+    const btnModePayoff = document.getElementById('btn-mode-payoff');
+    const panelTermMode = document.getElementById('panel-term-mode');
+    const panelPayoffMode = document.getElementById('panel-payoff-mode');
+
     const loanAmountSlider = document.getElementById('loan-amount');
     const loanAmountInput = document.getElementById('loan-amount-input');
     const loanAmountVal = document.getElementById('loan-amount-val');
@@ -274,149 +364,254 @@ import Layout from '../../layouts/Layout.astro';
     const interestRateInput = document.getElementById('interest-rate-input');
     const interestRateVal = document.getElementById('interest-rate-val');
 
+    // Panel A inputs
     const loanTermSlider = document.getElementById('loan-term');
     const loanTermVal = document.getElementById('loan-term-val');
-
     const extraPaymentSlider = document.getElementById('extra-payment');
     const extraPaymentInput = document.getElementById('extra-payment-input');
     const extraPaymentVal = document.getElementById('extra-payment-val');
 
+    // Panel B inputs
+    const monthlyPaymentTargetSlider = document.getElementById('monthly-payment-target');
+    const monthlyPaymentTargetInput = document.getElementById('monthly-payment-target-input');
+    const monthlyPaymentTargetVal = document.getElementById('monthly-payment-target-val');
+
+    const annualLumpSumSlider = document.getElementById('annual-lump-sum');
+    const annualLumpSumInput = document.getElementById('annual-lump-sum-input');
+    const annualLumpSumVal = document.getElementById('annual-lump-sum-val');
+    const lumpSumMonthSelect = document.getElementById('lump-sum-month');
+
     const resetBtn = document.getElementById('reset-calculator-btn');
+    const summaryGrid = document.getElementById('calculator-summary-grid');
+    const warningBox = document.getElementById('negative-amortization-warning');
+    const warningText = document.getElementById('warning-text');
 
-    // Outputs
-    const outMonthly = document.getElementById('out-monthly');
-    const outMonthlyBase = document.getElementById('out-monthly-base');
-    const outTotalCost = document.getElementById('out-total-cost');
-    const outInterestSaved = document.getElementById('out-interest-saved');
-    const outTermSaved = document.getElementById('out-term-saved');
-    const outEffectiveTerm = document.getElementById('out-effective-term');
-    const outPayoffDate = document.getElementById('out-payoff-date');
-
-    // Chart Elements
+    // Chart
     const svgEl = document.getElementById('loan-composition-svg');
     const svgGrid = document.getElementById('loan-grid-lines');
     const svgBars = document.getElementById('loan-bars');
     const svgAxes = document.getElementById('loan-axes');
     const tooltipEl = document.getElementById('loan-tooltip');
+    
     const tooltipTitle = document.getElementById('l-tooltip-title');
     const tooltipPrincipal = document.getElementById('l-tooltip-principal');
     const tooltipInterest = document.getElementById('l-tooltip-interest');
     const tooltipExtra = document.getElementById('l-tooltip-extra');
     const tooltipBalance = document.getElementById('l-tooltip-balance');
 
-    // Table elements
+    // Table
     const tableBody = document.getElementById('amortization-table-body');
     const tableViewMode = document.getElementById('table-view-mode');
     const thPeriod = document.getElementById('th-period');
 
     function init() {
-      // Event Listeners for Amount
+      setupModeButtons();
+      setupSharedInputs();
+      setupPanelAInputs();
+      setupPanelBInputs();
+      
+      resetBtn.addEventListener('click', resetAll);
+      tableViewMode.addEventListener('change', calculateLoan);
+      window.addEventListener('resize', calculateLoan);
+
+      calculateLoan();
+    }
+
+    function setupModeButtons() {
+      btnModeTerm.addEventListener('click', () => {
+        activeMode = 'term';
+        btnModeTerm.className = 'text-xs font-mono py-2 rounded transition-colors cursor-pointer text-center font-bold bg-primary text-white';
+        btnModePayoff.className = 'text-xs font-mono py-2 rounded transition-colors cursor-pointer text-center text-muted hover:text-foreground';
+        panelTermMode.classList.remove('hidden');
+        panelPayoffMode.classList.add('hidden');
+        calculateLoan();
+      });
+
+      btnModePayoff.addEventListener('click', () => {
+        activeMode = 'payoff';
+        btnModePayoff.className = 'text-xs font-mono py-2 rounded transition-colors cursor-pointer text-center font-bold bg-primary text-white';
+        btnModeTerm.className = 'text-xs font-mono py-2 rounded transition-colors cursor-pointer text-center text-muted hover:text-foreground';
+        panelPayoffMode.classList.remove('hidden');
+        panelTermMode.classList.add('hidden');
+        
+        // Auto-adjust target monthly payment to be reasonable if it is too low
+        const minPayment = Math.ceil(loanAmount * (interestRate / 100) / 12) + 100;
+        if (targetMonthlyPayment < minPayment) {
+          targetMonthlyPayment = minPayment;
+          monthlyPaymentTargetSlider.value = targetMonthlyPayment;
+          monthlyPaymentTargetInput.value = targetMonthlyPayment;
+          monthlyPaymentTargetVal.textContent = formatCurrency(targetMonthlyPayment, 0);
+        }
+        calculateLoan();
+      });
+    }
+
+    function setupSharedInputs() {
       loanAmountSlider.addEventListener('input', (e) => {
         loanAmount = parseFloat(e.target.value);
         loanAmountInput.value = loanAmount;
         loanAmountVal.textContent = formatCurrency(loanAmount, 0);
         calculateLoan();
       });
+
       loanAmountInput.addEventListener('change', (e) => {
         let val = parseFloat(e.target.value);
         if (isNaN(val) || val < 1000) val = 1000;
-        if (val > 10000000) val = 10000000; // Cap at 10M
+        if (val > 10000000) val = 10000000;
         loanAmount = val;
-        loanAmountSlider.value = Math.min(val, 1000000); // Slider cap at 1M
+        loanAmountSlider.value = Math.min(val, 1500000);
         loanAmountVal.textContent = formatCurrency(loanAmount, 0);
         loanAmountInput.value = loanAmount;
         calculateLoan();
       });
 
-      // Event Listeners for Rate
       interestRateSlider.addEventListener('input', (e) => {
         interestRate = parseFloat(e.target.value);
         interestRateInput.value = interestRate.toFixed(2);
-        interestRateVal.textContent = `${interestRate.toFixed(1)}%`;
+        interestRateVal.textContent = `${interestRate.toFixed(1).replace('.', ',')}%`;
         calculateLoan();
       });
+
       interestRateInput.addEventListener('change', (e) => {
         let val = parseFloat(e.target.value);
         if (isNaN(val) || val < 0.01) val = 0.01;
-        if (val > 50.0) val = 50.0;
+        if (val > 50) val = 50;
         interestRate = val;
-        interestRateSlider.value = Math.min(val, 15.0); // Slider cap 15%
-        interestRateVal.textContent = `${interestRate.toFixed(2)}%`;
+        interestRateSlider.value = Math.min(val, 15.0);
+        interestRateVal.textContent = `${interestRate.toFixed(2).replace('.', ',')}%`;
         interestRateInput.value = interestRate;
         calculateLoan();
       });
+    }
 
-      // Event Listeners for Term
+    function setupPanelAInputs() {
       loanTermSlider.addEventListener('input', (e) => {
         loanTermYears = parseInt(e.target.value);
-        loanTermVal.textContent = `${loanTermYears} Year${loanTermYears > 1 ? 's' : ''}`;
+        loanTermVal.textContent = `${loanTermYears} Years`;
         calculateLoan();
       });
 
-      // Event Listeners for Extra Payment
       extraPaymentSlider.addEventListener('input', (e) => {
         extraMonthly = parseFloat(e.target.value);
         extraPaymentInput.value = extraMonthly;
         extraPaymentVal.textContent = formatCurrency(extraMonthly, 0);
         calculateLoan();
       });
+
       extraPaymentInput.addEventListener('change', (e) => {
         let val = parseFloat(e.target.value);
         if (isNaN(val) || val < 0) val = 0;
-        if (val > loanAmount) val = loanAmount;
         extraMonthly = val;
-        extraPaymentSlider.value = Math.min(val, 2000); // Slider cap 2000
-        extraPaymentVal.textContent = formatCurrency(extraMonthly, 0);
-        extraPaymentInput.value = extraMonthly;
+        extraPaymentSlider.value = Math.min(val, 3000);
+        extraPaymentInput.value = val;
+        extraPaymentVal.textContent = formatCurrency(val, 0);
+        calculateLoan();
+      });
+    }
+
+    function setupPanelBInputs() {
+      monthlyPaymentTargetSlider.addEventListener('input', (e) => {
+        targetMonthlyPayment = parseFloat(e.target.value);
+        monthlyPaymentTargetInput.value = targetMonthlyPayment;
+        monthlyPaymentTargetVal.textContent = formatCurrency(targetMonthlyPayment, 0);
         calculateLoan();
       });
 
-      tableViewMode.addEventListener('change', () => {
+      monthlyPaymentTargetInput.addEventListener('change', (e) => {
+        let val = parseFloat(e.target.value);
+        if (isNaN(val) || val < 10) val = 10;
+        targetMonthlyPayment = val;
+        monthlyPaymentTargetSlider.value = Math.min(val, 10000);
+        monthlyPaymentTargetInput.value = val;
+        monthlyPaymentTargetVal.textContent = formatCurrency(val, 0);
         calculateLoan();
       });
 
-      resetBtn.addEventListener('click', () => {
-        loanAmount = 250000;
-        interestRate = 6.5;
-        loanTermYears = 30;
-        extraMonthly = 150;
-
-        loanAmountSlider.value = loanAmount;
-        loanAmountInput.value = loanAmount;
-        loanAmountVal.textContent = formatCurrency(loanAmount, 0);
-
-        interestRateSlider.value = interestRate;
-        interestRateInput.value = interestRate;
-        interestRateVal.textContent = `${interestRate}%`;
-
-        loanTermSlider.value = loanTermYears;
-        loanTermVal.textContent = `${loanTermYears} Years`;
-
-        extraPaymentSlider.value = extraMonthly;
-        extraPaymentInput.value = extraMonthly;
-        extraPaymentVal.textContent = formatCurrency(extraMonthly, 0);
-
+      annualLumpSumSlider.addEventListener('input', (e) => {
+        annualLumpSum = parseFloat(e.target.value);
+        annualLumpSumInput.value = annualLumpSum;
+        annualLumpSumVal.textContent = formatCurrency(annualLumpSum, 0);
         calculateLoan();
       });
 
-      window.addEventListener('resize', () => {
+      annualLumpSumInput.addEventListener('change', (e) => {
+        let val = parseFloat(e.target.value);
+        if (isNaN(val) || val < 0) val = 0;
+        annualLumpSum = val;
+        annualLumpSumSlider.value = Math.min(val, 25000);
+        annualLumpSumInput.value = val;
+        annualLumpSumVal.textContent = formatCurrency(val, 0);
         calculateLoan();
       });
+
+      lumpSumMonthSelect.addEventListener('change', (e) => {
+        lumpSumMonth = parseInt(e.target.value);
+        calculateLoan();
+      });
+    }
+
+    function resetAll() {
+      loanAmount = 250000;
+      interestRate = 4.5;
+      
+      loanTermYears = 25;
+      extraMonthly = 0;
+      
+      targetMonthlyPayment = 1200;
+      annualLumpSum = 2500;
+      lumpSumMonth = 12;
+
+      // Reset DOM
+      loanAmountSlider.value = loanAmount;
+      loanAmountInput.value = loanAmount;
+      loanAmountVal.textContent = formatCurrency(loanAmount, 0);
+
+      interestRateSlider.value = interestRate;
+      interestRateInput.value = interestRate;
+      interestRateVal.textContent = `4,5%`;
+
+      loanTermSlider.value = loanTermYears;
+      loanTermVal.textContent = `25 Years`;
+
+      extraPaymentSlider.value = extraMonthly;
+      extraPaymentInput.value = extraMonthly;
+      extraPaymentVal.textContent = `€0`;
+
+      monthlyPaymentTargetSlider.value = targetMonthlyPayment;
+      monthlyPaymentTargetInput.value = targetMonthlyPayment;
+      monthlyPaymentTargetVal.textContent = formatCurrency(targetMonthlyPayment, 0);
+
+      annualLumpSumSlider.value = annualLumpSum;
+      annualLumpSumInput.value = annualLumpSum;
+      annualLumpSumVal.textContent = formatCurrency(annualLumpSum, 0);
+
+      lumpSumMonthSelect.value = "12";
 
       calculateLoan();
     }
 
     function formatCurrency(val, dec = 2) {
-      return new Intl.NumberFormat('en-US', {
+      // German formatting for EUR
+      return new Intl.NumberFormat('de-DE', {
         style: 'currency',
-        currency: 'USD',
+        currency: 'EUR',
         minimumFractionDigits: dec,
         maximumFractionDigits: dec
       }).format(val);
     }
 
     function calculateLoan() {
-      // 1. Calculate base loan without extra payments
+      warningBox.classList.add('hidden');
+      
+      if (activeMode === 'term') {
+        calculateTermBasedLoan();
+      } else {
+        calculatePayoffBasedLoan();
+      }
+    }
+
+    // MODE 1: Input Term, output Monthly payment
+    function calculateTermBasedLoan() {
       const monthlyRate = (interestRate / 100) / 12;
       const totalPaymentsCount = loanTermYears * 12;
       
@@ -428,63 +623,33 @@ import Layout from '../../layouts/Layout.astro';
                               (Math.pow(1 + monthlyRate, totalPaymentsCount) - 1);
       }
 
-      // 2. Perform amortization loops for BOTH base schedule and extra payments schedule
-      // Schedule A: Base (no extra payments)
-      const baseSchedule = [];
-      let balanceA = loanAmount;
-      let totalInterestA = 0;
-      for (let m = 1; m <= totalPaymentsCount; m++) {
-        const interestPaid = balanceA * monthlyRate;
-        let principalPaid = baseMonthlyPayment - interestPaid;
-        
-        if (principalPaid > balanceA) {
-          principalPaid = balanceA;
-        }
-        
-        balanceA -= principalPaid;
-        totalInterestA += interestPaid;
-
-        baseSchedule.push({
-          month: m,
-          principalPaid,
-          interestPaid,
-          balance: balanceA
-        });
-
-        if (balanceA <= 0) break;
-      }
-
-      // Schedule B: With Extra Payments
+      // Amortization loop
       const extraSchedule = [];
-      let balanceB = loanAmount;
-      let totalInterestB = 0;
+      let balance = loanAmount;
+      let totalInterest = 0;
       let totalExtraPaid = 0;
-      let payoffMonth = totalPaymentsCount;
-      
-      for (let m = 1; m <= totalPaymentsCount; m++) {
-        if (balanceB <= 0) {
-          payoffMonth = m - 1;
-          break;
-        }
 
-        const startBal = balanceB;
-        const interestPaid = balanceB * monthlyRate;
+      for (let m = 1; m <= totalPaymentsCount; m++) {
+        if (balance <= 0) break;
+
+        const startBal = balance;
+        const interestPaid = balance * monthlyRate;
         let principalPaid = baseMonthlyPayment - interestPaid;
         
-        if (principalPaid > balanceB) {
-          principalPaid = balanceB;
+        if (principalPaid > balance) {
+          principalPaid = balance;
         }
-        balanceB -= principalPaid;
+        balance -= principalPaid;
 
-        // Apply Extra Payment
+        // Apply extra monthly
         let actualExtra = 0;
-        if (balanceB > 0 && extraMonthly > 0) {
-          actualExtra = Math.min(extraMonthly, balanceB);
-          balanceB -= actualExtra;
+        if (balance > 0 && extraMonthly > 0) {
+          actualExtra = Math.min(extraMonthly, balance);
+          balance -= actualExtra;
           totalExtraPaid += actualExtra;
         }
 
-        totalInterestB += interestPaid;
+        totalInterest += interestPaid;
 
         extraSchedule.push({
           month: m,
@@ -493,39 +658,201 @@ import Layout from '../../layouts/Layout.astro';
           principalPaid: principalPaid,
           interestPaid: interestPaid,
           extraPaid: actualExtra,
-          endingBalance: balanceB
+          endingBalance: balance
         });
       }
 
-      // 3. Summarize metrics
+      // Calculate base loan (without extra payment) for comparison
+      let baseTotalInterest = 0;
+      let balBaseCompare = loanAmount;
+      for (let m = 1; m <= totalPaymentsCount; m++) {
+        const interestPaid = balBaseCompare * monthlyRate;
+        let principalPaid = baseMonthlyPayment - interestPaid;
+        if (principalPaid > balBaseCompare) principalPaid = balBaseCompare;
+        balBaseCompare -= principalPaid;
+        baseTotalInterest += interestPaid;
+        if (balBaseCompare <= 0) break;
+      }
+
+      const interestSaved = baseTotalInterest - totalInterest;
       const actualTermMonths = extraSchedule.length;
-      const termSavedMonths = totalPaymentsCount - actualTermMonths;
-      const interestSaved = totalInterestA - totalInterestB;
-      const yearsSaved = Math.floor(termSavedMonths / 12);
-      const monthsSavedRemainder = termSavedMonths % 12;
+      const monthsSaved = totalPaymentsCount - actualTermMonths;
+      const yearsSaved = Math.floor(monthsSaved / 12);
+      const monthsSavedRem = monthsSaved % 12;
 
-      // Fill summary cards
-      outMonthly.textContent = formatCurrency(baseMonthlyPayment + (extraMonthly > 0 ? extraMonthly : 0));
-      outMonthlyBase.textContent = `Base: ${formatCurrency(baseMonthlyPayment)} + ${formatCurrency(extraMonthly)} extra`;
+      // Set output cards
+      renderSummaryCards([
+        {
+          label: 'Monthly Payment',
+          value: formatCurrency(baseMonthlyPayment + extraMonthly),
+          hint: `Base: ${formatCurrency(baseMonthlyPayment)} + ${formatCurrency(extraMonthly)} extra`
+        },
+        {
+          label: 'Total Interest Paid',
+          value: formatCurrency(totalInterest, 0),
+          hint: `Total cost: ${formatCurrency(loanAmount + totalInterest, 0)}`
+        },
+        {
+          label: 'Interest Saved',
+          value: formatCurrency(interestSaved, 0),
+          hint: monthsSaved > 0 ? `Term reduced by ${yearsSaved}y ${monthsSavedRem}m` : 'No extra payment applied'
+        },
+        {
+          label: 'Payoff Period',
+          value: `${Math.floor(actualTermMonths / 12)} yrs ${actualTermMonths % 12} mos`,
+          hint: `Est. Payoff: ${getPayoffCalendarDate(actualTermMonths)}`
+        }
+      ]);
+
+      processScheduleData(extraSchedule);
+    }
+
+    // MODE 2: Input Monthly Payment + Annual Lump Sum, output Payoff Date
+    function calculatePayoffBasedLoan() {
+      const monthlyRate = (interestRate / 100) / 12;
+      const monthlyInterestFirst = loanAmount * monthlyRate;
+
+      // Negative Amortization Check
+      if (targetMonthlyPayment <= monthlyInterestFirst) {
+        warningBox.classList.remove('hidden');
+        warningText.innerHTML = `<strong>Negative Amortization Warning:</strong> Target payment (${formatCurrency(targetMonthlyPayment)}) is less than or equal to the initial monthly interest (${formatCurrency(monthlyInterestFirst)}). The balance will increase forever. Please increase your monthly payment.`;
+        
+        renderSummaryCards([
+          { label: 'Monthly Payment', value: formatCurrency(targetMonthlyPayment), hint: 'Insufficient payment' },
+          { label: 'Total Interest Paid', value: '--', hint: 'Infinite loop' },
+          { label: 'Interest Saved', value: '--', hint: 'N/A' },
+          { label: 'Payoff Period', value: 'Never', hint: 'Balance is increasing' }
+        ]);
+
+        tableBody.innerHTML = '<tr><td colspan="7" class="py-6 text-center text-red-400 font-mono">Error: Negative Amortization (Target payment is insufficient)</td></tr>';
+        
+        // Clear SVG chart
+        svgGrid.innerHTML = '';
+        svgBars.innerHTML = '';
+        svgAxes.innerHTML = '';
+        return;
+      }
+
+      // Amortization Loop
+      const schedule = [];
+      let balance = loanAmount;
+      let totalInterest = 0;
+      let totalLumpSumPaid = 0;
+      let maxMonths = 600; // 50 Year limit
+      let m = 0;
+
+      while (balance > 0 && m < maxMonths) {
+        m++;
+        const startBal = balance;
+        const interestPaid = balance * monthlyRate;
+        
+        // Target Monthly Payment
+        let principalPaid = targetMonthlyPayment - interestPaid;
+        
+        if (principalPaid > balance) {
+          principalPaid = balance;
+        }
+        balance -= principalPaid;
+
+        // Apply Annual Extra Payment (Sondertilgung)
+        let actualExtra = 0;
+        if (balance > 0 && annualLumpSum > 0) {
+          // Check if this month matches the extra payment month (e.g. m is month 12, 24, 36...)
+          const relativeMonthOfYear = m % 12 === 0 ? 12 : m % 12;
+          if (relativeMonthOfYear === lumpSumMonth) {
+            actualExtra = Math.min(annualLumpSum, balance);
+            balance -= actualExtra;
+            totalLumpSumPaid += actualExtra;
+          }
+        }
+
+        totalInterest += interestPaid;
+
+        schedule.push({
+          month: m,
+          startBalance: startBal,
+          basePayment: principalPaid + interestPaid,
+          principalPaid: principalPaid,
+          interestPaid: interestPaid,
+          extraPaid: actualExtra,
+          endingBalance: balance
+        });
+      }
+
+      // Calculate baseline without the annual lump sum for comparison
+      let baseTotalInterest = 0;
+      let balBaseCompare = loanAmount;
+      let baseM = 0;
+      while (balBaseCompare > 0 && baseM < maxMonths) {
+        baseM++;
+        const interestPaid = balBaseCompare * monthlyRate;
+        let principalPaid = targetMonthlyPayment - interestPaid;
+        if (principalPaid > balBaseCompare) principalPaid = balBaseCompare;
+        balBaseCompare -= principalPaid;
+        baseTotalInterest += interestPaid;
+      }
+
+      const actualTermMonths = schedule.length;
+      const monthsSaved = baseM - actualTermMonths;
+      const interestSaved = baseTotalInterest - totalInterest;
+
+      renderSummaryCards([
+        {
+          label: 'Monthly Payment',
+          value: formatCurrency(targetMonthlyPayment),
+          hint: `Annual Extra: ${formatCurrency(annualLumpSum)} (Month ${lumpSumMonth})`
+        },
+        {
+          label: 'Total Interest Paid',
+          value: formatCurrency(totalInterest, 0),
+          hint: `Total cost: ${formatCurrency(loanAmount + totalInterest, 0)}`
+        },
+        {
+          label: 'Interest Saved',
+          value: formatCurrency(interestSaved, 0),
+          hint: monthsSaved > 0 
+            ? `Lump sum reduced term by ${Math.floor(monthsSaved/12)}y ${monthsSaved%12}m`
+            : 'No time saved'
+        },
+        {
+          label: 'Payoff Period',
+          value: `${Math.floor(actualTermMonths / 12)} yrs ${actualTermMonths % 12} mos`,
+          hint: `Est. Payoff: ${getPayoffCalendarDate(actualTermMonths)}`
+        }
+      ]);
+
+      if (actualTermMonths >= maxMonths) {
+        warningBox.classList.remove('hidden');
+        warningText.innerHTML = `<strong>Notice:</strong> Payoff exceeds 50 years under these parameters. Schedule has been truncated.`;
+      }
+
+      processScheduleData(schedule);
+    }
+
+    function renderSummaryCards(cards) {
+      if (!summaryGrid) return;
+      summaryGrid.innerHTML = '';
       
-      const totalAmountPaid = loanAmount + totalInterestB;
-      outTotalCost.textContent = formatCurrency(totalAmountPaid, 0);
+      cards.forEach(c => {
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'border border-border bg-card p-4 rounded-xl shadow-sm';
+        cardDiv.innerHTML = `
+          <span class="text-[10px] font-mono text-muted uppercase block">${c.label}</span>
+          <span class="text-base font-bold text-foreground mt-1 block">${c.value}</span>
+          <span class="text-[9px] font-mono text-muted block mt-0.5">${c.hint}</span>
+        `;
+        summaryGrid.appendChild(cardDiv);
+      });
+    }
 
-      outInterestSaved.textContent = formatCurrency(interestSaved, 0);
-      outTermSaved.textContent = termSavedMonths > 0 
-        ? `${yearsSaved} yr ${monthsSavedRemainder} mo earlier` 
-        : '0 months saved';
+    function getPayoffCalendarDate(monthsAhead) {
+      const today = new Date(); // Using current runtime date (approx June 2026)
+      today.setMonth(today.getMonth() + monthsAhead);
+      return today.toLocaleDateString('de-DE', { year: 'numeric', month: 'long' });
+    }
 
-      const effYears = Math.floor(actualTermMonths / 12);
-      const effMonths = actualTermMonths % 12;
-      outEffectiveTerm.textContent = `${effYears} yrs ${effMonths} mos`;
-
-      // Payoff Date calculation (based on current date June 2026)
-      const startDate = new Date(2026, 5, 1); // June 2026
-      startDate.setMonth(startDate.getMonth() + actualTermMonths);
-      outPayoffDate.textContent = startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
-
-      // Group Schedule by Year for Summary and Chart
+    function processScheduleData(schedule) {
+      // 1. Group Schedule by Year
       const yearlySummary = [];
       let currentYear = 1;
       let yrStartBal = loanAmount;
@@ -534,13 +861,13 @@ import Layout from '../../layouts/Layout.astro';
       let yrExtra = 0;
       let yrPayment = 0;
 
-      extraSchedule.forEach((row, index) => {
+      schedule.forEach((row, index) => {
         yrPrincipal += row.principalPaid;
         yrInterest += row.interestPaid;
         yrExtra += row.extraPaid;
         yrPayment += row.basePayment + row.extraPaid;
 
-        const isLastRow = index === extraSchedule.length - 1;
+        const isLastRow = index === schedule.length - 1;
         const isYearEnd = row.month % 12 === 0;
 
         if (isYearEnd || isLastRow) {
@@ -554,7 +881,6 @@ import Layout from '../../layouts/Layout.astro';
             endingBalance: row.endingBalance
           });
 
-          // Reset year accumulators
           currentYear++;
           yrStartBal = row.endingBalance;
           yrPrincipal = 0;
@@ -564,17 +890,17 @@ import Layout from '../../layouts/Layout.astro';
         }
       });
 
-      // Render Outputs
+      // 2. Render Table
       const viewMode = tableViewMode.value;
       if (viewMode === 'yearly') {
         thPeriod.textContent = 'Year';
         renderYearlyTable(yearlySummary);
       } else {
         thPeriod.textContent = 'Month';
-        renderMonthlyTable(extraSchedule);
+        renderMonthlyTable(schedule);
       }
 
-      // Render Chart (uses yearlySummary)
+      // 3. Render SVG Chart
       renderChart(yearlySummary);
     }
 
@@ -586,13 +912,13 @@ import Layout from '../../layouts/Layout.astro';
         const tr = document.createElement('tr');
         tr.className = 'border-b border-border/40 hover:bg-primary/5 transition-colors';
         tr.innerHTML = `
-          <td class="py-3 px-4 font-bold">Year ${row.year}</td>
+          <td class="py-3 px-4 font-bold text-foreground">Year ${row.year}</td>
           <td class="py-3 px-4 text-right">${formatCurrency(row.startBalance, 0)}</td>
           <td class="py-3 px-4 text-right">${formatCurrency(row.payment, 0)}</td>
           <td class="py-3 px-4 text-right text-primary font-semibold">${formatCurrency(row.principalPaid, 0)}</td>
           <td class="py-3 px-4 text-right text-rose-500">${formatCurrency(row.interestPaid, 0)}</td>
-          <td class="py-3 px-4 text-right text-emerald-500 font-semibold">${row.extraPaid > 0 ? formatCurrency(row.extraPaid, 0) : '$0'}</td>
-          <td class="py-3 px-4 text-right font-bold">${formatCurrency(row.endingBalance, 0)}</td>
+          <td class="py-3 px-4 text-right text-emerald-500 font-semibold">${row.extraPaid > 0 ? formatCurrency(row.extraPaid, 0) : '—'}</td>
+          <td class="py-3 px-4 text-right font-bold text-foreground">${formatCurrency(row.endingBalance, 0)}</td>
         `;
         tableBody.appendChild(tr);
       });
@@ -604,19 +930,19 @@ import Layout from '../../layouts/Layout.astro';
 
       monthlySchedule.forEach(row => {
         const tr = document.createElement('tr');
-        tr.className = 'border-b border-border/40 hover:bg-primary/5 transition-colors';
+        tr.className = 'border-b border-border/40 hover:bg-primary/5 transition-colors text-muted-foreground';
         
         const yr = Math.floor((row.month - 1) / 12) + 1;
         const mo = ((row.month - 1) % 12) + 1;
 
         tr.innerHTML = `
-          <td class="py-2.5 px-4"><span class="font-bold">Mo ${row.month}</span> <span class="text-[9px] text-muted font-mono block">Year ${yr} / Month ${mo}</span></td>
+          <td class="py-2.5 px-4 font-bold text-foreground">Month ${row.month} <span class="text-[9px] text-muted font-normal block">Year ${yr} / Month ${mo}</span></td>
           <td class="py-2.5 px-4 text-right">${formatCurrency(row.startBalance, 0)}</td>
           <td class="py-2.5 px-4 text-right">${formatCurrency(row.basePayment + row.extraPaid, 0)}</td>
           <td class="py-2.5 px-4 text-right text-primary">${formatCurrency(row.principalPaid, 0)}</td>
           <td class="py-2.5 px-4 text-right text-rose-500">${formatCurrency(row.interestPaid, 0)}</td>
-          <td class="py-2.5 px-4 text-right text-emerald-500 font-semibold">${row.extraPaid > 0 ? formatCurrency(row.extraPaid, 0) : '$0'}</td>
-          <td class="py-2.5 px-4 text-right font-bold">${formatCurrency(row.endingBalance, 0)}</td>
+          <td class="py-2.5 px-4 text-right text-emerald-500 font-semibold">${row.extraPaid > 0 ? formatCurrency(row.extraPaid, 0) : '—'}</td>
+          <td class="py-2.5 px-4 text-right font-bold text-foreground">${formatCurrency(row.endingBalance, 0)}</td>
         `;
         tableBody.appendChild(tr);
       });
@@ -627,7 +953,7 @@ import Layout from '../../layouts/Layout.astro';
 
       const width = svgEl.clientWidth;
       const height = svgEl.clientHeight;
-      const paddingLeft = 60;
+      const paddingLeft = 55;
       const paddingRight = 10;
       const paddingTop = 20;
       const paddingBottom = 30;
@@ -639,6 +965,8 @@ import Layout from '../../layouts/Layout.astro';
       svgGrid.innerHTML = '';
       svgBars.innerHTML = '';
       svgAxes.innerHTML = '';
+
+      if (yearlySummary.length === 0) return;
 
       // Find max payment in any year to scale the bars
       const maxYearlySum = Math.max(...yearlySummary.map(d => d.principalPaid + d.interestPaid + d.extraPaid));
@@ -667,14 +995,11 @@ import Layout from '../../layouts/Layout.astro';
 
       // Render Stacked Bars
       const barCount = yearlySummary.length;
-      const barSpacing = Math.max(2, Math.min(10, chartW / barCount / 4));
+      const barSpacing = Math.max(1.5, Math.min(8, chartW / barCount / 4));
       const barW = (chartW / barCount) - barSpacing;
 
       yearlySummary.forEach((d, idx) => {
         const x = paddingLeft + (idx * (chartW / barCount)) + barSpacing / 2;
-        
-        // Stack calculations
-        const totalPaid = d.principalPaid + d.interestPaid + d.extraPaid;
         
         const hPrincipal = (d.principalPaid / maxYearlySum) * chartH;
         const hInterest = (d.interestPaid / maxYearlySum) * chartH;
@@ -769,9 +1094,9 @@ import Layout from '../../layouts/Layout.astro';
 
     function formatCompactVal(val) {
       if (val >= 1000) {
-        return `$${(val / 1000).toFixed(1)}k`;
+        return `€${(val / 1000).toFixed(1).replace('.', ',')}k`;
       }
-      return `$${Math.round(val)}`;
+      return `€${Math.round(val)}`;
     }
 
     init();

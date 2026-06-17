@@ -1,5 +1,11 @@
 [
   {
+    "id": 12,
+    "timestamp": "2026-06-17T22:17:00Z",
+    "content": "Released Version v0.3.1. Upgraded Node 08: EU Tech Valuations with EUR (€) support, added Zalando SE and AUTO1 Group SE, and implemented customizable polynomial regression (linear, quadratic, cubic, exponential) with timeframe window selection. Upgraded Node 09: Loan Calculator to support EUR (€), added a secondary Calculate Payoff Date mode with annual extra payments (Sondertilgung) schedules, and updated the visual stacked bars and schedules.",
+    "tags": ["release", "v0.3.1", "regression", "polynomial", "sondertilgung", "eur"]
+  },
+  {
     "id": 11,
     "timestamp": "2026-06-17T21:56:00Z",
     "content": "Released Version v0.3.0. Added two new interactive laboratories. Node 08: EU Tech Valuations, which enables users to compare historical metrics of Europe's top tech firms and project their future revenues and valuations via customizable growth models and dynamic SVG chart paths. Node 09: Loan Calculator, which lets users model repayment compositions over time with support for extra monthly payments, visual stacked bar charts, and collapsible amortization schedules.",
