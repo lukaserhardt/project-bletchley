@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { Type } from '@lucide/astro';
 ---
 
 <Layout title="Project Bletchley - Typocraft" description="Interactive typography playground for Geist and Geist Mono variable fonts.">
@@ -19,13 +20,18 @@ import Layout from '../../layouts/Layout.astro';
     </nav>
 
     <!-- Header section -->
-    <header class="border-b border-border pb-6">
-      <h1 class="text-3xl font-black uppercase tracking-tight">
-        TYPOCRAFT PLAYGROUND
-      </h1>
-      <p class="text-base text-muted mt-2 max-w-xl">
-        Experiment with variable axis weights, sizing, tracking, and leading of the Geist typography stack in real-time.
-      </p>
+    <header class="border-b border-border pb-6 flex items-start gap-4">
+      <div class="p-3 bg-primary/10 rounded-xl text-primary mt-1 border border-primary/20 shrink-0">
+        <Type class="w-8 h-8" />
+      </div>
+      <div>
+        <h1 class="text-3xl font-black uppercase tracking-tight">
+          TYPOCRAFT PLAYGROUND
+        </h1>
+        <p class="text-base text-muted mt-2 max-w-xl">
+          Experiment with variable axis weights, sizing, tracking, and leading of the Geist typography stack in real-time.
+        </p>
+      </div>
     </header>
 
     <!-- Playground Workspace -->

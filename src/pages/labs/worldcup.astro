@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { Globe } from '@lucide/astro';
 ---
 
 <Layout title="Project Bletchley - World Cup Tracker" description="Live scores and schedule for the FIFA World Cup.">
@@ -20,11 +21,16 @@ import Layout from '../../layouts/Layout.astro';
 
     <!-- Header -->
     <header class="border-b border-border pb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      <div>
-        <h1 class="text-3xl font-extrabold tracking-tight">World Cup Tracker</h1>
-        <p class="text-sm text-muted mt-2">
-          Real-time tournament updates, groups, live scores, and schedules from the FIFA World Cup.
-        </p>
+      <div class="flex items-start gap-4">
+        <div class="p-3 bg-primary/10 rounded-xl text-primary mt-1 border border-primary/20 shrink-0">
+          <Globe class="w-8 h-8" />
+        </div>
+        <div>
+          <h1 class="text-3xl font-extrabold tracking-tight">World Cup Tracker</h1>
+          <p class="text-sm text-muted mt-2">
+            Real-time tournament updates, groups, live scores, and schedules from the FIFA World Cup.
+          </p>
+        </div>
       </div>
       <button
         id="demo-toggle"

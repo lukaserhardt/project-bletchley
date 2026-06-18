@@ -1,6 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import blogData from '../data/blog.json';
+import { 
+  Type, 
+  Trophy, 
+  Globe, 
+  CloudSun, 
+  Network, 
+  Orbit, 
+  Presentation, 
+  TrendingUp, 
+  Calculator 
+} from '@lucide/astro';
 
 const latestPost = blogData[0]; // Retrieve the most recent post for preview
 ---
@@ -65,7 +76,8 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
               <span class="text-muted">[ node-01 ]</span>
               <span class="text-primary font-semibold">● Local Playground</span>
             </div>
-            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
+            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors flex items-center gap-2">
+              <Type class="w-5 h-5 text-primary/85 group-hover:text-primary transition-colors shrink-0" />
               Typocraft Playground
             </h3>
             <p class="text-sm text-muted leading-relaxed">
@@ -88,7 +100,8 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
               <span class="text-muted">[ node-02 ]</span>
               <span class="text-primary font-semibold flex items-center gap-1">● Live Feed</span>
             </div>
-            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
+            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors flex items-center gap-2">
+              <Trophy class="w-5 h-5 text-primary/85 group-hover:text-primary transition-colors shrink-0" />
               Edmonton Oilers Tracker
             </h3>
             <p class="text-sm text-muted leading-relaxed">
@@ -111,7 +124,8 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
               <span class="text-muted">[ node-03 ]</span>
               <span class="text-primary font-semibold flex items-center gap-1">● Live Feed</span>
             </div>
-            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
+            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors flex items-center gap-2">
+              <Globe class="w-5 h-5 text-primary/85 group-hover:text-primary transition-colors shrink-0" />
               World Cup Scoreboard
             </h3>
             <p class="text-sm text-muted leading-relaxed">
@@ -134,7 +148,8 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
               <span class="text-muted">[ node-04 ]</span>
               <span class="text-emerald-500 font-semibold flex items-center gap-1">● API Active</span>
             </div>
-            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
+            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors flex items-center gap-2">
+              <CloudSun class="w-5 h-5 text-primary/85 group-hover:text-primary transition-colors shrink-0" />
               Berlin Weather
             </h3>
             <p class="text-sm text-muted leading-relaxed">
@@ -157,7 +172,8 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
               <span class="text-muted">[ node-05 ]</span>
               <span class="text-primary font-semibold">● Visual Model</span>
             </div>
-            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
+            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors flex items-center gap-2">
+              <Network class="w-5 h-5 text-primary/85 group-hover:text-primary transition-colors shrink-0" />
               Neural Network Sandbox
             </h3>
             <p class="text-sm text-muted leading-relaxed">
@@ -180,7 +196,8 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
               <span class="text-muted">[ node-06 ]</span>
               <span class="text-primary font-semibold">● Newtonian Physics</span>
             </div>
-            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
+            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors flex items-center gap-2">
+              <Orbit class="w-5 h-5 text-primary/85 group-hover:text-primary transition-colors shrink-0" />
               Gravity Orbit Sandbox
             </h3>
             <p class="text-sm text-muted leading-relaxed">
@@ -203,7 +220,8 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
               <span class="text-muted">[ node-07 ]</span>
               <span class="text-primary font-semibold">● Presentation</span>
             </div>
-            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
+            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors flex items-center gap-2">
+              <Presentation class="w-5 h-5 text-primary/85 group-hover:text-primary transition-colors shrink-0" />
               Agent-Led Slideshow
             </h3>
             <p class="text-sm text-muted leading-relaxed">
@@ -226,7 +244,8 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
               <span class="text-muted">[ node-08 ]</span>
               <span class="text-emerald-500 font-semibold">● Valuation Engine</span>
             </div>
-            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
+            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors flex items-center gap-2">
+              <TrendingUp class="w-5 h-5 text-primary/85 group-hover:text-primary transition-colors shrink-0" />
               EU Tech Valuations
             </h3>
             <p class="text-sm text-muted leading-relaxed">
@@ -249,7 +268,8 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
               <span class="text-muted">[ node-09 ]</span>
               <span class="text-primary font-semibold">● Composition Tool</span>
             </div>
-            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors">
+            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors flex items-center gap-2">
+              <Calculator class="w-5 h-5 text-primary/85 group-hover:text-primary transition-colors shrink-0" />
               Loan Calculator
             </h3>
             <p class="text-sm text-muted leading-relaxed">

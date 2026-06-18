@@ -1,6 +1,7 @@
 ---
 // Slideshow page does not use the standard layout because it requires an isolated full-screen wrapper
 import '../../styles/global.css';
+import { Presentation } from '@lucide/astro';
 ---
 
 <!doctype html>
@@ -24,7 +25,7 @@ import '../../styles/global.css';
     <!-- Top Navigation Banner -->
     <header class="p-6 md:px-12 flex items-center justify-between border-b border-white/5 bg-[#020205]/40 backdrop-blur-md z-10">
       <div class="flex items-center gap-3">
-        <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+        <Presentation class="w-5 h-5 text-primary shrink-0" />
         <span class="font-mono text-sm uppercase tracking-widest text-[#9ca3af]">Bletchley Presenter</span>
       </div>
       <div class="flex items-center gap-6 font-mono text-sm">

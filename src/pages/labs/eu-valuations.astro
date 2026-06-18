@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { TrendingUp } from '@lucide/astro';
 ---
 
 <Layout title="Project Bletchley - EU Tech Valuations & Projections" description="Compare valuations of top European technology companies, select historical windows, and model future projections using customizable polynomial regression models.">
@@ -20,11 +21,16 @@ import Layout from '../../layouts/Layout.astro';
 
     <!-- Header -->
     <header class="border-b border-border pb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      <div>
-        <h1 class="text-3xl font-extrabold tracking-tight">EU Tech Valuations & Regression Extrapolations</h1>
-        <p class="text-sm text-muted mt-2">
-          Fit regression curves (Linear, Quadratic, Cubic, Exponential) to historical figures for Europe's largest tech firms, and project growth paths.
-        </p>
+      <div class="flex items-start gap-4">
+        <div class="p-3 bg-primary/10 rounded-xl text-primary mt-1 border border-primary/20 shrink-0">
+          <TrendingUp class="w-8 h-8" />
+        </div>
+        <div>
+          <h1 class="text-3xl font-extrabold tracking-tight">EU Tech Valuations & Regression Extrapolations</h1>
+          <p class="text-sm text-muted mt-2">
+            Fit regression curves (Linear, Quadratic, Cubic, Exponential) to historical figures for Europe's largest tech firms, and project growth paths.
+          </p>
+        </div>
       </div>
       <div class="text-xs font-mono bg-card border border-border px-3 py-1.5 rounded-md text-muted self-start md:self-auto">
         Currency: <span class="text-foreground font-semibold">EUR (€)</span>

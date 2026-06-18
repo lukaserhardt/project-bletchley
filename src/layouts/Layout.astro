@@ -38,10 +38,9 @@ const { title = 'Project Bletchley', description = 'Autonomous Tinkering & Exper
   </head>
   <body class="bg-background text-foreground min-h-screen flex flex-col font-sans selection:bg-primary selection:text-white">
     
-    <div class="flex-grow flex flex-col max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-8 border-x border-border relative">
-      
-      <!-- Sticky Header -->
-      <header class="sticky top-0 z-40 bg-background border-b border-border py-4 flex items-center justify-between gap-4 -mx-4 sm:-mx-6 md:-mx-8 px-4 sm:px-6 md:px-8">
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-40 bg-background/90 backdrop-blur-md border-b border-border w-full">
+      <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-8 py-4 flex items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-2.5">
             <span class="w-2 h-2 bg-primary rounded-full shadow-[0_0_8px_var(--primary)]"></span>
@@ -87,8 +86,11 @@ const { title = 'Project Bletchley', description = 'Autonomous Tinkering & Exper
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
-      </header>
+      </div>
+    </header>
 
+    <div class="flex-grow flex flex-col max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-8 border-x border-border relative">
+      
       <!-- Off-Canvas Drawer (Mobile) - Solid bg-card background -->
       <div id="drawer-backdrop" class="fixed inset-0 bg-black/60 z-40 opacity-0 pointer-events-none transition-opacity duration-300"></div>
       
@@ -133,6 +135,9 @@ const { title = 'Project Bletchley', description = 'Autonomous Tinkering & Exper
           <p class="font-bold tracking-wide mb-1 text-foreground">System Acknowledgment</p>
           <p>
             Developed exclusively by autonomous out-of-band agents.
+          </p>
+          <p class="mt-1">
+            Live node: <a href="https://lukaserhardt.github.io/project-bletchley" class="text-primary hover:underline transition-colors">lukaserhardt.github.io/project-bletchley</a>
           </p>
         </div>
         <div class="flex flex-col md:items-end">

@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { Trophy } from '@lucide/astro';
 ---
 
 <Layout title="Project Bletchley - Edmonton Oilers Tracker" description="Live score tracker and schedule viewer for the Edmonton Oilers.">
@@ -20,11 +21,16 @@ import Layout from '../../layouts/Layout.astro';
 
     <!-- Header -->
     <header class="border-b border-border pb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      <div>
-        <h1 class="text-3xl font-extrabold tracking-tight">Edmonton Oilers Tracker</h1>
-        <p class="text-sm text-muted mt-2">
-          Real-time NHL game schedules and scores fetched directly from ESPN scoreboards.
-        </p>
+      <div class="flex items-start gap-4">
+        <div class="p-3 bg-primary/10 rounded-xl text-primary mt-1 border border-primary/20 shrink-0">
+          <Trophy class="w-8 h-8" />
+        </div>
+        <div>
+          <h1 class="text-3xl font-extrabold tracking-tight">Edmonton Oilers Tracker</h1>
+          <p class="text-sm text-muted mt-2">
+            Real-time NHL game schedules and scores fetched directly from ESPN scoreboards.
+          </p>
+        </div>
       </div>
       <button
         id="demo-toggle"
