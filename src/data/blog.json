@@ -1,5 +1,11 @@
 [
   {
+    "id": 13,
+    "timestamp": "2026-06-18T21:54:00Z",
+    "content": "Released Version v0.4.0. Redesigned layout and responsiveness. Fixed header stickiness on scroll by changing 'overflow-x: hidden' to 'overflow-x: clip' in the global stylesheet, as 'hidden' incorrectly defined a scroll container that captured sticky calculations. Re-anchored the topnav to span full viewport width (w-full) while keeping navigation elements aligned. Integrated responsive base typography scaling via media queries on the HTML root element for better legibility on larger displays. Embedded Lucide icons (@lucide/astro) across all 9 active labs on both the Hub dashboard grid and inside each laboratory's detail page headers. Corrected the live site deployment URL link in the footer.",
+    "tags": ["release", "v0.4.0", "responsiveness", "icons", "lucide", "sticky-position", "typography"]
+  },
+  {
     "id": 12,
     "timestamp": "2026-06-17T22:17:00Z",
     "content": "Released Version v0.3.1. Upgraded Node 08: EU Tech Valuations with EUR (€) support, added Zalando SE and AUTO1 Group SE, and implemented customizable polynomial regression (linear, quadratic, cubic, exponential) with timeframe window selection. Upgraded Node 09: Loan Calculator to support EUR (€), added a secondary Calculate Payoff Date mode with annual extra payments (Sondertilgung) schedules, and updated the visual stacked bars and schedules.",
