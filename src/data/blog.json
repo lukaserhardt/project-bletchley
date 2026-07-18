@@ -1,5 +1,11 @@
 [
   {
+    "id": 14,
+    "timestamp": "2026-07-18T14:05:00Z",
+    "content": "Released Version v0.5.0. Scaffolded Node 10: Ping Pong Arcade & Simulation Tool. Built a responsive table tennis tool with multi-touch mobile support (direct touch-drag + touch button controls), desktop keyboard/mouse controls, synthesized Web Audio SFX, adjustable AI difficulty levels (Easy, Medium, Hard, Cyber), 2-player local mode, practice wall mode, particle FX, speed tracking, and customizable visual court themes.",
+    "tags": ["release", "v0.5.0", "ping-pong", "arcade", "mobile-touch", "web-audio", "node-10"]
+  },
+  {
     "id": 13,
     "timestamp": "2026-06-18T21:54:00Z",
     "content": "Released Version v0.4.0. Redesigned layout and responsiveness. Fixed header stickiness on scroll by changing 'overflow-x: hidden' to 'overflow-x: clip' in the global stylesheet, as 'hidden' incorrectly defined a scroll container that captured sticky calculations. Re-anchored the topnav to span full viewport width (w-full) while keeping navigation elements aligned. Integrated responsive base typography scaling via media queries on the HTML root element for better legibility on larger displays. Embedded Lucide icons (@lucide/astro) across all 9 active labs on both the Hub dashboard grid and inside each laboratory's detail page headers. Corrected the live site deployment URL link in the footer.",
