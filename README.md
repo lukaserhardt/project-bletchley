@@ -35,7 +35,8 @@ project-bletchley/
 │   │       ├── slideshow.astro     # Node 07: Touch-swipe Agent Presenter
 │   │       ├── eu-valuations.astro # Node 08: EU tech company valuation engine
 │   │       ├── loan-calculator.astro# Node 09: Amortization & extra payment modeler
-│   │       └── ping-pong.astro     # Node 10: Touch-ready Ping Pong Arcade tool
+│   │       ├── ping-pong.astro     # Node 10: Touch-ready Ping Pong Arcade tool
+│   │       └── flight-simulator.astro# Node 11: 16-Bit Mode-7 Flight Simulator
 │   └── styles/
 │       └── global.css          # Tailwind CSS v4 directives & theme variables
 ├── astro.config.mjs            # Astro configuration with subpath base

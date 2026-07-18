@@ -1,0 +1,1128 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, ShieldAlert, Crosshair } from '@lucide/astro';
+---
+
+<Layout title="Project Bletchley - 16-Bit Flight Simulator" description="Retro Mode-7 style 16-bit flight simulator with cockpit HUD instruments, 3D perspective terrain, target ring challenges, landing maneuvers, and synthesized sound engine.">
+  <div class="space-y-8 flex-grow flex flex-col relative">
+    
+    <!-- Hero Background Glow Blobs -->
+    <div class="absolute -top-16 -left-20 w-72 h-72 rounded-full bg-gradient-to-tr from-primary/10 to-purple-500/5 blur-[80px] -z-10 pointer-events-none"></div>
+    <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-gradient-to-br from-indigo-500/5 to-primary/10 blur-[100px] -z-10 pointer-events-none"></div>
+
+    <!-- Navigation Breadcrumbs -->
+    <nav class="font-mono text-sm text-muted flex items-center gap-2">
+      <a href="/project-bletchley/" class="hover:text-primary hover:underline">Hub</a>
+      <span>/</span>
+      <span class="text-foreground">Labs</span>
+      <span>/</span>
+      <span class="text-foreground font-bold">16-Bit Flight Simulator</span>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="border-b border-border pb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div class="flex items-start gap-4">
+        <div class="p-3 bg-primary/10 rounded-xl text-primary mt-1 border border-primary/20 shrink-0">
+          <Plane class="w-8 h-8" />
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-3xl font-extrabold tracking-tight">16-Bit Flight Simulator</h1>
+            <span class="bg-primary/20 text-primary font-mono text-xs font-semibold px-2.5 py-0.5 rounded-full border border-primary/30">
+              Node 11 // Arcade 3D
+            </span>
+          </div>
+          <p class="text-sm text-muted mt-2 max-w-2xl leading-relaxed">
+            Mode-7 inspired retro flight engine. Control Pitch, Roll, Yaw, and Throttle across islands, target ring courses, and runway landings with 16-bit cockpit telemetry and Web Audio engine SFX.
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Action Header Buttons -->
+      <div class="flex items-center gap-2 shrink-0">
+        <button
+          id="sound-toggle-btn"
+          class="border border-border bg-card hover:bg-background text-sm font-mono px-3 py-1.5 rounded-md transition-colors cursor-pointer hover:border-primary text-foreground flex items-center gap-1.5 shadow-sm"
+          title="Toggle Synthesized Engine SFX"
+        >
+          <Volume2 id="sound-icon-on" class="w-4 h-4 text-primary" />
+          <VolumeX id="sound-icon-off" class="w-4 h-4 text-muted hidden" />
+          <span id="sound-label" class="hidden sm:inline">SFX On</span>
+        </button>
+        <button
+          id="reset-flight-btn"
+          class="border border-border bg-card hover:bg-background text-sm font-mono px-3 py-1.5 rounded-md transition-colors cursor-pointer hover:border-primary text-foreground flex items-center gap-1.5 shadow-sm"
+        >
+          <RefreshCw class="w-4 h-4" />
+          <span>Reset Flight</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Simulator Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch flex-grow">
+      
+      <!-- Control Panel & Avionics Sidebar -->
+      <section class="lg:col-span-4 border border-border bg-card p-6 rounded-xl space-y-6 flex flex-col justify-between shadow-sm">
+        <div class="space-y-6">
+          <h2 class="font-mono text-sm font-bold uppercase tracking-wider border-b border-border pb-2 text-foreground flex items-center justify-between">
+            <span>Flight Avionics & Setup</span>
+            <span class="text-xs text-primary font-normal font-mono" id="mission-badge">Free Flight</span>
+          </h2>
+
+          <div class="space-y-5">
+            <!-- Mission Selection -->
+            <div class="space-y-2">
+              <label class="block font-mono text-xs uppercase tracking-wider text-muted">Flight Mission</label>
+              <div class="grid grid-cols-3 gap-1.5 font-mono text-xs">
+                <button
+                  type="button"
+                  id="mission-free"
+                  class="mission-btn border border-primary bg-primary/10 text-primary p-2 rounded-md transition-all font-semibold cursor-pointer text-center"
+                >
+                  Free Flight
+                </button>
+                <button
+                  type="button"
+                  id="mission-rings"
+                  class="mission-btn border border-border bg-background hover:border-primary text-foreground p-2 rounded-md transition-all font-semibold cursor-pointer text-center"
+                >
+                  Ring Course
+                </button>
+                <button
+                  type="button"
+                  id="mission-landing"
+                  class="mission-btn border border-border bg-background hover:border-primary text-foreground p-2 rounded-md transition-all font-semibold cursor-pointer text-center"
+                >
+                  Landing
+                </button>
+              </div>
+            </div>
+
+            <!-- Atmosphere / Sky Time Theme -->
+            <div class="space-y-2">
+              <label class="block font-mono text-xs uppercase tracking-wider text-muted">Sky & Atmosphere</label>
+              <div class="grid grid-cols-3 gap-1.5 font-mono text-xs">
+                <button type="button" data-time="day" class="sky-btn border border-primary bg-primary/10 text-primary p-1.5 rounded-md transition-all font-semibold cursor-pointer text-center">Daylight</button>
+                <button type="button" data-time="sunset" class="sky-btn border border-border bg-background text-muted p-1.5 rounded-md transition-all cursor-pointer text-center">Sunset</button>
+                <button type="button" data-time="night" class="sky-btn border border-border bg-background text-muted p-1.5 rounded-md transition-all cursor-pointer text-center">Cyber Night</button>
+              </div>
+            </div>
+
+            <!-- Engine Throttle Control Slider -->
+            <div class="space-y-1.5 border-t border-border/60 pt-3">
+              <div class="flex justify-between text-xs font-mono">
+                <span class="uppercase tracking-wider text-muted flex items-center gap-1">
+                  <Zap class="w-3.5 h-3.5 text-amber-500" /> Throttle Thrust
+                </span>
+                <span id="throttle-val-text" class="font-bold text-primary">60%</span>
+              </div>
+              <input
+                type="range"
+                id="throttle-slider"
+                min="0"
+                max="100"
+                value="60"
+                step="1"
+                class="w-full h-2 bg-border appearance-none cursor-pointer accent-primary rounded-lg"
+              />
+              <div class="flex justify-between text-[10px] font-mono text-muted">
+                <span>0% (Idle)</span>
+                <span>50%</span>
+                <span>100% (Afterburner)</span>
+              </div>
+            </div>
+
+            <!-- Flight Gear & Controls -->
+            <div class="grid grid-cols-2 gap-2 font-mono text-xs border-t border-border/60 pt-3">
+              <button
+                type="button"
+                id="gear-toggle-btn"
+                class="border border-border bg-background hover:border-primary text-foreground p-2 rounded-md transition-colors font-semibold cursor-pointer flex items-center justify-between"
+              >
+                <span>Landing Gear</span>
+                <span id="gear-status" class="text-emerald-500 font-bold">DOWN</span>
+              </button>
+              <button
+                type="button"
+                id="flaps-toggle-btn"
+                class="border border-border bg-background hover:border-primary text-foreground p-2 rounded-md transition-colors font-semibold cursor-pointer flex items-center justify-between"
+              >
+                <span>Flaps</span>
+                <span id="flaps-status" class="text-muted font-bold">UP</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Real-Time Flight Telemetry Dashboard -->
+          <div class="border border-border/80 bg-background/50 p-4 rounded-xl space-y-3 font-mono text-xs">
+            <div class="flex items-center justify-between border-b border-border/40 pb-2">
+              <span class="text-muted uppercase tracking-wider">Airspeed</span>
+              <span id="telemetry-speed" class="font-bold text-foreground text-sm">180 KTS</span>
+            </div>
+            <div class="flex items-center justify-between border-b border-border/40 pb-2">
+              <span class="text-muted uppercase tracking-wider">Altitude (ALT)</span>
+              <span id="telemetry-alt" class="font-bold text-primary text-sm">1,250 FT</span>
+            </div>
+            <div class="flex items-center justify-between border-b border-border/40 pb-2">
+              <span class="text-muted uppercase tracking-wider">Heading (HDG)</span>
+              <span id="telemetry-hdg" class="font-bold text-foreground">045° NNE</span>
+            </div>
+            <div class="flex items-center justify-between border-b border-border/40 pb-2">
+              <span class="text-muted uppercase tracking-wider">Pitch / Roll</span>
+              <span id="telemetry-attitude" class="font-bold text-foreground">0° / 0°</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-muted uppercase tracking-wider">Mission Target</span>
+              <span id="telemetry-mission" class="font-bold text-amber-500">Rings: 0 / 8</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls Guide Footnote -->
+        <div class="font-mono text-xs text-muted border-t border-border pt-4 leading-relaxed space-y-2">
+          <div class="flex items-center gap-1.5 text-foreground font-semibold">
+            <span>🕹️ Controls:</span>
+          </div>
+          <p><strong>Mobile:</strong> Drag the left virtual stick for Pitch/Roll yoke, use the right Throttle slider.</p>
+          <p><strong>Desktop:</strong> [W/S] Pitch Up/Down, [A/D] Roll Left/Right, [I/K] Throttle, [Q/E] Yaw Rudder, [Space] Fire Cannon, [G] Gear, [F] Flaps.</p>
+        </div>
+      </section>
+
+      <!-- Main Flight Screen & Cockpit Canvas -->
+      <section class="lg:col-span-8 border border-border bg-card rounded-xl overflow-hidden shadow-sm flex flex-col items-stretch min-h-[520px]">
+        
+        <!-- Screen Status Header Bar -->
+        <div class="border-b border-border bg-background px-4 py-3 font-mono text-xs flex items-center justify-between gap-2">
+          <div class="flex items-center gap-3">
+            <span class="text-primary font-bold tracking-wider uppercase flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span id="flight-status-text">Airborne // Systems Normal</span>
+            </span>
+          </div>
+          
+          <div class="flex items-center gap-3">
+            <span id="stall-warning" class="text-rose-500 font-bold font-mono text-xs animate-pulse hidden flex items-center gap-1">
+              <ShieldAlert class="w-4 h-4" /> STALL WARNING
+            </span>
+            <button 
+              id="pause-btn"
+              class="border border-border bg-card hover:bg-background text-foreground font-mono text-xs px-3 py-1 rounded-md transition-colors cursor-pointer hover:border-primary flex items-center gap-1"
+            >
+              <Pause id="pause-icon" class="w-3.5 h-3.5 text-primary" />
+              <Play id="play-icon" class="w-3.5 h-3.5 text-primary hidden" />
+              <span id="pause-text">Pause</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Flight Viewport & Canvas Area -->
+        <div class="flex-grow bg-[#000005] relative flex flex-col items-center justify-center overflow-hidden select-none" id="viewport-wrapper">
+          
+          <canvas id="flight-canvas" class="w-full h-full block min-h-[420px] touch-none"></canvas>
+
+          <!-- Cockpit HUD Instruments Overlay -->
+          <div class="absolute inset-0 pointer-events-none p-4 flex flex-col justify-between z-10 font-mono text-xs">
+            <!-- Top HUD Bar: Compass & Status -->
+            <div class="flex justify-between items-start">
+              <!-- Mini Artificial Horizon Box -->
+              <div class="bg-black/60 backdrop-blur-md border border-primary/40 px-3 py-2 rounded-lg text-primary space-y-1">
+                <div class="text-[10px] uppercase text-muted tracking-wider">HUD Horizon</div>
+                <div class="w-24 h-1 bg-primary/30 relative overflow-hidden rounded">
+                  <div id="hud-pitch-bar" class="absolute inset-x-0 h-full bg-primary transition-all duration-75"></div>
+                </div>
+              </div>
+
+              <!-- Center Compass Strip -->
+              <div class="bg-black/70 backdrop-blur-md border border-border px-4 py-1.5 rounded-lg text-foreground font-mono text-sm tracking-widest border-primary/30 flex items-center gap-3">
+                <Compass class="w-4 h-4 text-primary" />
+                <span id="hud-compass-text">HDG 045° [ NNE ]</span>
+              </div>
+
+              <!-- Radar Minimap -->
+              <div class="w-24 h-24 bg-black/80 border border-primary/50 rounded-full relative overflow-hidden flex items-center justify-center shadow-lg">
+                <!-- Radar grid rings -->
+                <div class="absolute inset-2 border border-primary/20 rounded-full"></div>
+                <div class="absolute inset-6 border border-primary/15 rounded-full"></div>
+                <!-- Crosshair -->
+                <div class="absolute inset-x-0 top-1/2 h-[1px] bg-primary/30"></div>
+                <div class="absolute inset-y-0 left-1/2 w-[1px] bg-primary/30"></div>
+                <!-- Plane blip -->
+                <div class="w-2 h-2 bg-primary rounded-full z-10 shadow-[0_0_8px_var(--primary)]"></div>
+                <!-- Target blips container -->
+                <div id="radar-blips" class="absolute inset-0"></div>
+              </div>
+            </div>
+
+            <!-- Bottom HUD Controls Info -->
+            <div class="flex justify-between items-end text-[11px]">
+              <div class="bg-black/60 backdrop-blur-md border border-border px-3 py-1.5 rounded-lg text-muted">
+                <span>GEAR: <strong id="hud-gear-val" class="text-emerald-400">DOWN</strong></span> | 
+                <span>FLAPS: <strong id="hud-flaps-val" class="text-muted">UP</strong></span>
+              </div>
+              <div class="bg-black/60 backdrop-blur-md border border-border px-3 py-1.5 rounded-lg text-muted">
+                <span>CANVAS: 16-BIT MODE 7 PERSPECTIVE</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Overlay Start / Crash Dialog -->
+          <div id="flight-overlay" class="absolute inset-0 bg-black/85 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center z-20 transition-all duration-300">
+            <div class="space-y-4 max-w-md">
+              <div class="w-14 h-14 rounded-2xl bg-primary/20 border border-primary/40 flex items-center justify-center mx-auto text-primary">
+                <Plane class="w-7 h-7" />
+              </div>
+              <h3 id="overlay-title" class="text-2xl font-extrabold tracking-tight text-white font-mono uppercase">
+                16-BIT FLIGHT SIMULATOR
+              </h3>
+              <p id="overlay-desc" class="text-sm text-muted leading-relaxed font-sans">
+                Take off into retro 3D skies. Fly through target rings, perform runway landings, and master 16-bit aerobatics!
+              </p>
+              <button
+                id="start-flight-btn"
+                class="w-full bg-primary hover:bg-primary/90 text-white font-mono font-bold py-3 px-6 rounded-xl transition-transform active:scale-95 shadow-lg cursor-pointer text-sm tracking-wider uppercase flex items-center justify-center gap-2"
+              >
+                <Play class="w-4 h-4" />
+                <span>Take Off Now</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Mobile Touch Virtual Flight Yoke & Throttle Pad -->
+        <div class="border-t border-border bg-background p-3 flex items-center justify-between gap-3 font-mono text-xs">
+          <div class="flex items-center gap-2">
+            <span class="text-muted text-[11px]">Mobile Flight Controls:</span>
+          </div>
+
+          <!-- Virtual Touch Yoke Joystick Pad -->
+          <div class="flex items-center gap-2">
+            <button
+              id="btn-pitch-up"
+              class="bg-card active:bg-primary active:text-white border border-border px-3.5 py-2 rounded-lg text-foreground font-bold text-xs select-none touch-none"
+            >
+              ▲ PITCH NOSE DOWN
+            </button>
+            <button
+              id="btn-pitch-down"
+              class="bg-card active:bg-primary active:text-white border border-border px-3.5 py-2 rounded-lg text-foreground font-bold text-xs select-none touch-none"
+            >
+              ▼ PITCH NOSE UP
+            </button>
+            <button
+              id="btn-roll-left"
+              class="bg-card active:bg-primary active:text-white border border-border px-3 py-2 rounded-lg text-foreground font-bold text-xs select-none touch-none"
+            >
+              ◀ BANK L
+            </button>
+            <button
+              id="btn-roll-right"
+              class="bg-card active:bg-primary active:text-white border border-border px-3 py-2 rounded-lg text-foreground font-bold text-xs select-none touch-none"
+            >
+              BANK R ▶
+            </button>
+            <button
+              id="btn-fire-cannon"
+              class="bg-rose-500/20 hover:bg-rose-600 text-rose-400 hover:text-white border border-rose-500/40 px-3.5 py-2 rounded-lg font-bold text-xs uppercase cursor-pointer select-none"
+            >
+              🚀 CANNON
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </div>
+
+  <script>
+    // --- 16-BIT FLIGHT SIMULATOR ENGINE ---
+    const canvas = document.getElementById('flight-canvas') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d')!;
+    const wrapper = document.getElementById('viewport-wrapper')!;
+
+    // UI Elements
+    const flightStatusEl = document.getElementById('flight-status-text')!;
+    const stallWarningEl = document.getElementById('stall-warning')!;
+    const telemetrySpeedEl = document.getElementById('telemetry-speed')!;
+    const telemetryAltEl = document.getElementById('telemetry-alt')!;
+    const telemetryHdgEl = document.getElementById('telemetry-hdg')!;
+    const telemetryAttitudeEl = document.getElementById('telemetry-attitude')!;
+    const telemetryMissionEl = document.getElementById('telemetry-mission')!;
+    const missionBadgeEl = document.getElementById('mission-badge')!;
+
+    // HUD Elements
+    const hudCompassText = document.getElementById('hud-compass-text')!;
+    const hudPitchBar = document.getElementById('hud-pitch-bar')!;
+    const hudGearVal = document.getElementById('hud-gear-val')!;
+    const hudFlapsVal = document.getElementById('hud-flaps-val')!;
+    const radarBlipsEl = document.getElementById('radar-blips')!;
+
+    // Overlay
+    const overlay = document.getElementById('flight-overlay')!;
+    const overlayTitle = document.getElementById('overlay-title')!;
+    const overlayDesc = document.getElementById('overlay-desc')!;
+    const startFlightBtn = document.getElementById('start-flight-btn')!;
+
+    // Controls UI
+    const pauseBtn = document.getElementById('pause-btn')!;
+    const pauseIcon = document.getElementById('pause-icon')!;
+    const playIcon = document.getElementById('play-icon')!;
+    const pauseText = document.getElementById('pause-text')!;
+    const resetFlightBtn = document.getElementById('reset-flight-btn')!;
+    const soundToggleBtn = document.getElementById('sound-toggle-btn')!;
+    const soundIconOn = document.getElementById('sound-icon-on')!;
+    const soundIconOff = document.getElementById('sound-icon-off')!;
+    const soundLabel = document.getElementById('sound-label')!;
+
+    const throttleSlider = document.getElementById('throttle-slider') as HTMLInputElement;
+    const throttleValText = document.getElementById('throttle-val-text')!;
+    const gearToggleBtn = document.getElementById('gear-toggle-btn')!;
+    const gearStatusEl = document.getElementById('gear-status')!;
+    const flapsToggleBtn = document.getElementById('flaps-toggle-btn')!;
+    const flapsStatusEl = document.getElementById('flaps-status')!;
+
+    // Mobile Action buttons
+    const btnPitchUp = document.getElementById('btn-pitch-up')!;
+    const btnPitchDown = document.getElementById('btn-pitch-down')!;
+    const btnRollLeft = document.getElementById('btn-roll-left')!;
+    const btnRollRight = document.getElementById('btn-roll-right')!;
+    const btnFireCannon = document.getElementById('btn-fire-cannon')!;
+
+    // --- Web Audio SFX Engine ---
+    let soundEnabled = true;
+    let audioCtx: AudioContext | null = null;
+    let engineOsc: OscillatorNode | null = null;
+    let engineGain: GainNode | null = null;
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+        audioCtx = new AudioContextClass();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function initEngineSound() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioCtx();
+        if (!engineOsc) {
+          engineOsc = ctx.createOscillator();
+          engineGain = ctx.createGain();
+
+          engineOsc.type = 'sawtooth';
+          engineOsc.frequency.setValueAtTime(60, ctx.currentTime);
+          engineGain.gain.setValueAtTime(0.05, ctx.currentTime);
+
+          engineOsc.connect(engineGain);
+          engineGain.connect(ctx.destination);
+          engineOsc.start();
+        }
+      } catch (e) {}
+    }
+
+    function updateEngineSound(throttlePct: number) {
+      if (!soundEnabled || !engineOsc || !engineGain) return;
+      try {
+        const freq = 50 + throttlePct * 1.8;
+        engineOsc.frequency.setTargetAtTime(freq, getAudioCtx().currentTime, 0.1);
+      } catch (e) {}
+    }
+
+    function playSFX(type: 'cannon' | 'ring' | 'stall' | 'crash' | 'land') {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioCtx();
+        const now = ctx.currentTime;
+
+        if (type === 'cannon') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(320, now);
+          osc.frequency.exponentialRampToValueAtTime(80, now + 0.1);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.1);
+        } else if (type === 'ring') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(587.33, now); // D5
+          osc.frequency.setValueAtTime(880, now + 0.08); // A5
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.2);
+        } else if (type === 'land') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.setValueAtTime(659.25, now + 0.1);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        } else if (type === 'crash') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(150, now);
+          osc.frequency.linearRampToValueAtTime(40, now + 0.5);
+          gain.gain.setValueAtTime(0.4, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.5);
+        }
+      } catch (e) {}
+    }
+
+    soundToggleBtn.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      if (soundEnabled) {
+        soundIconOn.classList.remove('hidden');
+        soundIconOff.classList.add('hidden');
+        soundLabel.textContent = 'SFX On';
+        initEngineSound();
+      } else {
+        soundIconOn.classList.add('hidden');
+        soundIconOff.classList.remove('hidden');
+        soundLabel.textContent = 'Muted';
+        if (engineGain) engineGain.gain.value = 0;
+      }
+    });
+
+    // --- State Variables ---
+    let width = 800;
+    let height = 450;
+
+    let isPlaying = false;
+    let isPaused = false;
+    let isCrashed = false;
+    let isLanded = false;
+
+    let currentMission = 'free'; // 'free' | 'rings' | 'landing'
+    let skyTheme = 'day'; // 'day' | 'sunset' | 'night'
+
+    // Plane Flight Physics State
+    const plane = {
+      x: 0,
+      y: 1250, // Altitude in feet
+      z: 0,
+      pitch: 0, // deg (-45 to +45)
+      roll: 0,  // deg (-60 to +60)
+      yaw: 45,  // heading deg (0 to 360)
+      speed: 180, // knots (0 to 350)
+      throttle: 60, // 0 to 100%
+      gearDown: true,
+      flapsDown: false,
+      stalling: false
+    };
+
+    // Cannon Particles & Projectiles
+    let bullets: { x: number; y: number; z: number; vx: number; vy: number; vz: number; life: number }[] = [];
+    let explosions: { x: number; y: number; z: number; radius: number; alpha: number; color: string }[] = [];
+
+    // Mission Targets: Rings in 3D world space
+    let targetRings: { x: number; y: number; z: number; radius: number; passed: boolean }[] = [];
+    let ringsPassedCount = 0;
+
+    // Runway 3D Location
+    const runway = {
+      x: 0,
+      z: 1500,
+      length: 1200,
+      width: 160
+    };
+
+    // Sky Palette Themes
+    const skyPalettes = {
+      day: {
+        skyTop: '#1e3a8a',
+        skyBottom: '#38bdf8',
+        groundBase: '#15803d',
+        gridLine: '#16a34a',
+        fog: 'rgba(56, 189, 248, 0.4)'
+      },
+      sunset: {
+        skyTop: '#4c1d95',
+        skyBottom: '#f97316',
+        groundBase: '#7c2d12',
+        gridLine: '#ea580c',
+        fog: 'rgba(249, 115, 22, 0.4)'
+      },
+      night: {
+        skyTop: '#020617',
+        skyBottom: '#1e1b4b',
+        groundBase: '#09090b',
+        gridLine: '#6366f1',
+        fog: 'rgba(99, 102, 241, 0.3)'
+      }
+    };
+
+    // Input States
+    const keys: Record<string, boolean> = {};
+    let mobilePitchUp = false;
+    let mobilePitchDown = false;
+    let mobileRollLeft = false;
+    let mobileRollRight = false;
+
+    // --- Responsive Canvas ---
+    function resizeCanvas() {
+      const rect = wrapper.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+
+      width = rect.width;
+      height = Math.max(420, rect.height);
+
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // --- Mission Builder ---
+    function initMission() {
+      ringsPassedCount = 0;
+      targetRings = [];
+
+      if (currentMission === 'rings') {
+        // Spawn 8 floating rings in a scenic flight path
+        for (let i = 0; i < 8; i++) {
+          const angle = (i / 8) * Math.PI * 2;
+          const dist = 1400 + i * 400;
+          targetRings.push({
+            x: Math.sin(angle) * dist,
+            y: 900 + Math.sin(i * 1.2) * 400,
+            z: Math.cos(angle) * dist + 1000,
+            radius: 80,
+            passed: false
+          });
+        }
+        telemetryMissionEl.textContent = 'Rings: 0 / 8';
+      } else if (currentMission === 'landing') {
+        telemetryMissionEl.textContent = 'Align Runway';
+      } else {
+        telemetryMissionEl.textContent = 'Free Exploration';
+      }
+    }
+
+    function resetFlight() {
+      plane.x = 0;
+      plane.y = 1250;
+      plane.z = 0;
+      plane.pitch = 0;
+      plane.roll = 0;
+      plane.yaw = 45;
+      plane.speed = 180;
+      plane.throttle = 60;
+      plane.gearDown = true;
+      plane.flapsDown = false;
+      plane.stalling = false;
+
+      throttleSlider.value = '60';
+      throttleValText.textContent = '60%';
+
+      isCrashed = false;
+      isLanded = false;
+      isPaused = false;
+      isPlaying = true;
+
+      bullets = [];
+      explosions = [];
+
+      initMission();
+      hideOverlay();
+      flightStatusEl.textContent = 'Airborne // Systems Normal';
+      stallWarningEl.classList.add('hidden');
+      initEngineSound();
+    }
+
+    function showOverlay(title: string, desc: string, btnText: string) {
+      overlayTitle.textContent = title;
+      overlayDesc.textContent = desc;
+      startFlightBtn.querySelector('span')!.textContent = btnText;
+      overlay.classList.remove('opacity-0', 'pointer-events-none');
+    }
+
+    function hideOverlay() {
+      overlay.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    // --- Cannon Fire ---
+    function fireCannon() {
+      if (!isPlaying || isCrashed) return;
+      playSFX('cannon');
+
+      const radYaw = (plane.yaw * Math.PI) / 180;
+      const radPitch = (plane.pitch * Math.PI) / 180;
+
+      const speed = 25;
+      bullets.push({
+        x: plane.x,
+        y: plane.y - 10,
+        z: plane.z,
+        vx: Math.sin(radYaw) * speed,
+        vy: Math.sin(radPitch) * speed,
+        vz: Math.cos(radYaw) * speed,
+        life: 60
+      });
+    }
+
+    // --- Flight Dynamics Physics Loop ---
+    function updatePhysics(dt: number) {
+      if (!isPlaying || isPaused || isCrashed) return;
+
+      // 1. Read Inputs & Pitch/Roll Yoke
+      let pitchInput = 0;
+      let rollInput = 0;
+      let yawInput = 0;
+
+      if (keys['w'] || keys['W'] || keys['ArrowUp'] || mobilePitchUp) pitchInput -= 1;
+      if (keys['s'] || keys['S'] || keys['ArrowDown'] || mobilePitchDown) pitchInput += 1;
+      if (keys['a'] || keys['A'] || keys['ArrowLeft'] || mobileRollLeft) rollInput -= 1;
+      if (keys['d'] || keys['D'] || keys['ArrowRight'] || mobileRollRight) rollInput += 1;
+
+      if (keys['q'] || keys['Q']) yawInput -= 1;
+      if (keys['e'] || keys['E']) yawInput += 1;
+
+      // Pitch & Roll Response
+      plane.pitch += pitchInput * 1.8 * dt;
+      plane.roll += rollInput * 2.5 * dt;
+      plane.yaw += (yawInput * 1.2 + plane.roll * 0.04) * dt;
+
+      // Damping / Auto-centering when no roll input
+      if (rollInput === 0) {
+        plane.roll *= 0.94;
+      }
+      if (pitchInput === 0) {
+        plane.pitch *= 0.96;
+      }
+
+      // Clamp angles
+      plane.pitch = Math.max(-50, Math.min(50, plane.pitch));
+      plane.roll = Math.max(-75, Math.min(75, plane.roll));
+      plane.yaw = (plane.yaw + 360) % 360;
+
+      // 2. Throttle & Speed Acceleration
+      const targetSpeed = plane.throttle * 2.8 + (plane.flapsDown ? -30 : 0);
+      plane.speed += (targetSpeed - plane.speed) * 0.03 * dt;
+
+      // Lift & Altitude dynamics
+      const radPitch = (plane.pitch * Math.PI) / 180;
+      const radYaw = (plane.yaw * Math.PI) / 180;
+
+      const climbRate = Math.sin(radPitch) * plane.speed * 0.25;
+      plane.y += climbRate * dt;
+
+      // Forward position movement
+      plane.x += Math.sin(radYaw) * plane.speed * 0.2 * dt;
+      plane.z += Math.cos(radYaw) * plane.speed * 0.2 * dt;
+
+      // Stall detection: If pitching up steeply with low airspeed
+      if (plane.speed < 70 && plane.pitch > 15) {
+        plane.stalling = true;
+        stallWarningEl.classList.remove('hidden');
+        plane.y -= 12 * dt; // Fall down
+        playSFX('stall');
+      } else {
+        plane.stalling = false;
+        stallWarningEl.classList.add('hidden');
+      }
+
+      // 3. Terrain Collision & Touchdown Detection
+      if (plane.y <= 0) {
+        plane.y = 0;
+
+        // Check if landing on runway with gear down and safe speed/attitude
+        const distRunwayX = Math.abs(plane.x - runway.x);
+        const distRunwayZ = Math.abs(plane.z - runway.z);
+
+        if (
+          plane.gearDown &&
+          distRunwayX < runway.width &&
+          distRunwayZ < runway.length / 2 &&
+          plane.speed < 120 &&
+          Math.abs(plane.pitch) < 15 &&
+          Math.abs(plane.roll) < 15
+        ) {
+          // Successful Landing!
+          isLanded = true;
+          isPlaying = false;
+          playSFX('land');
+          flightStatusEl.textContent = 'Touchdown Complete';
+          showOverlay('TOUCHDOWN SUCCESSFUL!', `Smooth landing at ${Math.round(plane.speed)} KTS on Runway 09. Perfect aviator precision!`, 'Fly Again');
+        } else {
+          // Crash into ground!
+          isCrashed = true;
+          isPlaying = false;
+          playSFX('crash');
+          flightStatusEl.textContent = 'CRASH DETECTED';
+          showOverlay('AIRCRAFT CRASHED', `Impact with terrain at ${Math.round(plane.speed)} KTS. Keep gear down and approach under 120 KTS for landing.`, 'Try Again');
+        }
+      }
+
+      // 4. Update Mission Target Rings
+      if (currentMission === 'rings') {
+        targetRings.forEach(ring => {
+          if (!ring.passed) {
+            const dx = ring.x - plane.x;
+            const dy = ring.y - plane.y;
+            const dz = ring.z - plane.z;
+            const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+            if (dist < ring.radius + 30) {
+              ring.passed = true;
+              ringsPassedCount++;
+              playSFX('ring');
+              telemetryMissionEl.textContent = `Rings: ${ringsPassedCount} / 8`;
+
+              if (ringsPassedCount >= 8) {
+                showOverlay('COURSE CLEARED!', 'Congratulations! You flew through all 8 target rings with master precision.', 'Next Flight');
+              }
+            }
+          }
+        });
+      }
+
+      // 5. Update Cannon Bullets
+      for (let i = bullets.length - 1; i >= 0; i--) {
+        const b = bullets[i];
+        b.x += b.vx * dt;
+        b.y += b.vy * dt;
+        b.z += b.vz * dt;
+        b.life -= dt;
+        if (b.life <= 0) {
+          bullets.splice(i, 1);
+        }
+      }
+
+      // Update Engine SFX Pitch
+      updateEngineSound(plane.throttle);
+
+      // 6. Update Telemetry Displays
+      telemetrySpeedEl.textContent = `${Math.round(plane.speed)} KTS`;
+      telemetryAltEl.textContent = `${Math.round(plane.y).toLocaleString()} FT`;
+
+      const hdgDeg = Math.round(plane.yaw);
+      const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+      const dirStr = dirs[Math.floor((hdgDeg + 22.5) / 45) % 8];
+      telemetryHdgEl.textContent = `${String(hdgDeg).padStart(3, '0')}° ${dirStr}`;
+      telemetryAttitudeEl.textContent = `${Math.round(plane.pitch)}° / ${Math.round(plane.roll)}°`;
+
+      // Update HUD Horizon Bar
+      hudCompassText.textContent = `HDG ${String(hdgDeg).padStart(3, '0')}° [ ${dirStr} ]`;
+      hudPitchBar.style.transform = `translateY(${-plane.pitch * 0.8}px) rotate(${-plane.roll}deg)`;
+
+      // Update Minimap Blips
+      updateRadarUI();
+    }
+
+    function updateRadarUI() {
+      // Clear previous blips
+      radarBlipsEl.innerHTML = '';
+
+      if (currentMission === 'rings') {
+        targetRings.forEach(ring => {
+          if (!ring.passed) {
+            const relX = (ring.x - plane.x) / 40;
+            const relZ = (ring.z - plane.z) / 40;
+
+            if (Math.abs(relX) < 40 && Math.abs(relZ) < 40) {
+              const blip = document.createElement('div');
+              blip.className = 'absolute w-1.5 h-1.5 bg-amber-400 rounded-full animate-ping';
+              blip.style.left = `${48 + relX}px`;
+              blip.style.top = `${48 - relZ}px`;
+              radarBlipsEl.appendChild(blip);
+            }
+          }
+        });
+      }
+    }
+
+    // --- Pseudo-3D Mode 7 Rendering Engine ---
+    function draw() {
+      const palette = skyPalettes[skyTheme as keyof typeof skyPalettes];
+
+      // 1. Draw Sky Gradient
+      const skyGlow = ctx.createLinearGradient(0, 0, 0, height / 2 + plane.pitch * 2);
+      skyGlow.addColorStop(0, palette.skyTop);
+      skyGlow.addColorStop(1, palette.skyBottom);
+      ctx.fillStyle = skyGlow;
+      ctx.fillRect(0, 0, width, height);
+
+      // Horizon Y coordinate calculated from Pitch
+      const horizonY = height / 2 + plane.pitch * 3.5;
+
+      // 2. Draw 16-Bit Grid Ground Perspective
+      ctx.fillStyle = palette.groundBase;
+      ctx.fillRect(0, Math.max(0, horizonY), width, height - horizonY);
+
+      // Perspective Grid Lines
+      ctx.strokeStyle = palette.gridLine;
+      ctx.lineWidth = 1.5;
+      ctx.globalAlpha = 0.4;
+
+      const numGridLines = 16;
+      const fov = 300;
+
+      for (let i = -numGridLines; i <= numGridLines; i++) {
+        const xStart = width / 2 + i * 35 + plane.roll * 2;
+        ctx.beginPath();
+        ctx.moveTo(xStart, horizonY);
+        ctx.lineTo(width / 2 + i * 180 + plane.roll * 5, height);
+        ctx.stroke();
+      }
+
+      // Horizontal Distance Grid Rings
+      for (let j = 1; j <= 8; j++) {
+        const yPos = horizonY + Math.pow(j, 2.2) * 5;
+        if (yPos > horizonY && yPos < height) {
+          ctx.beginPath();
+          ctx.moveTo(0, yPos);
+          ctx.lineTo(width, yPos);
+          ctx.stroke();
+        }
+      }
+      ctx.globalAlpha = 1.0;
+
+      // 3. Render 3D Runway Strip
+      const relRunwayZ = runway.z - plane.z;
+      const relRunwayX = runway.x - plane.x;
+
+      if (relRunwayZ > -500 && relRunwayZ < 4000) {
+        const scale = fov / (relRunwayZ + 400);
+        const rwScreenX = width / 2 + relRunwayX * scale;
+        const rwScreenY = horizonY + (plane.y + 100) * scale;
+        const rwWidth = runway.width * scale;
+
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(rwScreenX - rwWidth / 2, rwScreenY, rwWidth, 60 * scale);
+
+        // Center dash runway line
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(rwScreenX - 2, rwScreenY, 4, 60 * scale);
+      }
+
+      // 4. Render 3D Target Rings (for Ring Mission)
+      if (currentMission === 'rings') {
+        targetRings.forEach(ring => {
+          if (!ring.passed) {
+            const dz = ring.z - plane.z;
+            const dx = ring.x - plane.x;
+            const dy = ring.y - plane.y;
+
+            if (dz > 50 && dz < 3500) {
+              const scale = fov / dz;
+              const screenX = width / 2 + dx * scale;
+              const screenY = horizonY - dy * scale;
+              const radiusScreen = ring.radius * scale;
+
+              // Golden Ring FX
+              ctx.strokeStyle = '#f59e0b';
+              ctx.lineWidth = Math.max(2, 6 * scale);
+              ctx.shadowColor = '#f59e0b';
+              ctx.shadowBlur = 10;
+              ctx.beginPath();
+              ctx.arc(screenX, screenY, Math.max(4, radiusScreen), 0, Math.PI * 2);
+              ctx.stroke();
+              ctx.shadowBlur = 0;
+            }
+          }
+        });
+      }
+
+      // 5. Render Cannon Bullets
+      bullets.forEach(b => {
+        const dz = b.z - plane.z;
+        const dx = b.x - plane.x;
+        const dy = b.y - plane.y;
+
+        if (dz > 10 && dz < 2000) {
+          const scale = fov / dz;
+          const screenX = width / 2 + dx * scale;
+          const screenY = horizonY - dy * scale;
+
+          ctx.fillStyle = '#fbbf24';
+          ctx.beginPath();
+          ctx.arc(screenX, screenY, Math.max(1.5, 3 * scale), 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
+
+      // 6. Draw Cockpit Frame & Crosshair Overlay
+      ctx.strokeStyle = 'rgba(99, 102, 241, 0.4)';
+      ctx.lineWidth = 1;
+
+      // Flight Yoke Reticle
+      ctx.beginPath();
+      ctx.arc(width / 2, height / 2, 18, 0, Math.PI * 2);
+      ctx.moveTo(width / 2 - 28, height / 2);
+      ctx.lineTo(width / 2 + 28, height / 2);
+      ctx.moveTo(width / 2, height / 2 - 28);
+      ctx.lineTo(width / 2, height / 2 + 28);
+      ctx.stroke();
+    }
+
+    // Normalized Delta Time Loop
+    let lastTime = 0;
+    function mainLoop(timestamp = 0) {
+      if (timestamp && lastTime) {
+        const deltaTime = timestamp - lastTime;
+        const dt = Math.max(0.2, Math.min(2.0, deltaTime / 16.667));
+        updatePhysics(dt);
+      } else {
+        updatePhysics(1.0);
+      }
+      if (timestamp) lastTime = timestamp;
+
+      draw();
+      requestAnimationFrame(mainLoop);
+    }
+
+    // --- Inputs & Event Handlers ---
+    window.addEventListener('keydown', (e) => {
+      getAudioCtx();
+      keys[e.key] = true;
+
+      if (e.key === ' ') {
+        e.preventDefault();
+        fireCannon();
+      } else if (e.key === 'g' || e.key === 'G') {
+        toggleGear();
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFlaps();
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      keys[e.key] = false;
+    });
+
+    // Mobile Virtual Touch Buttons
+    btnPitchUp.addEventListener('touchstart', (e) => { e.preventDefault(); mobilePitchUp = true; });
+    btnPitchUp.addEventListener('touchend', (e) => { e.preventDefault(); mobilePitchUp = false; });
+    btnPitchUp.addEventListener('mousedown', () => { mobilePitchUp = true; });
+    btnPitchUp.addEventListener('mouseup', () => { mobilePitchUp = false; });
+
+    btnPitchDown.addEventListener('touchstart', (e) => { e.preventDefault(); mobilePitchDown = true; });
+    btnPitchDown.addEventListener('touchend', (e) => { e.preventDefault(); mobilePitchDown = false; });
+    btnPitchDown.addEventListener('mousedown', () => { mobilePitchDown = true; });
+    btnPitchDown.addEventListener('mouseup', () => { mobilePitchDown = false; });
+
+    btnRollLeft.addEventListener('touchstart', (e) => { e.preventDefault(); mobileRollLeft = true; });
+    btnRollLeft.addEventListener('touchend', (e) => { e.preventDefault(); mobileRollLeft = false; });
+    btnRollLeft.addEventListener('mousedown', () => { mobileRollLeft = true; });
+    btnRollLeft.addEventListener('mouseup', () => { mobileRollLeft = false; });
+
+    btnRollRight.addEventListener('touchstart', (e) => { e.preventDefault(); mobileRollRight = true; });
+    btnRollRight.addEventListener('touchend', (e) => { e.preventDefault(); mobileRollRight = false; });
+    btnRollRight.addEventListener('mousedown', () => { mobileRollRight = true; });
+    btnRollRight.addEventListener('mouseup', () => { mobileRollRight = false; });
+
+    btnFireCannon.addEventListener('click', fireCannon);
+
+    // Gear & Flaps Controls
+    function toggleGear() {
+      plane.gearDown = !plane.gearDown;
+      gearStatusEl.textContent = plane.gearDown ? 'DOWN' : 'UP';
+      gearStatusEl.className = plane.gearDown ? 'text-emerald-500 font-bold' : 'text-muted font-bold';
+      hudGearVal.textContent = plane.gearDown ? 'DOWN' : 'UP';
+      hudGearVal.className = plane.gearDown ? 'text-emerald-400' : 'text-muted';
+    }
+
+    function toggleFlaps() {
+      plane.flapsDown = !plane.flapsDown;
+      flapsStatusEl.textContent = plane.flapsDown ? 'DOWN' : 'UP';
+      flapsStatusEl.className = plane.flapsDown ? 'text-amber-500 font-bold' : 'text-muted font-bold';
+      hudFlapsVal.textContent = plane.flapsDown ? 'DOWN' : 'UP';
+      hudFlapsVal.className = plane.flapsDown ? 'text-amber-400' : 'text-muted';
+    }
+
+    gearToggleBtn.addEventListener('click', toggleGear);
+    flapsToggleBtn.addEventListener('click', toggleFlaps);
+
+    // Throttle Slider
+    throttleSlider.addEventListener('input', () => {
+      plane.throttle = parseInt(throttleSlider.value);
+      throttleValText.textContent = `${plane.throttle}%`;
+    });
+
+    // Pause & Start Controls
+    startFlightBtn.addEventListener('click', () => {
+      getAudioCtx();
+      resetFlight();
+    });
+
+    resetFlightBtn.addEventListener('click', resetFlight);
+
+    pauseBtn.addEventListener('click', () => {
+      if (!isPlaying || isCrashed) return;
+      isPaused = !isPaused;
+      if (isPaused) {
+        pauseIcon.classList.add('hidden');
+        playIcon.classList.remove('hidden');
+        pauseText.textContent = 'Resume';
+        flightStatusEl.textContent = 'Flight Paused';
+      } else {
+        pauseIcon.classList.remove('hidden');
+        playIcon.classList.add('hidden');
+        pauseText.textContent = 'Pause';
+        flightStatusEl.textContent = 'Airborne // Systems Normal';
+      }
+    });
+
+    // Mission Selection
+    const missionBtns = document.querySelectorAll('.mission-btn');
+    missionBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget as HTMLButtonElement;
+        missionBtns.forEach(b => b.className = 'mission-btn border border-border bg-background hover:border-primary text-foreground p-2 rounded-md transition-all font-semibold cursor-pointer text-center');
+        target.className = 'mission-btn border border-primary bg-primary/10 text-primary p-2 rounded-md transition-all font-semibold cursor-pointer text-center';
+
+        if (target.id === 'mission-free') {
+          currentMission = 'free';
+          missionBadgeEl.textContent = 'Free Flight';
+        } else if (target.id === 'mission-rings') {
+          currentMission = 'rings';
+          missionBadgeEl.textContent = 'Ring Course';
+        } else if (target.id === 'mission-landing') {
+          currentMission = 'landing';
+          missionBadgeEl.textContent = 'Landing';
+        }
+        resetFlight();
+      });
+    });
+
+    // Sky Atmosphere Switcher
+    const skyBtns = document.querySelectorAll('.sky-btn');
+    skyBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget as HTMLButtonElement;
+        skyBtns.forEach(b => b.className = 'sky-btn border border-border bg-background text-muted p-1.5 rounded-md transition-all cursor-pointer text-center');
+        target.className = 'sky-btn border border-primary bg-primary/10 text-primary p-1.5 rounded-md font-semibold transition-all cursor-pointer text-center';
+        skyTheme = target.dataset.time || 'day';
+      });
+    });
+
+    // Start Loop
+    mainLoop();
+  </script>
+</Layout>

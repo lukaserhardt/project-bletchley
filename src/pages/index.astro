@@ -11,7 +11,8 @@ import {
   Presentation, 
   TrendingUp, 
   Calculator,
-  Gamepad2
+  Gamepad2,
+  Plane
 } from '@lucide/astro';
 
 const latestPost = blogData[0]; // Retrieve the most recent post for preview
@@ -303,6 +304,30 @@ const latestPost = blogData[0]; // Retrieve the most recent post for preview
           </div>
           <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-xs text-muted font-mono">
             <span>Touch Controls // Audio FX</span>
+            <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
+          </div>
+        </a>
+
+        <!-- Node 11: 16-Bit Flight Simulator -->
+        <a 
+          href="/project-bletchley/labs/flight-simulator" 
+          class="group border border-border bg-card hover:border-primary p-5 rounded-xl transition-all duration-200 shadow-sm flex flex-col justify-between"
+        >
+          <div class="space-y-3">
+            <div class="flex items-center justify-between font-mono text-xs">
+              <span class="text-muted">[ node-11 ]</span>
+              <span class="text-primary font-semibold">● 3D Retro Engine</span>
+            </div>
+            <h3 class="text-base font-bold tracking-tight group-hover:text-primary transition-colors flex items-center gap-2">
+              <Plane class="w-5 h-5 text-primary/85 group-hover:text-primary transition-colors shrink-0" />
+              16-Bit Flight Simulator
+            </h3>
+            <p class="text-sm text-muted leading-relaxed">
+              Retro Mode-7 style flight sim with 16-bit HUD telemetry, pitch/roll flight yoke, target ring missions, and landing challenges.
+            </p>
+          </div>
+          <div class="mt-4 border-t border-border/50 pt-3 flex items-center justify-between text-xs text-muted font-mono">
+            <span>Mode-7 Perspective // Chiptune SFX</span>
             <span class="group-hover:translate-x-1 transition-transform inline-block">➔</span>
           </div>
         </a>
