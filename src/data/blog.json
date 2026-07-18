@@ -1,5 +1,11 @@
 [
   {
+    "id": 17,
+    "timestamp": "2026-07-18T14:36:00Z",
+    "content": "Released Version v0.6.1. Complete overhaul of 16-Bit Flight Simulator graphics and flight mechanics. Added real-time 3D Mode-7 scrolling terrain, horizon wing-banking rotations, third-person aircraft sprite with thruster animations and ground altitude shadows, stable level flight trim, and a camera view toggle button (Chase Cam / Cockpit HUD).",
+    "tags": ["release", "v0.6.1", "flight-simulator", "mode-7", "chase-cam", "rendering", "physics"]
+  },
+  {
     "id": 16,
     "timestamp": "2026-07-18T14:24:00Z",
     "content": "Released Version v0.6.0. Scaffolded Node 11: 16-Bit Flight Simulator. Built a retro Mode-7 style pseudo-3D flight simulation engine featuring 16-bit cockpit HUD telemetry (attitude horizon, altimeter, heading compass, speed & throttle meters, mini radar), pitch/roll flight yoke controls, synthesized chiptune engine SFX, target ring flight courses, runway landing maneuvers, and cannon fire interactions.",
