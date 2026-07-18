@@ -1,9 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, ShieldAlert, Camera, Flame, Navigation, Target } from '@lucide/astro';
+import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, ShieldAlert, Camera, Flame, Navigation, Maximize, Minimize, X } from '@lucide/astro';
 ---
 
-<Layout title="Project Bletchley - 16-Bit Flight Simulator" description="Retro 16-bit flight simulator with 3D Mode-7 scrolling terrain, wayfinding target beacons, F-14 fighter jet sprite, twin plasma cannon tracers, and landing approach missions.">
+<Layout title="Project Bletchley - 16-Bit Flight Simulator" description="Retro 16-bit flight simulator with fullscreen touch cockpit, vertical throttle lever, F-14 fighter jet sprite, 3D target ring beacons, and landing approach missions.">
   <div class="space-y-8 flex-grow flex flex-col relative">
     
     <!-- Hero Background Glow Blobs -->
@@ -33,7 +33,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
             </span>
           </div>
           <p class="text-sm text-muted mt-2 max-w-2xl leading-relaxed">
-            Retro Mode-7 3D flight engine with wayfinding navigation beacons, twin plasma cannons, F-14 jet wingtip lights, touch joystick controls, and landing approach missions.
+            Full-screen touch flight simulator. All flight controls including vertical throttle lever, touch joystick, gear/flaps, and plasma cannons directly visible on screen.
           </p>
         </div>
       </div>
@@ -41,9 +41,17 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       <!-- Header Action Controls -->
       <div class="flex items-center gap-2 shrink-0">
         <button
+          id="fullscreen-btn"
+          class="border border-border bg-card hover:bg-background text-sm font-mono px-3 py-1.5 rounded-md transition-colors cursor-pointer hover:border-primary text-foreground flex items-center gap-1.5 shadow-sm"
+          title="Toggle Fullscreen Immersive Mode"
+        >
+          <Maximize id="fullscreen-icon-enter" class="w-4 h-4 text-primary" />
+          <Minimize id="fullscreen-icon-exit" class="w-4 h-4 text-primary hidden" />
+          <span id="fullscreen-label">Fullscreen</span>
+        </button>
+        <button
           id="camera-toggle-btn"
           class="border border-border bg-card hover:bg-background text-sm font-mono px-3 py-1.5 rounded-md transition-colors cursor-pointer hover:border-primary text-foreground flex items-center gap-1.5 shadow-sm"
-          title="Toggle Camera View (Chase Cam / Cockpit)"
         >
           <Camera class="w-4 h-4 text-primary" />
           <span id="camera-label">Chase Cam</span>
@@ -51,7 +59,6 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         <button
           id="sound-toggle-btn"
           class="border border-border bg-card hover:bg-background text-sm font-mono px-3 py-1.5 rounded-md transition-colors cursor-pointer hover:border-primary text-foreground flex items-center gap-1.5 shadow-sm"
-          title="Toggle Synthesized Engine SFX"
         >
           <Volume2 id="sound-icon-on" class="w-4 h-4 text-primary" />
           <VolumeX id="sound-icon-off" class="w-4 h-4 text-muted hidden" />
@@ -62,7 +69,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
           class="border border-border bg-card hover:bg-background text-sm font-mono px-3 py-1.5 rounded-md transition-colors cursor-pointer hover:border-primary text-foreground flex items-center gap-1.5 shadow-sm"
         >
           <RefreshCw class="w-4 h-4" />
-          <span>Reset Flight</span>
+          <span>Reset</span>
         </button>
       </div>
     </header>
@@ -70,11 +77,11 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
     <!-- Main Simulator Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch flex-grow">
       
-      <!-- Control Panel & Avionics Sidebar -->
+      <!-- Pre-Flight Setup Sidebar -->
       <section class="lg:col-span-4 border border-border bg-card p-6 rounded-xl space-y-6 flex flex-col justify-between shadow-sm">
         <div class="space-y-6">
           <h2 class="font-mono text-sm font-bold uppercase tracking-wider border-b border-border pb-2 text-foreground flex items-center justify-between">
-            <span>Flight Avionics & Setup</span>
+            <span>Pre-Flight Avionics & Setup</span>
             <span class="text-xs text-primary font-normal font-mono" id="mission-badge">Free Flight</span>
           </h2>
 
@@ -107,7 +114,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
               </div>
             </div>
 
-            <!-- Atmosphere / Sky Time Theme -->
+            <!-- Sky Atmosphere Switcher -->
             <div class="space-y-2">
               <label class="block font-mono text-xs uppercase tracking-wider text-muted">Sky & Environment</label>
               <div class="grid grid-cols-3 gap-1.5 font-mono text-xs">
@@ -117,7 +124,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
               </div>
             </div>
 
-            <!-- Engine Throttle Control Slider -->
+            <!-- Engine Throttle Slider -->
             <div class="space-y-1.5 border-t border-border/60 pt-3">
               <div class="flex justify-between text-xs font-mono">
                 <span class="uppercase tracking-wider text-muted flex items-center gap-1">
@@ -134,14 +141,9 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
                 step="1"
                 class="w-full h-2 bg-border appearance-none cursor-pointer accent-primary rounded-lg"
               />
-              <div class="flex justify-between text-[10px] font-mono text-muted">
-                <span>0% (Idle)</span>
-                <span>50% (Cruise)</span>
-                <span>100% (Afterburner)</span>
-              </div>
             </div>
 
-            <!-- Flight Gear & Controls -->
+            <!-- Gear & Flaps Quick Controls -->
             <div class="grid grid-cols-2 gap-2 font-mono text-xs border-t border-border/60 pt-3">
               <button
                 type="button"
@@ -162,7 +164,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
             </div>
           </div>
 
-          <!-- Real-Time Flight Telemetry Dashboard -->
+          <!-- Real-Time Telemetry -->
           <div class="border border-border/80 bg-background/50 p-4 rounded-xl space-y-3 font-mono text-xs">
             <div class="flex items-center justify-between border-b border-border/40 pb-2">
               <span class="text-muted uppercase tracking-wider">Airspeed</span>
@@ -176,10 +178,6 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
               <span class="text-muted uppercase tracking-wider">Heading (HDG)</span>
               <span id="telemetry-hdg" class="font-bold text-foreground">045° NNE</span>
             </div>
-            <div class="flex items-center justify-between border-b border-border/40 pb-2">
-              <span class="text-muted uppercase tracking-wider">Pitch / Roll</span>
-              <span id="telemetry-attitude" class="font-bold text-foreground">0° / 0°</span>
-            </div>
             <div class="flex items-center justify-between">
               <span class="text-muted uppercase tracking-wider">Mission Target</span>
               <span id="telemetry-mission" class="font-bold text-amber-500">Free Exploration</span>
@@ -187,20 +185,18 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
           </div>
         </div>
 
-        <!-- Controls Guide Footnote -->
         <div class="font-mono text-xs text-muted border-t border-border pt-4 leading-relaxed space-y-2">
           <div class="flex items-center gap-1.5 text-foreground font-semibold">
-            <span>🕹️ Flight Control Guide:</span>
+            <span>🕹️ Fullscreen Touch Flight:</span>
           </div>
-          <p><strong>Touch Joystick:</strong> Drag thumb anywhere on screen (Up = Dive, Down = Climb, Left/Right = Bank Turn).</p>
-          <p><strong>Keyboard:</strong> [W/S] Pitch Nose Down/Up, [A/D] Roll Bank, [I/K] Throttle, [Space] Plasma Cannon, [G] Gear, [F] Flaps.</p>
+          <p>Tapping <strong>Take Off Now</strong> enters full-screen flight mode where all yoke gestures, vertical throttle lever, gear, flaps, and cannon buttons are visible simultaneously.</p>
         </div>
       </section>
 
       <!-- Main Flight Screen & Cockpit Canvas -->
-      <section class="lg:col-span-8 border border-border bg-card rounded-xl overflow-hidden shadow-sm flex flex-col items-stretch min-h-[560px]">
+      <section class="lg:col-span-8 border border-border bg-card rounded-xl overflow-hidden shadow-sm flex flex-col items-stretch min-h-[560px]" id="flight-section">
         
-        <!-- Screen Status Header Bar -->
+        <!-- Screen Header Status Bar -->
         <div class="border-b border-border bg-background px-4 py-3 font-mono text-xs flex items-center justify-between gap-2">
           <div class="flex items-center gap-3">
             <span class="text-primary font-bold tracking-wider uppercase flex items-center gap-1.5">
@@ -229,26 +225,27 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
           
           <canvas id="flight-canvas" class="w-full h-full block min-h-[460px] touch-none"></canvas>
 
-          <!-- Cockpit HUD Instruments Overlay -->
-          <div class="absolute inset-0 pointer-events-none p-4 flex flex-col justify-between z-10 font-mono text-xs">
-            <!-- Top HUD Bar: Compass & Navigation Target Box -->
+          <!-- Cockpit HUD Overlay -->
+          <div class="absolute inset-0 pointer-events-none p-3 sm:p-4 flex flex-col justify-between z-10 font-mono text-xs">
+            
+            <!-- Top HUD Bar -->
             <div class="flex justify-between items-start gap-2">
-              <!-- Pitch & Roll Artificial Horizon Indicator -->
-              <div class="bg-black/70 backdrop-blur-md border border-primary/40 px-3 py-2 rounded-lg text-primary space-y-1 shrink-0">
+              <!-- Horizon Bar -->
+              <div class="bg-black/75 backdrop-blur-md border border-primary/40 px-3 py-2 rounded-lg text-primary space-y-1 shrink-0">
                 <div class="text-[10px] uppercase text-muted tracking-wider">Artificial Horizon</div>
-                <div class="w-28 h-2 bg-primary/20 relative overflow-hidden rounded border border-primary/40">
+                <div class="w-24 sm:w-28 h-2 bg-primary/20 relative overflow-hidden rounded border border-primary/40">
                   <div id="hud-pitch-bar" class="absolute inset-x-0 h-full bg-primary transition-all duration-75"></div>
                 </div>
               </div>
 
-              <!-- Center Wayfinding Target Box (For Rings & Landing) -->
-              <div class="bg-black/80 backdrop-blur-md border border-amber-500/40 px-3.5 py-1.5 rounded-lg text-amber-400 font-mono text-xs font-bold tracking-wider flex items-center gap-2 shadow-lg" id="hud-wayfinding-box">
-                <Navigation class="w-4 h-4 text-amber-500 animate-pulse" />
+              <!-- Center Wayfinding Target Box -->
+              <div class="bg-black/85 backdrop-blur-md border border-amber-500/50 px-3 py-1.5 rounded-lg text-amber-400 font-mono text-xs font-bold tracking-wider flex items-center gap-2 shadow-lg" id="hud-wayfinding-box">
+                <Navigation class="w-4 h-4 text-amber-500 animate-pulse shrink-0" />
                 <span id="hud-wayfinding-text">TARGET: FREE FLIGHT</span>
               </div>
 
               <!-- Radar Minimap -->
-              <div class="w-24 h-24 bg-black/80 border border-primary/50 rounded-full relative overflow-hidden flex items-center justify-center shadow-lg shrink-0">
+              <div class="w-20 h-20 sm:w-24 sm:h-24 bg-black/85 border border-primary/50 rounded-full relative overflow-hidden flex items-center justify-center shadow-lg shrink-0">
                 <div class="absolute inset-2 border border-primary/20 rounded-full"></div>
                 <div class="absolute inset-6 border border-primary/15 rounded-full"></div>
                 <div class="absolute inset-x-0 top-1/2 h-[1px] bg-primary/30"></div>
@@ -258,36 +255,59 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
               </div>
             </div>
 
-            <!-- Bottom Touch Overlay Action Buttons -->
-            <div class="flex justify-between items-end text-[11px] pointer-events-auto">
-              <div class="bg-black/70 backdrop-blur-md border border-border px-3 py-1.5 rounded-lg text-muted pointer-events-none">
-                <span>GEAR: <strong id="hud-gear-val" class="text-emerald-400">DOWN</strong></span> | 
-                <span>FLAPS: <strong id="hud-flaps-val" class="text-muted">UP</strong></span>
+            <!-- Bottom Touch Cockpit HUD Controls (ALL-IN-ONE VISIBLE TOUCH CONTROLS) -->
+            <div class="flex justify-between items-end gap-3 pointer-events-auto">
+              
+              <!-- Left Touch Telemetry & View Controls -->
+              <div class="flex flex-col gap-2">
+                <div class="bg-black/80 backdrop-blur-md border border-border px-3 py-1.5 rounded-lg text-muted pointer-events-none hidden sm:block">
+                  <span>GEAR: <strong id="hud-gear-val" class="text-emerald-400">DOWN</strong></span> | 
+                  <span>FLAPS: <strong id="hud-flaps-val" class="text-muted">UP</strong></span>
+                </div>
               </div>
 
-              <!-- Clean 3 Touch Buttons on Overlay (Gear, Flaps, Cannon) -->
-              <div class="flex items-center gap-2">
-                <button
-                  id="touch-gear-btn"
-                  class="bg-black/80 hover:bg-primary/20 border border-border hover:border-primary text-foreground font-mono text-xs px-3 py-2 rounded-xl transition-all active:scale-95 cursor-pointer shadow-lg select-none"
-                >
-                  <span id="touch-gear-label">🛞 GEAR</span>
-                </button>
-                <button
-                  id="touch-flaps-btn"
-                  class="bg-black/80 hover:bg-primary/20 border border-border hover:border-primary text-foreground font-mono text-xs px-3 py-2 rounded-xl transition-all active:scale-95 cursor-pointer shadow-lg select-none"
-                >
-                  <span id="touch-flaps-label">✈️ FLAPS</span>
-                </button>
-                <button
-                  id="touch-cannon-btn"
-                  class="bg-rose-600 hover:bg-rose-500 text-white font-mono text-xs font-bold px-4 py-2.5 rounded-xl transition-all active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5 select-none"
-                >
-                  <Flame class="w-4 h-4 fill-white" />
-                  <span>CANNON</span>
-                </button>
+              <!-- Right Touch Controls: Vertical Throttle Lever + Action Buttons -->
+              <div class="flex items-end gap-3">
+                
+                <!-- Vertical Touch Throttle Slider -->
+                <div id="touch-throttle-box" class="flex flex-col items-center gap-1 bg-black/85 backdrop-blur-md p-2 rounded-xl border border-primary/50 select-none shadow-xl">
+                  <span class="text-[10px] font-mono text-amber-400 font-bold uppercase tracking-wider">THROTTLE</span>
+                  <div id="touch-throttle-track" class="w-7 h-28 sm:h-32 bg-primary/20 border border-primary/50 rounded-lg relative overflow-hidden touch-none cursor-pointer">
+                    <div id="touch-throttle-bar" class="absolute bottom-0 inset-x-0 bg-primary/80 transition-all duration-75"></div>
+                    <div id="touch-throttle-knob" class="absolute inset-x-0 h-4 bg-amber-400 rounded border border-white shadow-md transition-all duration-75" style="bottom: 60%"></div>
+                  </div>
+                  <span id="touch-throttle-val" class="text-[11px] font-mono text-white font-bold">60%</span>
+                </div>
+
+                <!-- Touch Action Buttons Column (Gear, Flaps, Cannon) -->
+                <div class="flex flex-col gap-2">
+                  <div class="flex items-center gap-2">
+                    <button
+                      id="touch-gear-btn"
+                      class="bg-black/85 hover:bg-primary/20 border border-border hover:border-primary text-foreground font-mono text-xs px-3 py-2 rounded-xl transition-all active:scale-95 cursor-pointer shadow-lg select-none"
+                    >
+                      <span id="touch-gear-label">🛞 GEAR</span>
+                    </button>
+                    <button
+                      id="touch-flaps-btn"
+                      class="bg-black/85 hover:bg-primary/20 border border-border hover:border-primary text-foreground font-mono text-xs px-3 py-2 rounded-xl transition-all active:scale-95 cursor-pointer shadow-lg select-none"
+                    >
+                      <span id="touch-flaps-label">✈️ FLAPS</span>
+                    </button>
+                  </div>
+                  <button
+                    id="touch-cannon-btn"
+                    class="w-full bg-rose-600 hover:bg-rose-500 text-white font-mono text-xs font-bold py-3 px-4 rounded-xl transition-all active:scale-95 cursor-pointer shadow-lg flex items-center justify-center gap-1.5 select-none"
+                  >
+                    <Flame class="w-4 h-4 fill-white" />
+                    <span>FIRE CANNON</span>
+                  </button>
+                </div>
+
               </div>
+
             </div>
+
           </div>
 
           <!-- Overlay Start / Crash Dialog -->
@@ -300,14 +320,14 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
                 16-BIT FLIGHT SIMULATOR
               </h3>
               <p id="overlay-desc" class="text-sm text-muted leading-relaxed font-sans">
-                Take off into retro 3D skies. Drag your thumb anywhere on screen to steer the flight yoke, shoot plasma cannon tracers, and perform runway touchdowns!
+                Take off into retro 3D skies. Fullscreen touch cockpit with vertical throttle lever, touch joystick gestures, and plasma cannon FX.
               </p>
               <button
                 id="start-flight-btn"
                 class="w-full bg-primary hover:bg-primary/90 text-white font-mono font-bold py-3 px-6 rounded-xl transition-transform active:scale-95 shadow-lg cursor-pointer text-sm tracking-wider uppercase flex items-center justify-center gap-2"
               >
                 <Play class="w-4 h-4" />
-                <span>Take Off Now</span>
+                <span>Take Off Now (Fullscreen)</span>
               </button>
             </div>
           </div>
@@ -324,6 +344,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
     const canvas = document.getElementById('flight-canvas') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d')!;
     const wrapper = document.getElementById('viewport-wrapper')!;
+    const flightSection = document.getElementById('flight-section')!;
 
     // UI Elements
     const flightStatusEl = document.getElementById('flight-status-text')!;
@@ -341,8 +362,13 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
     const hudFlapsVal = document.getElementById('hud-flaps-val')!;
     const radarBlipsEl = document.getElementById('radar-blips')!;
     const cameraLabel = document.getElementById('camera-label')!;
-    const hudWayfindingBox = document.getElementById('hud-wayfinding-box')!;
     const hudWayfindingText = document.getElementById('hud-wayfinding-text')!;
+
+    // Fullscreen Elements
+    const fullscreenBtn = document.getElementById('fullscreen-btn')!;
+    const fullscreenIconEnter = document.getElementById('fullscreen-icon-enter')!;
+    const fullscreenIconExit = document.getElementById('fullscreen-icon-exit')!;
+    const fullscreenLabel = document.getElementById('fullscreen-label')!;
 
     // Overlay
     const overlay = document.getElementById('flight-overlay')!;
@@ -369,12 +395,17 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
     const flapsToggleBtn = document.getElementById('flaps-toggle-btn')!;
     const flapsStatusEl = document.getElementById('flaps-status')!;
 
-    // Touch Buttons
+    // Touch Controls
     const touchCannonBtn = document.getElementById('touch-cannon-btn')!;
     const touchGearBtn = document.getElementById('touch-gear-btn')!;
     const touchGearLabel = document.getElementById('touch-gear-label')!;
     const touchFlapsBtn = document.getElementById('touch-flaps-btn')!;
     const touchFlapsLabel = document.getElementById('touch-flaps-label')!;
+
+    const touchThrottleTrack = document.getElementById('touch-throttle-track')!;
+    const touchThrottleBar = document.getElementById('touch-throttle-bar')!;
+    const touchThrottleKnob = document.getElementById('touch-throttle-knob')!;
+    const touchThrottleVal = document.getElementById('touch-throttle-val')!;
 
     // --- Web Audio SFX Engine ---
     let soundEnabled = true;
@@ -427,7 +458,6 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         const now = ctx.currentTime;
 
         if (type === 'cannon') {
-          // Double burst laser cannon sound
           [0, 0.05].forEach((offset) => {
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
@@ -504,6 +534,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
     let isPaused = false;
     let isCrashed = false;
     let isLanded = false;
+    let isFullscreen = false;
 
     let currentMission = 'free';
     let skyTheme = 'day';
@@ -514,10 +545,10 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       x: 0,
       y: 850,
       z: 0,
-      pitch: 0, // deg (-45 to +45)
-      roll: 0,  // deg (-60 to +60)
-      yaw: 45,  // heading deg (0 to 360)
-      speed: 90, // Calibrated smooth speed (KTS)
+      pitch: 0,
+      roll: 0,
+      yaw: 45,
+      speed: 90,
       throttle: 60,
       gearDown: false,
       flapsDown: false,
@@ -576,13 +607,13 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       touchId: null as number | null
     };
 
-    // --- Responsive Canvas Setup ---
+    // --- Responsive Canvas Setup & Fullscreen ---
     function resizeCanvas() {
       const rect = wrapper.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
 
       width = rect.width;
-      height = Math.max(460, rect.height);
+      height = Math.max(380, rect.height);
 
       canvas.width = width * dpr;
       canvas.height = height * dpr;
@@ -592,13 +623,40 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
+    function toggleFullscreen() {
+      isFullscreen = !isFullscreen;
+      if (isFullscreen) {
+        if (wrapper.requestFullscreen) {
+          wrapper.requestFullscreen().catch(() => {});
+        } else if ((wrapper as any).webkitRequestFullscreen) {
+          (wrapper as any).webkitRequestFullscreen();
+        }
+        wrapper.classList.add('fixed', 'inset-0', 'z-50', 'w-screen', 'h-screen');
+        fullscreenIconEnter.classList.add('hidden');
+        fullscreenIconExit.classList.remove('hidden');
+        fullscreenLabel.textContent = 'Exit';
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
+        } else if ((document as any).webkitExitFullscreen) {
+          (document as any).webkitExitFullscreen();
+        }
+        wrapper.classList.remove('fixed', 'inset-0', 'z-50', 'w-screen', 'h-screen');
+        fullscreenIconEnter.classList.remove('hidden');
+        fullscreenIconExit.classList.add('hidden');
+        fullscreenLabel.textContent = 'Fullscreen';
+      }
+      setTimeout(resizeCanvas, 100);
+    }
+
+    fullscreenBtn.addEventListener('click', toggleFullscreen);
+
     // --- Mission Builder ---
     function initMission() {
       ringsPassedCount = 0;
       targetRings = [];
 
       if (currentMission === 'rings') {
-        // Spawn 8 floating rings along a clear forward arc path
         for (let i = 0; i < 8; i++) {
           const angle = (i / 8) * Math.PI * 1.2;
           const dist = 600 + i * 450;
@@ -632,6 +690,16 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       }
     }
 
+    function updateThrottleUI(pct: number) {
+      plane.throttle = Math.max(0, Math.min(100, pct));
+      throttleSlider.value = String(Math.round(plane.throttle));
+      throttleValText.textContent = `${Math.round(plane.throttle)}%`;
+
+      touchThrottleBar.style.height = `${plane.throttle}%`;
+      touchThrottleKnob.style.bottom = `${Math.max(0, Math.min(85, plane.throttle * 0.85))}%`;
+      touchThrottleVal.textContent = `${Math.round(plane.throttle)}%`;
+    }
+
     function resetFlight() {
       plane.x = 0;
       plane.y = 850;
@@ -640,15 +708,14 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       plane.roll = 0;
       plane.yaw = 45;
       plane.speed = 90;
-      plane.throttle = 60;
       plane.gearDown = false;
       plane.flapsDown = false;
       plane.stalling = false;
       plane.muzzleFlash = 0;
       plane.recoilShake = 0;
 
-      throttleSlider.value = '60';
-      throttleValText.textContent = '60%';
+      updateThrottleUI(60);
+
       gearStatusEl.textContent = 'UP';
       flapsStatusEl.textContent = 'UP';
       hudGearVal.textContent = 'UP';
@@ -692,14 +759,13 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       if (!isPlaying || isCrashed) return;
       playSFX('cannon');
       plane.muzzleFlash = 5;
-      plane.recoilShake = 4; // Visual camera recoil
+      plane.recoilShake = 4;
 
       const radYaw = (plane.yaw * Math.PI) / 180;
       const radPitch = (plane.pitch * Math.PI) / 180;
 
       const speed = 24;
 
-      // Dual wing laser bolts
       bullets.push({
         x: plane.x - Math.cos(radYaw) * 16,
         y: plane.y - 4,
@@ -727,7 +793,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
     function updatePhysics(dt: number) {
       if (!isPlaying || isPaused || isCrashed) return;
 
-      // 1. Read Inputs (Keyboard + Virtual Touch Yoke)
+      // 1. Read Inputs
       let pitchInput = touchYoke.pitchInput;
       let rollInput = touchYoke.rollInput;
 
@@ -736,42 +802,25 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       if (keys['a'] || keys['A'] || keys['ArrowLeft']) rollInput -= 1;
       if (keys['d'] || keys['D'] || keys['ArrowRight']) rollInput += 1;
 
-      if (keys['i'] || keys['I']) {
-        plane.throttle = Math.min(100, plane.throttle + 1.2 * dt);
-        throttleSlider.value = String(Math.round(plane.throttle));
-        throttleValText.textContent = `${Math.round(plane.throttle)}%`;
-      }
-      if (keys['k'] || keys['K']) {
-        plane.throttle = Math.max(0, plane.throttle - 1.2 * dt);
-        throttleSlider.value = String(Math.round(plane.throttle));
-        throttleValText.textContent = `${Math.round(plane.throttle)}%`;
-      }
+      if (keys['i'] || keys['I']) updateThrottleUI(plane.throttle + 1.2 * dt);
+      if (keys['k'] || keys['K']) updateThrottleUI(plane.throttle - 1.2 * dt);
 
-      // Smooth Pitch & Roll Response
       plane.pitch += pitchInput * 1.8 * dt;
       plane.roll += rollInput * 2.5 * dt;
 
-      // Smooth bank turn heading (Yaw)
       plane.yaw += (plane.roll * 0.04) * dt;
 
-      // Auto Damping when yoke released
-      if (rollInput === 0 && !touchYoke.active) {
-        plane.roll *= 0.92;
-      }
-      if (pitchInput === 0 && !touchYoke.active) {
-        plane.pitch *= 0.93; // Level flight trim
-      }
+      if (rollInput === 0 && !touchYoke.active) plane.roll *= 0.92;
+      if (pitchInput === 0 && !touchYoke.active) plane.pitch *= 0.93;
 
-      // Clamp angles
       plane.pitch = Math.max(-45, Math.min(45, plane.pitch));
       plane.roll = Math.max(-75, Math.min(75, plane.roll));
       plane.yaw = (plane.yaw + 360) % 360;
 
-      // Decay muzzle flash & recoil shake
       if (plane.muzzleFlash > 0) plane.muzzleFlash -= 1;
       if (plane.recoilShake > 0) plane.recoilShake *= 0.8;
 
-      // 2. Calibrated Realistic Speed & Position Movement
+      // 2. Speed & Movement
       const targetSpeed = 45 + plane.throttle * 1.5 + (plane.flapsDown ? -18 : 0);
       plane.speed += (targetSpeed - plane.speed) * 0.04 * dt;
 
@@ -781,7 +830,6 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       const climbRate = Math.sin(radPitch) * plane.speed * 0.25;
       plane.y += climbRate * dt;
 
-      // Smooth position ratio for relaxing control
       plane.x += Math.sin(radYaw) * plane.speed * 0.06 * dt;
       plane.z += Math.cos(radYaw) * plane.speed * 0.06 * dt;
 
@@ -796,7 +844,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         stallWarningEl.classList.add('hidden');
       }
 
-      // 3. Ground Touchdown System
+      // 3. Touchdown System
       if (plane.y <= 0) {
         plane.y = 0;
 
@@ -825,7 +873,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         }
       }
 
-      // 4. Mission Target Rings & Wayfinding Update
+      // 4. Mission Target Rings & Wayfinding
       if (currentMission === 'rings') {
         const nextRing = targetRings.find(r => !r.passed);
 
@@ -835,7 +883,6 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
           const dz = nextRing.z - plane.z;
           const dist = Math.round(Math.sqrt(dx * dx + dy * dy + dz * dz));
 
-          // Calculate Waypointing Angle Relative to Plane Heading
           const ringHdg = Math.round((Math.atan2(dx, dz) * (180 / Math.PI) + 360) % 360);
           let hdgDiff = ringHdg - plane.yaw;
           if (hdgDiff > 180) hdgDiff -= 360;
@@ -847,7 +894,6 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
 
           hudWayfindingText.textContent = `${arrow} RING #${nextRing.id}: ${dist}m (HDG ${String(ringHdg).padStart(3, '0')}°)`;
 
-          // Check Ring Passage Collision
           if (dist < nextRing.radius + 35) {
             nextRing.passed = true;
             ringsPassedCount++;
@@ -866,7 +912,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         hudWayfindingText.textContent = `FREE EXPLORATION // HDG ${String(Math.round(plane.yaw)).padStart(3, '0')}°`;
       }
 
-      // 5. Update Cannon Plasma Tracer Bolts
+      // 5. Cannon Plasma Tracer Bolts
       for (let i = bullets.length - 1; i >= 0; i--) {
         const b = bullets[i];
         b.x += b.vx * dt;
@@ -878,10 +924,8 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         }
       }
 
-      // Engine Sound
       updateEngineSound(plane.throttle);
 
-      // Telemetry Displays
       telemetrySpeedEl.textContent = `${Math.round(plane.speed)} KTS`;
       telemetryAltEl.textContent = `${Math.round(plane.y).toLocaleString()} FT`;
 
@@ -890,6 +934,8 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       const dirStr = dirs[Math.floor((hdgDeg + 22.5) / 45) % 8];
       telemetryHdgEl.textContent = `${String(hdgDeg).padStart(3, '0')}° ${dirStr}`;
       telemetryAttitudeEl.textContent = `${Math.round(plane.pitch)}° / ${Math.round(plane.roll)}°`;
+
+      hudPitchBar.style.transform = `translateY(${-plane.pitch * 0.8}px) rotate(${-plane.roll}deg)`;
 
       if (plane.y > 0) {
         flightStatusEl.textContent = `Airborne // ${Math.round(plane.y)} FT`;
@@ -921,15 +967,12 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
     function draw() {
       const palette = skyPalettes[skyTheme as keyof typeof skyPalettes];
 
-      // Screen Recoil Shake Offset
       const shakeX = (Math.random() - 0.5) * plane.recoilShake;
       const shakeY = (Math.random() - 0.5) * plane.recoilShake;
 
-      // 1. Horizon & Pitch Calculation
       const horizonY = height / 2 + (plane.pitch * 3.5) + shakeY;
 
       ctx.save();
-      // Rotate viewport according to Aircraft Wing Roll Angle!
       ctx.translate(width / 2 + shakeX, horizonY);
       ctx.rotate((-plane.roll * Math.PI) / 180);
 
@@ -937,7 +980,6 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       ctx.fillStyle = palette.skyTop;
       ctx.fillRect(-width * 1.5, -height * 2.5, width * 3, height * 2.5);
 
-      // Sky Horizon Gradient
       const skyGlow = ctx.createLinearGradient(0, -120, 0, 0);
       skyGlow.addColorStop(0, palette.skyTop);
       skyGlow.addColorStop(1, palette.skyBottom);
@@ -948,7 +990,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       ctx.fillStyle = palette.groundBase;
       ctx.fillRect(-width * 1.5, 0, width * 3, height * 2.5);
 
-      // 2. Mode-7 Scrolling Grid Lines
+      // Mode-7 Scrolling Grid Lines
       ctx.strokeStyle = palette.gridLine;
       ctx.lineWidth = 1.5;
       ctx.globalAlpha = 0.45;
@@ -957,7 +999,6 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       const offsetX = (plane.x % gridSize);
       const offsetZ = (plane.z % gridSize);
 
-      // Radiating perspective lines
       for (let i = -14; i <= 14; i++) {
         const xStart = i * 45 - offsetX * 0.2;
         const xEnd = i * 240 - offsetX * 1.8;
@@ -967,7 +1008,6 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         ctx.stroke();
       }
 
-      // Horizontal ground distance lines scrolling toward camera!
       for (let j = 1; j <= 14; j++) {
         const zPos = (j * 45 - (offsetZ * 0.4)) % 550;
         if (zPos > 0) {
@@ -982,7 +1022,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       }
       ctx.globalAlpha = 1.0;
 
-      // 3. Render 3D Runway
+      // 3D Runway
       const relRunwayZ = runway.z - plane.z;
       const relRunwayX = runway.x - plane.x;
 
@@ -999,7 +1039,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         ctx.fillRect(rwScreenX - 2, rwScreenY, 4, 90 * scale);
       }
 
-      // 4. Render 3D Target Rings & Wayfinding Beacons
+      // 3D Target Rings & Wayfinding Beacons
       if (currentMission === 'rings') {
         const nextRing = targetRings.find(r => !r.passed);
 
@@ -1017,7 +1057,6 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
 
               const isNext = (nextRing && nextRing.id === ring.id);
 
-              // Draw Vertical Wayfinding Light Beam (for next target ring!)
               if (isNext) {
                 const beamGradient = ctx.createLinearGradient(screenX, screenY - 400 * scale, screenX, screenY);
                 beamGradient.addColorStop(0, 'rgba(245, 158, 11, 0)');
@@ -1026,7 +1065,6 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
                 ctx.fillRect(screenX - 10 * scale, screenY - 400 * scale, 20 * scale, 400 * scale);
               }
 
-              // Ring Circle
               ctx.strokeStyle = isNext ? '#fbbf24' : '#f59e0b';
               ctx.lineWidth = Math.max(2, (isNext ? 8 : 4) * scale);
               ctx.shadowColor = '#f59e0b';
@@ -1036,7 +1074,6 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
               ctx.stroke();
               ctx.shadowBlur = 0;
 
-              // Floating Ring Number Text
               ctx.fillStyle = '#ffffff';
               ctx.font = `bold ${Math.max(10, Math.round(14 * scale))}px monospace`;
               ctx.textAlign = 'center';
@@ -1046,7 +1083,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         });
       }
 
-      // 5. Render Bright Plasma Cannon Tracers
+      // Plasma Cannon Tracers
       bullets.forEach(b => {
         const dz = b.z - plane.z;
         const dx = b.x - plane.x;
@@ -1057,7 +1094,6 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
           const screenX = dx * scale;
           const screenY = -dy * scale;
 
-          // Dual wing plasma laser line
           ctx.strokeStyle = '#f43f5e';
           ctx.shadowColor = '#f43f5e';
           ctx.shadowBlur = 12;
@@ -1071,9 +1107,9 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         }
       });
 
-      ctx.restore(); // Restore unrotated viewport transform
+      ctx.restore();
 
-      // 6. Ground Shadow under plane
+      // Ground Shadow
       if (plane.y < 900) {
         const shadowAlpha = Math.max(0, 1 - plane.y / 900) * 0.45;
         const shadowOffsetY = Math.min(120, (plane.y / 900) * 100);
@@ -1087,7 +1123,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         ctx.restore();
       }
 
-      // 7. Render Virtual Touch Yoke Ring on Canvas (When Touch Active)
+      // Touch Yoke Indicator Ring
       if (touchYoke.active) {
         ctx.save();
         ctx.translate(touchYoke.startX, touchYoke.startY);
@@ -1111,23 +1147,21 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         ctx.restore();
       }
 
-      // 8. Prettier 16-Bit Fighter Aircraft Sprite (In Chase Cam view!)
+      // F-14 Aircraft Sprite
       if (cameraMode === 'chase') {
         drawDetailed16BitFighterJet(width / 2, height - 90, plane.roll, plane.pitch, plane.throttle, plane.gearDown, plane.muzzleFlash);
       }
     }
 
-    // Helper: High-Detail 16-Bit F-14 Tomcat Fighter Jet Sprite
+    // F-14 Tomcat Jet Renderer
     function drawDetailed16BitFighterJet(x: number, y: number, roll: number, pitch: number, throttle: number, gearDown: boolean, muzzleFlash: number) {
       ctx.save();
       ctx.translate(x, y);
       
-      // Roll Tilt & Pitch Perspective
       ctx.rotate((roll * Math.PI) / 180);
       const pitchScaleY = 1 - Math.sin((pitch * Math.PI) / 180) * 0.25;
       ctx.scale(1, pitchScaleY);
 
-      // Wingtip Cannon Muzzle Flash Spark Explosions
       if (muzzleFlash > 0) {
         ctx.fillStyle = '#fef08a';
         ctx.shadowColor = '#fef08a';
@@ -1139,24 +1173,22 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         ctx.shadowBlur = 0;
       }
 
-      // Main Wings (Layered 16-bit Shading)
-      ctx.fillStyle = '#334155'; // Dark metallic slate
+      ctx.fillStyle = '#334155';
       ctx.strokeStyle = '#64748b';
       ctx.lineWidth = 1.5;
 
       ctx.beginPath();
-      ctx.moveTo(0, -32); // Sharp Nose
-      ctx.lineTo(64, 16); // Right Wingtip
+      ctx.moveTo(0, -32);
+      ctx.lineTo(64, 16);
       ctx.lineTo(22, 12);
-      ctx.lineTo(24, 32); // Tail Right
-      ctx.lineTo(-24, 32); // Tail Left
+      ctx.lineTo(24, 32);
+      ctx.lineTo(-24, 32);
       ctx.lineTo(-22, 12);
-      ctx.lineTo(-64, 16); // Left Wingtip
+      ctx.lineTo(-64, 16);
       ctx.closePath();
       ctx.fill();
       ctx.stroke();
 
-      // Wing Panel Trim Highlights
       ctx.fillStyle = '#475569';
       ctx.beginPath();
       ctx.moveTo(0, -18);
@@ -1167,14 +1199,12 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       ctx.closePath();
       ctx.fill();
 
-      // Fuselage Central Body
       ctx.fillStyle = '#64748b';
       ctx.beginPath();
       ctx.ellipse(0, 0, 12, 34, 0, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
 
-      // Glass Canopy (Cyan Gloss Glow)
       ctx.fillStyle = '#38bdf8';
       ctx.shadowColor = '#38bdf8';
       ctx.shadowBlur = 10;
@@ -1183,8 +1213,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       ctx.fill();
       ctx.shadowBlur = 0;
 
-      // Wingtip Navigation Position Lights
-      // Left Wing: Red
+      // Nav Lights
       ctx.fillStyle = '#ef4444';
       ctx.shadowColor = '#ef4444';
       ctx.shadowBlur = 6;
@@ -1192,7 +1221,6 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       ctx.arc(-63, 15, 3, 0, Math.PI * 2);
       ctx.fill();
 
-      // Right Wing: Green
       ctx.fillStyle = '#22c55e';
       ctx.shadowColor = '#22c55e';
       ctx.shadowBlur = 6;
@@ -1201,11 +1229,10 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       ctx.fill();
       ctx.shadowBlur = 0;
 
-      // Twin Jet Engine Afterburner Thrust Flame
+      // Thrust Flame
       if (throttle > 10) {
         const flameLen = 14 + (throttle / 100) * 32 + Math.random() * 8;
 
-        // Outer Orange Flame
         ctx.fillStyle = '#f97316';
         ctx.beginPath();
         ctx.moveTo(-10, 32);
@@ -1216,7 +1243,6 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         ctx.closePath();
         ctx.fill();
 
-        // Inner Yellow Core Flame
         ctx.fillStyle = '#fef08a';
         ctx.beginPath();
         ctx.moveTo(-8, 32);
@@ -1228,14 +1254,10 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         ctx.fill();
       }
 
-      // Landing Gear Wheels & Struts
       if (gearDown) {
         ctx.fillStyle = '#0f172a';
-        // Left Wheel
         ctx.fillRect(-24, 12, 6, 9);
-        // Right Wheel
         ctx.fillRect(18, 12, 6, 9);
-        // Nose Wheel
         ctx.fillRect(-3, -22, 6, 7);
       }
 
@@ -1258,11 +1280,47 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       requestAnimationFrame(mainLoop);
     }
 
-    // --- Intuitive Touch Yoke Gesture Event Listeners ---
+    // --- Vertical Touch Throttle Lever Handler ---
+    function handleThrottleTouch(e: TouchEvent | MouseEvent) {
+      const rect = touchThrottleTrack.getBoundingClientRect();
+      const clientY = (e as TouchEvent).touches ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY;
+      const relY = Math.max(0, Math.min(rect.height, clientY - rect.top));
+      const pct = 100 - (relY / rect.height) * 100;
+      updateThrottleUI(pct);
+    }
+
+    let isThrottleDragging = false;
+    touchThrottleTrack.addEventListener('touchstart', (e) => {
+      e.stopPropagation();
+      isThrottleDragging = true;
+      handleThrottleTouch(e);
+    }, { passive: false });
+
+    touchThrottleTrack.addEventListener('touchmove', (e) => {
+      if (!isThrottleDragging) return;
+      e.stopPropagation();
+      e.preventDefault();
+      handleThrottleTouch(e);
+    }, { passive: false });
+
+    touchThrottleTrack.addEventListener('touchend', () => { isThrottleDragging = false; });
+    touchThrottleTrack.addEventListener('touchcancel', () => { isThrottleDragging = false; });
+
+    touchThrottleTrack.addEventListener('mousedown', (e) => {
+      isThrottleDragging = true;
+      handleThrottleTouch(e);
+    });
+    window.addEventListener('mousemove', (e) => {
+      if (isThrottleDragging) handleThrottleTouch(e);
+    });
+    window.addEventListener('mouseup', () => { isThrottleDragging = false; });
+
+    // --- Touch Yoke Gesture Event Listeners ---
     canvas.addEventListener('touchstart', (e) => {
       getAudioCtx();
       if (!isPlaying) {
         resetFlight();
+        if (!isFullscreen) toggleFullscreen();
         return;
       }
 
@@ -1272,13 +1330,13 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         const scaleX = width / rect.width;
         const scaleY = height / rect.height;
         const tx = (touch.clientX - rect.left) * scaleX;
-        const ty = (touch.clientY - rect.top) * scaleY;
 
-        if (!touchYoke.active) {
+        // Avoid touch joystick if touching throttle on right
+        if (tx < width * 0.75 && !touchYoke.active) {
           touchYoke.active = true;
           touchYoke.touchId = touch.identifier;
           touchYoke.startX = tx;
-          touchYoke.startY = ty;
+          touchYoke.startY = (touch.clientY - rect.top) * scaleY;
           touchYoke.pitchInput = 0;
           touchYoke.rollInput = 0;
         }
@@ -1352,7 +1410,6 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
     touchGearBtn.addEventListener('click', toggleGear);
     touchFlapsBtn.addEventListener('click', toggleFlaps);
 
-    // Gear & Flaps Controls
     function toggleGear() {
       plane.gearDown = !plane.gearDown;
       gearStatusEl.textContent = plane.gearDown ? 'DOWN' : 'UP';
@@ -1374,15 +1431,14 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
     gearToggleBtn.addEventListener('click', toggleGear);
     flapsToggleBtn.addEventListener('click', toggleFlaps);
 
-    // Throttle Slider
     throttleSlider.addEventListener('input', () => {
-      plane.throttle = parseInt(throttleSlider.value);
-      throttleValText.textContent = `${plane.throttle}%`;
+      updateThrottleUI(parseInt(throttleSlider.value));
     });
 
     // Pause & Start Controls
     startFlightBtn.addEventListener('click', () => {
       getAudioCtx();
+      if (!isFullscreen) toggleFullscreen();
       resetFlight();
     });
 

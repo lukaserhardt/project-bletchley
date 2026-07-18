@@ -1,5 +1,11 @@
 [
   {
+    "id": 20,
+    "timestamp": "2026-07-18T14:57:00Z",
+    "content": "Released Version v0.7.0. Implemented auto-fullscreen immersive flight mode and all-in-one touch HUD for mobile devices. Tapping 'Take Off Now' automatically enters full-screen view. Added a dedicated vertical touch throttle lever directly on the right screen overlay alongside Touch Yoke gestures, Gear, Flaps, and Plasma Cannon buttons for simultaneous single-screen flight control.",
+    "tags": ["release", "v0.7.0", "flight-simulator", "auto-fullscreen", "touch-throttle", "cockpit-hud", "mobile-optimized"]
+  },
+  {
     "id": 19,
     "timestamp": "2026-07-18T14:51:00Z",
     "content": "Released Version v0.6.3. Enhanced 16-Bit Flight Simulator graphics and flight mechanics. Rendered a high-detail F-14 Tomcat fighter jet sprite with wingtip navigation lights (red/green) and heat haze thrust, added 3D vertical wayfinding light beams and HUD directional indicators for target rings, calibrated smooth flight steering sensitivity, and consolidated touch UI to 3 distinct buttons (Gear, Flaps, Cannon).",
