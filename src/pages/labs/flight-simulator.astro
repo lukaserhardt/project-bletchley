@@ -1,9 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, ShieldAlert, Camera, Flame, Navigation, Maximize, Minimize, X } from '@lucide/astro';
+import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, ShieldAlert, Camera, Flame, Navigation, Maximize, Minimize, Settings, X } from '@lucide/astro';
 ---
 
-<Layout title="Project Bletchley - 16-Bit Flight Simulator" description="Retro 16-bit flight simulator with fullscreen touch cockpit, vertical throttle lever, F-14 fighter jet sprite, 3D target ring beacons, and landing approach missions.">
+<Layout title="Project Bletchley - 16-Bit Flight Simulator" description="Retro 16-bit flight simulator with in-flight HUD settings overlay, vertical throttle lever, F-14 fighter jet sprite, 3D target ring beacons, and landing approach missions.">
   <div class="space-y-8 flex-grow flex flex-col relative">
     
     <!-- Hero Background Glow Blobs -->
@@ -33,7 +33,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
             </span>
           </div>
           <p class="text-sm text-muted mt-2 max-w-2xl leading-relaxed">
-            Full-screen touch flight simulator. All flight controls including vertical throttle lever, touch joystick, gear/flaps, and plasma cannons directly visible on screen.
+            All-in-one touch flight cockpit. Adjust mission setup, vertical throttle lever, gear, flaps, sky themes, and plasma cannons directly on screen in normal or fullscreen mode.
           </p>
         </div>
       </div>
@@ -187,9 +187,9 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
 
         <div class="font-mono text-xs text-muted border-t border-border pt-4 leading-relaxed space-y-2">
           <div class="flex items-center gap-1.5 text-foreground font-semibold">
-            <span>🕹️ Fullscreen Touch Flight:</span>
+            <span>🕹️ All-In-One Cockpit:</span>
           </div>
-          <p>Tapping <strong>Take Off Now</strong> enters full-screen flight mode where all yoke gestures, vertical throttle lever, gear, flaps, and cannon buttons are visible simultaneously.</p>
+          <p>Drag thumb anywhere on screen to steer yoke. Use on-screen vertical throttle lever, gear, flaps, cannon, and ⚙️ settings buttons directly on the flight canvas.</p>
         </div>
       </section>
 
@@ -230,8 +230,8 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
             
             <!-- Top HUD Bar -->
             <div class="flex justify-between items-start gap-2">
-              <!-- Horizon Bar -->
-              <div class="bg-black/75 backdrop-blur-md border border-primary/40 px-3 py-2 rounded-lg text-primary space-y-1 shrink-0">
+              <!-- Artificial Horizon -->
+              <div class="bg-black/80 backdrop-blur-md border border-primary/40 px-3 py-2 rounded-lg text-primary space-y-1 shrink-0">
                 <div class="text-[10px] uppercase text-muted tracking-wider">Artificial Horizon</div>
                 <div class="w-24 sm:w-28 h-2 bg-primary/20 relative overflow-hidden rounded border border-primary/40">
                   <div id="hud-pitch-bar" class="absolute inset-x-0 h-full bg-primary transition-all duration-75"></div>
@@ -244,25 +244,71 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
                 <span id="hud-wayfinding-text">TARGET: FREE FLIGHT</span>
               </div>
 
-              <!-- Radar Minimap -->
-              <div class="w-20 h-20 sm:w-24 sm:h-24 bg-black/85 border border-primary/50 rounded-full relative overflow-hidden flex items-center justify-center shadow-lg shrink-0">
-                <div class="absolute inset-2 border border-primary/20 rounded-full"></div>
-                <div class="absolute inset-6 border border-primary/15 rounded-full"></div>
-                <div class="absolute inset-x-0 top-1/2 h-[1px] bg-primary/30"></div>
-                <div class="absolute inset-y-0 left-1/2 w-[1px] bg-primary/30"></div>
-                <div class="w-2 h-2 bg-primary rounded-full z-10 shadow-[0_0_8px_var(--primary)]"></div>
-                <div id="radar-blips" class="absolute inset-0"></div>
+              <!-- In-Flight Settings & Fullscreen Quick Buttons -->
+              <div class="flex items-center gap-1.5 pointer-events-auto">
+                <button
+                  id="hud-settings-toggle-btn"
+                  class="bg-black/85 hover:bg-primary/30 border border-primary/50 text-white font-mono text-xs px-2.5 py-2 rounded-lg transition-all active:scale-95 cursor-pointer shadow-lg flex items-center gap-1 select-none"
+                  title="In-Flight Settings Menu"
+                >
+                  <Settings class="w-4 h-4 text-amber-400" />
+                  <span class="hidden sm:inline">SETUP</span>
+                </button>
+                <button
+                  id="hud-fullscreen-btn"
+                  class="bg-black/85 hover:bg-primary/30 border border-primary/50 text-white font-mono text-xs px-2.5 py-2 rounded-lg transition-all active:scale-95 cursor-pointer shadow-lg flex items-center gap-1 select-none"
+                  title="Toggle Fullscreen View"
+                >
+                  <Maximize id="hud-fs-icon-enter" class="w-4 h-4 text-primary" />
+                  <Minimize id="hud-fs-icon-exit" class="w-4 h-4 text-primary hidden" />
+                </button>
               </div>
             </div>
 
-            <!-- Bottom Touch Cockpit HUD Controls (ALL-IN-ONE VISIBLE TOUCH CONTROLS) -->
+            <!-- In-Flight Quick Settings Popover Menu -->
+            <div id="hud-settings-menu" class="hidden absolute top-16 right-4 bg-black/90 backdrop-blur-xl border border-primary/40 p-4 rounded-xl shadow-2xl z-30 pointer-events-auto space-y-4 max-w-xs font-mono text-xs text-white">
+              <div class="flex justify-between items-center border-b border-border pb-2">
+                <span class="font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1">
+                  <Settings class="w-4 h-4" /> In-Flight Setup
+                </span>
+                <button id="hud-settings-close" class="text-muted hover:text-white cursor-pointer">
+                  <X class="w-4 h-4" />
+                </button>
+              </div>
+
+              <!-- In-Flight Mission Selector -->
+              <div class="space-y-1.5">
+                <label class="block text-[10px] uppercase tracking-wider text-muted">Flight Mission</label>
+                <div class="grid grid-cols-3 gap-1 text-[11px]">
+                  <button type="button" data-mission="free" class="hud-m-btn bg-primary/20 border border-primary text-primary p-1.5 rounded text-center cursor-pointer font-bold">Free</button>
+                  <button type="button" data-mission="rings" class="hud-m-btn bg-card border border-border text-foreground p-1.5 rounded text-center cursor-pointer">Rings</button>
+                  <button type="button" data-mission="landing" class="hud-m-btn bg-card border border-border text-foreground p-1.5 rounded text-center cursor-pointer">Landing</button>
+                </div>
+              </div>
+
+              <!-- In-Flight Sky Theme Selector -->
+              <div class="space-y-1.5">
+                <label class="block text-[10px] uppercase tracking-wider text-muted">Sky Theme</label>
+                <div class="grid grid-cols-3 gap-1 text-[11px]">
+                  <button type="button" data-hudsky="day" class="hud-sky-btn bg-primary/20 border border-primary text-primary p-1.5 rounded text-center cursor-pointer font-bold">Day</button>
+                  <button type="button" data-hudsky="sunset" class="hud-sky-btn bg-card border border-border text-foreground p-1.5 rounded text-center cursor-pointer">Sunset</button>
+                  <button type="button" data-hudsky="night" class="hud-sky-btn bg-card border border-border text-foreground p-1.5 rounded text-center cursor-pointer">Night</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Touch Cockpit HUD Controls (ALL VISIBLE TOUCH CONTROLS) -->
             <div class="flex justify-between items-end gap-3 pointer-events-auto">
               
-              <!-- Left Touch Telemetry & View Controls -->
-              <div class="flex flex-col gap-2">
-                <div class="bg-black/80 backdrop-blur-md border border-border px-3 py-1.5 rounded-lg text-muted pointer-events-none hidden sm:block">
-                  <span>GEAR: <strong id="hud-gear-val" class="text-emerald-400">DOWN</strong></span> | 
-                  <span>FLAPS: <strong id="hud-flaps-val" class="text-muted">UP</strong></span>
+              <!-- Left Radar & Telemetry -->
+              <div class="flex items-end gap-3">
+                <div class="w-18 h-18 sm:w-22 sm:h-22 bg-black/85 border border-primary/50 rounded-full relative overflow-hidden flex items-center justify-center shadow-lg shrink-0">
+                  <div class="absolute inset-2 border border-primary/20 rounded-full"></div>
+                  <div class="absolute inset-5 border border-primary/15 rounded-full"></div>
+                  <div class="absolute inset-x-0 top-1/2 h-[1px] bg-primary/30"></div>
+                  <div class="absolute inset-y-0 left-1/2 w-[1px] bg-primary/30"></div>
+                  <div class="w-2 h-2 bg-primary rounded-full z-10 shadow-[0_0_8px_var(--primary)]"></div>
+                  <div id="radar-blips" class="absolute inset-0"></div>
                 </div>
               </div>
 
@@ -320,14 +366,14 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
                 16-BIT FLIGHT SIMULATOR
               </h3>
               <p id="overlay-desc" class="text-sm text-muted leading-relaxed font-sans">
-                Take off into retro 3D skies. Fullscreen touch cockpit with vertical throttle lever, touch joystick gestures, and plasma cannon FX.
+                Take off into retro 3D skies. Touch cockpit with vertical throttle lever, touch joystick gestures, plasma cannon FX, and in-flight setup.
               </p>
               <button
                 id="start-flight-btn"
                 class="w-full bg-primary hover:bg-primary/90 text-white font-mono font-bold py-3 px-6 rounded-xl transition-transform active:scale-95 shadow-lg cursor-pointer text-sm tracking-wider uppercase flex items-center justify-center gap-2"
               >
                 <Play class="w-4 h-4" />
-                <span>Take Off Now (Fullscreen)</span>
+                <span>Take Off Now</span>
               </button>
             </div>
           </div>
@@ -344,7 +390,6 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
     const canvas = document.getElementById('flight-canvas') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d')!;
     const wrapper = document.getElementById('viewport-wrapper')!;
-    const flightSection = document.getElementById('flight-section')!;
 
     // UI Elements
     const flightStatusEl = document.getElementById('flight-status-text')!;
@@ -369,6 +414,15 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
     const fullscreenIconEnter = document.getElementById('fullscreen-icon-enter')!;
     const fullscreenIconExit = document.getElementById('fullscreen-icon-exit')!;
     const fullscreenLabel = document.getElementById('fullscreen-label')!;
+
+    const hudFullscreenBtn = document.getElementById('hud-fullscreen-btn')!;
+    const hudFsIconEnter = document.getElementById('hud-fs-icon-enter')!;
+    const hudFsIconExit = document.getElementById('hud-fs-icon-exit')!;
+
+    // In-Flight Settings Overlay Elements
+    const hudSettingsToggleBtn = document.getElementById('hud-settings-toggle-btn')!;
+    const hudSettingsMenu = document.getElementById('hud-settings-menu')!;
+    const hudSettingsClose = document.getElementById('hud-settings-close')!;
 
     // Overlay
     const overlay = document.getElementById('flight-overlay')!;
@@ -635,6 +689,9 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         fullscreenIconEnter.classList.add('hidden');
         fullscreenIconExit.classList.remove('hidden');
         fullscreenLabel.textContent = 'Exit';
+
+        hudFsIconEnter.classList.add('hidden');
+        hudFsIconExit.classList.remove('hidden');
       } else {
         if (document.exitFullscreen) {
           document.exitFullscreen().catch(() => {});
@@ -645,11 +702,55 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         fullscreenIconEnter.classList.remove('hidden');
         fullscreenIconExit.classList.add('hidden');
         fullscreenLabel.textContent = 'Fullscreen';
+
+        hudFsIconEnter.classList.remove('hidden');
+        hudFsIconExit.classList.add('hidden');
       }
       setTimeout(resizeCanvas, 100);
     }
 
     fullscreenBtn.addEventListener('click', toggleFullscreen);
+    hudFullscreenBtn.addEventListener('click', toggleFullscreen);
+
+    // In-Flight Settings Popover Handlers
+    hudSettingsToggleBtn.addEventListener('click', () => {
+      hudSettingsMenu.classList.toggle('hidden');
+    });
+    hudSettingsClose.addEventListener('click', () => {
+      hudSettingsMenu.classList.add('hidden');
+    });
+
+    // In-flight mission switch
+    const hudMBtns = document.querySelectorAll('.hud-m-btn');
+    hudMBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget as HTMLButtonElement;
+        const m = target.dataset.mission || 'free';
+        setMission(m);
+        hudSettingsMenu.classList.add('hidden');
+      });
+    });
+
+    // In-flight sky switch
+    const hudSkyBtns = document.querySelectorAll('.hud-sky-btn');
+    hudSkyBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget as HTMLButtonElement;
+        const s = target.dataset.hudsky || 'day';
+        setSkyTheme(s);
+        hudSettingsMenu.classList.add('hidden');
+      });
+    });
+
+    function setMission(m: string) {
+      currentMission = m;
+      missionBadgeEl.textContent = m === 'rings' ? 'Ring Course' : m === 'landing' ? 'Landing' : 'Free Flight';
+      resetFlight();
+    }
+
+    function setSkyTheme(s: string) {
+      skyTheme = s;
+    }
 
     // --- Mission Builder ---
     function initMission() {
@@ -1320,7 +1421,6 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       getAudioCtx();
       if (!isPlaying) {
         resetFlight();
-        if (!isFullscreen) toggleFullscreen();
         return;
       }
 
@@ -1331,7 +1431,6 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         const scaleY = height / rect.height;
         const tx = (touch.clientX - rect.left) * scaleX;
 
-        // Avoid touch joystick if touching throttle on right
         if (tx < width * 0.75 && !touchYoke.active) {
           touchYoke.active = true;
           touchYoke.touchId = touch.identifier;
@@ -1438,7 +1537,6 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
     // Pause & Start Controls
     startFlightBtn.addEventListener('click', () => {
       getAudioCtx();
-      if (!isFullscreen) toggleFullscreen();
       resetFlight();
     });
 
@@ -1468,17 +1566,8 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         missionBtns.forEach(b => b.className = 'mission-btn border border-border bg-background hover:border-primary text-foreground p-2 rounded-md transition-all font-semibold cursor-pointer text-center');
         target.className = 'mission-btn border border-primary bg-primary/10 text-primary p-2 rounded-md transition-all font-semibold cursor-pointer text-center';
 
-        if (target.id === 'mission-free') {
-          currentMission = 'free';
-          missionBadgeEl.textContent = 'Free Flight';
-        } else if (target.id === 'mission-rings') {
-          currentMission = 'rings';
-          missionBadgeEl.textContent = 'Ring Course';
-        } else if (target.id === 'mission-landing') {
-          currentMission = 'landing';
-          missionBadgeEl.textContent = 'Landing';
-        }
-        resetFlight();
+        const m = target.id === 'mission-rings' ? 'rings' : target.id === 'mission-landing' ? 'landing' : 'free';
+        setMission(m);
       });
     });
 
@@ -1489,7 +1578,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
         const target = e.currentTarget as HTMLButtonElement;
         skyBtns.forEach(b => b.className = 'sky-btn border border-border bg-background text-muted p-1.5 rounded-md transition-all cursor-pointer text-center');
         target.className = 'sky-btn border border-primary bg-primary/10 text-primary p-1.5 rounded-md font-semibold transition-all cursor-pointer text-center';
-        skyTheme = target.dataset.time || 'day';
+        setSkyTheme(target.dataset.time || 'day');
       });
     });
 
