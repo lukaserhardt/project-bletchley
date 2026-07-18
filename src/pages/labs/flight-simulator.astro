@@ -3,7 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, ShieldAlert, Camera, Flame, Navigation, Maximize, Minimize, Settings, X } from '@lucide/astro';
 ---
 
-<Layout title="Project Bletchley - 16-Bit Flight Simulator" description="Retro 16-bit flight simulator with in-flight HUD settings overlay, vertical throttle lever, F-14 fighter jet sprite, 3D target ring beacons, and landing approach missions.">
+<Layout title="Project Bletchley - 16-Bit Flight Simulator" description="Retro 16-bit flight simulator featuring real-time 3D Mode-7 scrolling terrain, F-14 fighter jet sprite, target ring beacons, full touch controls, and landing missions.">
   <div class="space-y-8 flex-grow flex flex-col relative">
     
     <!-- Hero Background Glow Blobs -->
@@ -33,7 +33,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
             </span>
           </div>
           <p class="text-sm text-muted mt-2 max-w-2xl leading-relaxed">
-            All-in-one touch flight cockpit. Adjust mission setup, vertical throttle lever, gear, flaps, sky themes, and plasma cannons directly on screen in normal or fullscreen mode.
+            Retro 16-bit Mode-7 3D flight engine. Steer with touch yoke gestures, adjust vertical throttle, fire plasma cannons, and conquer ring courses & landing approaches.
           </p>
         </div>
       </div>
@@ -187,9 +187,9 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
 
         <div class="font-mono text-xs text-muted border-t border-border pt-4 leading-relaxed space-y-2">
           <div class="flex items-center gap-1.5 text-foreground font-semibold">
-            <span>🕹️ All-In-One Cockpit:</span>
+            <span>🕹️ All-In-One Cockpit Guide:</span>
           </div>
-          <p>Drag thumb anywhere on screen to steer yoke. Use on-screen vertical throttle lever, gear, flaps, cannon, and ⚙️ settings buttons directly on the flight canvas.</p>
+          <p>Drag thumb anywhere on canvas to steer flight yoke. Adjust throttle lever, gear, flaps, and plasma cannons directly on screen in normal or fullscreen mode.</p>
         </div>
       </section>
 
@@ -297,10 +297,10 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
               </div>
             </div>
 
-            <!-- Bottom Touch Cockpit HUD Controls (ALL VISIBLE TOUCH CONTROLS) -->
+            <!-- Bottom Touch Cockpit HUD Controls -->
             <div class="flex justify-between items-end gap-3 pointer-events-auto">
               
-              <!-- Left Radar & Telemetry -->
+              <!-- Left Radar & Minimap -->
               <div class="flex items-end gap-3">
                 <div class="w-18 h-18 sm:w-22 sm:h-22 bg-black/85 border border-primary/50 rounded-full relative overflow-hidden flex items-center justify-center shadow-lg shrink-0">
                   <div class="absolute inset-2 border border-primary/20 rounded-full"></div>
@@ -357,7 +357,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
           </div>
 
           <!-- Overlay Start / Crash Dialog -->
-          <div id="flight-overlay" class="absolute inset-0 bg-black/85 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center z-20 transition-all duration-300">
+          <div id="flight-overlay" class="absolute inset-0 bg-black/85 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center z-20 transition-all duration-300" style="display: flex;">
             <div class="space-y-4 max-w-md">
               <div class="w-14 h-14 rounded-2xl bg-primary/20 border border-primary/40 flex items-center justify-center mx-auto text-primary">
                 <Plane class="w-7 h-7" />
@@ -370,9 +370,10 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
               </p>
               <button
                 id="start-flight-btn"
-                class="w-full bg-primary hover:bg-primary/90 text-white font-mono font-bold py-3 px-6 rounded-xl transition-transform active:scale-95 shadow-lg cursor-pointer text-sm tracking-wider uppercase flex items-center justify-center gap-2"
+                type="button"
+                class="w-full bg-primary hover:bg-primary/90 text-white font-mono font-bold py-3.5 px-6 rounded-xl transition-all active:scale-95 shadow-xl cursor-pointer text-sm tracking-wider uppercase flex items-center justify-center gap-2 select-none"
               >
-                <Play class="w-4 h-4" />
+                <Play class="w-5 h-5 fill-white" />
                 <span>Take Off Now</span>
               </button>
             </div>
@@ -468,12 +469,18 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
     let engineGain: GainNode | null = null;
 
     function getAudioCtx() {
-      if (!audioCtx) {
-        const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-        audioCtx = new AudioContextClass();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
+      try {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+          if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+          }
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume().catch(() => {});
+        }
+      } catch (e) {
+        console.warn('AudioContext init error:', e);
       }
       return audioCtx;
     }
@@ -482,7 +489,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       if (!soundEnabled) return;
       try {
         const ctx = getAudioCtx();
-        if (!engineOsc) {
+        if (ctx && !engineOsc) {
           engineOsc = ctx.createOscillator();
           engineGain = ctx.createGain();
 
@@ -500,8 +507,11 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
     function updateEngineSound(throttlePct: number) {
       if (!soundEnabled || !engineOsc || !engineGain) return;
       try {
-        const freq = 45 + throttlePct * 1.5;
-        engineOsc.frequency.setTargetAtTime(freq, getAudioCtx().currentTime, 0.1);
+        const ctx = getAudioCtx();
+        if (ctx) {
+          const freq = 45 + throttlePct * 1.5;
+          engineOsc.frequency.setTargetAtTime(freq, ctx.currentTime, 0.1);
+        }
       } catch (e) {}
     }
 
@@ -509,6 +519,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       if (!soundEnabled) return;
       try {
         const ctx = getAudioCtx();
+        if (!ctx) return;
         const now = ctx.currentTime;
 
         if (type === 'cannon') {
@@ -801,6 +812,18 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       touchThrottleVal.textContent = `${Math.round(plane.throttle)}%`;
     }
 
+    function showOverlay(title: string, desc: string, btnText: string) {
+      overlayTitle.textContent = title;
+      overlayDesc.textContent = desc;
+      const label = startFlightBtn.querySelector('span');
+      if (label) label.textContent = btnText;
+      overlay.style.display = 'flex';
+    }
+
+    function hideOverlay() {
+      overlay.style.display = 'none';
+    }
+
     function resetFlight() {
       plane.x = 0;
       plane.y = 850;
@@ -817,12 +840,12 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
 
       updateThrottleUI(60);
 
-      gearStatusEl.textContent = 'UP';
-      flapsStatusEl.textContent = 'UP';
-      hudGearVal.textContent = 'UP';
-      hudFlapsVal.textContent = 'UP';
-      touchGearLabel.textContent = '🛞 GEAR (UP)';
-      touchFlapsLabel.textContent = '✈️ FLAPS (UP)';
+      if (gearStatusEl) gearStatusEl.textContent = 'UP';
+      if (flapsStatusEl) flapsStatusEl.textContent = 'UP';
+      if (hudGearVal) hudGearVal.textContent = 'UP';
+      if (hudFlapsVal) hudFlapsVal.textContent = 'UP';
+      if (touchGearLabel) touchGearLabel.textContent = '🛞 GEAR (UP)';
+      if (touchFlapsLabel) touchFlapsLabel.textContent = '✈️ FLAPS (UP)';
 
       isCrashed = false;
       isLanded = false;
@@ -834,19 +857,8 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       initMission();
       hideOverlay();
       flightStatusEl.textContent = 'Level Cruise // 850 FT';
-      stallWarningEl.classList.add('hidden');
+      if (stallWarningEl) stallWarningEl.classList.add('hidden');
       initEngineSound();
-    }
-
-    function showOverlay(title: string, desc: string, btnText: string) {
-      overlayTitle.textContent = title;
-      overlayDesc.textContent = desc;
-      startFlightBtn.querySelector('span')!.textContent = btnText;
-      overlay.classList.remove('opacity-0', 'pointer-events-none');
-    }
-
-    function hideOverlay() {
-      overlay.classList.add('opacity-0', 'pointer-events-none');
     }
 
     // --- Camera View Toggle ---
@@ -937,12 +949,12 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       // Stall Check
       if (plane.speed < 48 && plane.pitch > 15) {
         plane.stalling = true;
-        stallWarningEl.classList.remove('hidden');
+        if (stallWarningEl) stallWarningEl.classList.remove('hidden');
         plane.y -= 10 * dt;
         playSFX('stall');
       } else {
         plane.stalling = false;
-        stallWarningEl.classList.add('hidden');
+        if (stallWarningEl) stallWarningEl.classList.add('hidden');
       }
 
       // 3. Touchdown System
@@ -1036,7 +1048,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
       telemetryHdgEl.textContent = `${String(hdgDeg).padStart(3, '0')}° ${dirStr}`;
       telemetryAttitudeEl.textContent = `${Math.round(plane.pitch)}° / ${Math.round(plane.roll)}°`;
 
-      hudPitchBar.style.transform = `translateY(${-plane.pitch * 0.8}px) rotate(${-plane.roll}deg)`;
+      if (hudPitchBar) hudPitchBar.style.transform = `translateY(${-plane.pitch * 0.8}px) rotate(${-plane.roll}deg)`;
 
       if (plane.y > 0) {
         flightStatusEl.textContent = `Airborne // ${Math.round(plane.y)} FT`;
@@ -1046,6 +1058,7 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
     }
 
     function updateRadarUI() {
+      if (!radarBlipsEl) return;
       radarBlipsEl.innerHTML = '';
       if (currentMission === 'rings') {
         targetRings.forEach(ring => {
@@ -1511,20 +1524,28 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
 
     function toggleGear() {
       plane.gearDown = !plane.gearDown;
-      gearStatusEl.textContent = plane.gearDown ? 'DOWN' : 'UP';
-      gearStatusEl.className = plane.gearDown ? 'text-emerald-500 font-bold' : 'text-muted font-bold';
-      hudGearVal.textContent = plane.gearDown ? 'DOWN' : 'UP';
-      hudGearVal.className = plane.gearDown ? 'text-emerald-400' : 'text-muted';
-      touchGearLabel.textContent = plane.gearDown ? '🛞 GEAR (DN)' : '🛞 GEAR (UP)';
+      if (gearStatusEl) {
+        gearStatusEl.textContent = plane.gearDown ? 'DOWN' : 'UP';
+        gearStatusEl.className = plane.gearDown ? 'text-emerald-500 font-bold' : 'text-muted font-bold';
+      }
+      if (hudGearVal) {
+        hudGearVal.textContent = plane.gearDown ? 'DOWN' : 'UP';
+        hudGearVal.className = plane.gearDown ? 'text-emerald-400' : 'text-muted';
+      }
+      if (touchGearLabel) touchGearLabel.textContent = plane.gearDown ? '🛞 GEAR (DN)' : '🛞 GEAR (UP)';
     }
 
     function toggleFlaps() {
       plane.flapsDown = !plane.flapsDown;
-      flapsStatusEl.textContent = plane.flapsDown ? 'DOWN' : 'UP';
-      flapsStatusEl.className = plane.flapsDown ? 'text-amber-500 font-bold' : 'text-muted font-bold';
-      hudFlapsVal.textContent = plane.flapsDown ? 'DOWN' : 'UP';
-      hudFlapsVal.className = plane.flapsDown ? 'text-amber-400' : 'text-muted';
-      touchFlapsLabel.textContent = plane.flapsDown ? '✈️ FLAPS (DN)' : '✈️ FLAPS (UP)';
+      if (flapsStatusEl) {
+        flapsStatusEl.textContent = plane.flapsDown ? 'DOWN' : 'UP';
+        flapsStatusEl.className = plane.flapsDown ? 'text-amber-500 font-bold' : 'text-muted font-bold';
+      }
+      if (hudFlapsVal) {
+        hudFlapsVal.textContent = plane.flapsDown ? 'DOWN' : 'UP';
+        hudFlapsVal.className = plane.flapsDown ? 'text-amber-400' : 'text-muted';
+      }
+      if (touchFlapsLabel) touchFlapsLabel.textContent = plane.flapsDown ? '✈️ FLAPS (DN)' : '✈️ FLAPS (UP)';
     }
 
     gearToggleBtn.addEventListener('click', toggleGear);
@@ -1535,9 +1556,22 @@ import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, 
     });
 
     // Pause & Start Controls
-    startFlightBtn.addEventListener('click', () => {
+    function triggerStartFlight(e?: Event) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
       getAudioCtx();
       resetFlight();
+    }
+
+    startFlightBtn.addEventListener('click', triggerStartFlight);
+    startFlightBtn.addEventListener('touchstart', triggerStartFlight, { passive: false });
+
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        triggerStartFlight(e);
+      }
     });
 
     resetFlightBtn.addEventListener('click', resetFlight);

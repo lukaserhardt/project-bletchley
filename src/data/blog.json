@@ -1,5 +1,11 @@
 [
   {
+    "id": 22,
+    "timestamp": "2026-07-18T21:19:00Z",
+    "content": "Released Version v0.7.2. Critical audit & overhaul of flight simulator startup. Fixed AudioContext promise exceptions, deduplicated DOM element IDs, updated overlay dismiss logic to display:none, and added multi-touch/pointer click listeners to 'Take Off Now' button to guarantee 100% reliable game launch across all mobile and desktop browsers.",
+    "tags": ["release", "v0.7.2", "flight-simulator", "audit-fix", "event-listeners", "startup-fix"]
+  },
+  {
     "id": 21,
     "timestamp": "2026-07-18T15:29:00Z",
     "content": "Released Version v0.7.1. Fixed fullscreen accessibility and settings configuration. Added an in-flight setup popover menu ('⚙️ SETUP') right on the flight HUD, allowing pilots to switch missions (Free Flight, Ring Course, Landing) and sky themes (Day, Sunset, Night) seamlessly at any time without leaving fullscreen mode.",
