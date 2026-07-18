@@ -1,5 +1,11 @@
 [
   {
+    "id": 23,
+    "timestamp": "2026-07-18T21:29:00Z",
+    "content": "Released Version v0.8.0. Redesigned 16-Bit Flight Simulator into a dedicated 2-Stage User Flow. Stage 1: Clean pre-flight setup card on the hub page for selecting flight mission and sky atmosphere. Stage 2: Tapping '🚀 FLUG IN FULLSCREEN STARTEN' launches the full-screen simulator with complete in-flight touch controls (Touch Yoke, Vertical Throttle Lever, Gear, Flaps, Cannon, Radar, and Exit button).",
+    "tags": ["release", "v0.8.0", "flight-simulator", "fullscreen-arcade", "2-stage-flow", "cockpit-hud"]
+  },
+  {
     "id": 22,
     "timestamp": "2026-07-18T21:19:00Z",
     "content": "Released Version v0.7.2. Critical audit & overhaul of flight simulator startup. Fixed AudioContext promise exceptions, deduplicated DOM element IDs, updated overlay dismiss logic to display:none, and added multi-touch/pointer click listeners to 'Take Off Now' button to guarantee 100% reliable game launch across all mobile and desktop browsers.",
