@@ -1,5 +1,11 @@
 [
   {
+    "id": 18,
+    "timestamp": "2026-07-18T14:44:00Z",
+    "content": "Released Version v0.6.2. Optimized 16-Bit Flight Simulator for mobile touch devices. Added intuitive virtual touch-yoke drag gestures (drag thumb anywhere on screen canvas with spring return), calibrated forward flight speed, rendered dual-wing neon plasma cannon tracer bolts with wing muzzle flashes, and cleaned up mobile UI with dedicated touch action buttons.",
+    "tags": ["release", "v0.6.2", "flight-simulator", "mobile-touch", "joystick-yoke", "plasma-cannon"]
+  },
+  {
     "id": 17,
     "timestamp": "2026-07-18T14:36:00Z",
     "content": "Released Version v0.6.1. Complete overhaul of 16-Bit Flight Simulator graphics and flight mechanics. Added real-time 3D Mode-7 scrolling terrain, horizon wing-banking rotations, third-person aircraft sprite with thruster animations and ground altitude shadows, stable level flight trim, and a camera view toggle button (Chase Cam / Cockpit HUD).",

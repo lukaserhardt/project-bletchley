@@ -1,9 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, ShieldAlert, Camera, Eye } from '@lucide/astro';
+import { Plane, Compass, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Trophy, ShieldAlert, Camera, Flame } from '@lucide/astro';
 ---
 
-<Layout title="Project Bletchley - 16-Bit Flight Simulator" description="Retro 16-bit flight simulator with 3D Mode-7 scrolling terrain, chase cam airplane visualization, horizon tilt, cockpit HUD telemetry, and landing missions.">
+<Layout title="Project Bletchley - 16-Bit Flight Simulator" description="Retro 16-bit flight simulator featuring virtual touch joystick controls, Mode-7 3D scrolling landscapes, realistic flight speeds, plasma cannon tracers, and landing missions.">
   <div class="space-y-8 flex-grow flex flex-col relative">
     
     <!-- Hero Background Glow Blobs -->
@@ -33,7 +33,7 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
             </span>
           </div>
           <p class="text-sm text-muted mt-2 max-w-2xl leading-relaxed">
-            Real-time Mode-7 scrolling 3D flight engine. Experience 16-bit plane banking, horizon tilts, level flight stability, ring courses, and runway approach touchdowns.
+            Mode-7 retro flight engine with touch joystick controls, calibrated flight speeds, plasma cannon tracers, 3D target ring challenges, and landing approach missions.
           </p>
         </div>
       </div>
@@ -166,7 +166,7 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
           <div class="border border-border/80 bg-background/50 p-4 rounded-xl space-y-3 font-mono text-xs">
             <div class="flex items-center justify-between border-b border-border/40 pb-2">
               <span class="text-muted uppercase tracking-wider">Airspeed</span>
-              <span id="telemetry-speed" class="font-bold text-foreground text-sm">150 KTS</span>
+              <span id="telemetry-speed" class="font-bold text-foreground text-sm">120 KTS</span>
             </div>
             <div class="flex items-center justify-between border-b border-border/40 pb-2">
               <span class="text-muted uppercase tracking-wider">Altitude (ALT)</span>
@@ -190,12 +190,10 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
         <!-- Controls Guide Footnote -->
         <div class="font-mono text-xs text-muted border-t border-border pt-4 leading-relaxed space-y-2">
           <div class="flex items-center gap-1.5 text-foreground font-semibold">
-            <span>🕹️ Flight Yoke Instructions:</span>
+            <span>🕹️ Flight Control Guide:</span>
           </div>
-          <p><strong>Pull Back [S / Down Arrow]:</strong> Pitch Nose UP (Climb)</p>
-          <p><strong>Push Forward [W / Up Arrow]:</strong> Pitch Nose DOWN (Dive)</p>
-          <p><strong>Bank [A / D / Left-Right Arrows]:</strong> Bank & Roll Wings Left/Right</p>
-          <p><strong>Throttle [I / K]:</strong> Increase / Decrease Engine Thrust</p>
+          <p><strong>Mobile Touch:</strong> Drag thumb anywhere on the screen like a flight yoke (Drag Up = Dive, Drag Down = Climb, Drag Left/Right = Bank Turn).</p>
+          <p><strong>Desktop Keyboard:</strong> [W/S] Pitch Nose Down/Up, [A/D] Roll Bank, [I/K] Throttle, [Space] Fire Plasma Cannon.</p>
         </div>
       </section>
 
@@ -251,26 +249,37 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
 
               <!-- Radar Minimap -->
               <div class="w-24 h-24 bg-black/80 border border-primary/50 rounded-full relative overflow-hidden flex items-center justify-center shadow-lg">
-                <!-- Radar grid rings -->
                 <div class="absolute inset-2 border border-primary/20 rounded-full"></div>
                 <div class="absolute inset-6 border border-primary/15 rounded-full"></div>
                 <div class="absolute inset-x-0 top-1/2 h-[1px] bg-primary/30"></div>
                 <div class="absolute inset-y-0 left-1/2 w-[1px] bg-primary/30"></div>
-                <!-- Plane blip -->
                 <div class="w-2 h-2 bg-primary rounded-full z-10 shadow-[0_0_8px_var(--primary)]"></div>
-                <!-- Target blips container -->
                 <div id="radar-blips" class="absolute inset-0"></div>
               </div>
             </div>
 
-            <!-- Bottom HUD Controls Info -->
-            <div class="flex justify-between items-end text-[11px]">
-              <div class="bg-black/70 backdrop-blur-md border border-border px-3 py-1.5 rounded-lg text-muted">
+            <!-- Bottom Touch Overlay Controls & Telemetry Info -->
+            <div class="flex justify-between items-end text-[11px] pointer-events-auto">
+              <div class="bg-black/70 backdrop-blur-md border border-border px-3 py-1.5 rounded-lg text-muted pointer-events-none">
                 <span>GEAR: <strong id="hud-gear-val" class="text-emerald-400">DOWN</strong></span> | 
                 <span>FLAPS: <strong id="hud-flaps-val" class="text-muted">UP</strong></span>
               </div>
-              <div class="bg-black/70 backdrop-blur-md border border-border px-3 py-1.5 rounded-lg text-muted">
-                <span id="camera-status-text">VIEW: CHASE CAM (THIRD-PERSON)</span>
+
+              <!-- Touch Quick Buttons for Mobile (Fire Cannon & Gear) -->
+              <div class="flex items-center gap-2">
+                <button
+                  id="touch-gear-btn"
+                  class="bg-black/80 hover:bg-primary/20 border border-border hover:border-primary text-foreground font-mono text-xs px-3.5 py-2.5 rounded-xl transition-all active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5 select-none"
+                >
+                  <span>⚙️ GEAR</span>
+                </button>
+                <button
+                  id="touch-cannon-btn"
+                  class="bg-rose-600 hover:bg-rose-500 text-white font-mono text-xs font-bold px-4 py-2.5 rounded-xl transition-all active:scale-95 cursor-pointer shadow-lg flex items-center gap-1.5 select-none"
+                >
+                  <Flame class="w-4 h-4 fill-white" />
+                  <span>FIRE CANNON</span>
+                </button>
               </div>
             </div>
           </div>
@@ -285,7 +294,7 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
                 16-BIT FLIGHT SIMULATOR
               </h3>
               <p id="overlay-desc" class="text-sm text-muted leading-relaxed font-sans">
-                Take off into retro 3D skies. Fly over Mode-7 landscapes, maneuver through target rings, and perform smooth runway approach landings!
+                Take off into retro 3D skies. Drag your thumb anywhere on screen to steer the flight yoke, shoot plasma cannon tracers, and perform runway touchdowns!
               </p>
               <button
                 id="start-flight-btn"
@@ -299,45 +308,17 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
 
         </div>
 
-        <!-- Mobile Touch Control Pad -->
+        <!-- Mobile Touch Helper Bar -->
         <div class="border-t border-border bg-background p-3 flex items-center justify-between gap-3 font-mono text-xs">
-          <div class="flex items-center gap-2">
-            <span class="text-muted text-[11px]">Mobile Touch Controls:</span>
+          <div class="flex items-center gap-2 text-muted">
+            <span>📱 Touch Tip: Slide thumb anywhere on screen to steer Pitch & Bank.</span>
           </div>
-
-          <!-- Virtual Flight Yoke Buttons -->
-          <div class="flex items-center gap-1.5">
+          <div class="flex items-center gap-2">
             <button
-              id="btn-pitch-down"
-              class="bg-card active:bg-primary active:text-white border border-border px-3 py-2 rounded-lg text-foreground font-bold text-xs select-none touch-none"
-              title="Push Nose Down"
+              id="btn-fast-cannon"
+              class="bg-rose-500/20 hover:bg-rose-600 text-rose-400 hover:text-white border border-rose-500/40 px-3.5 py-1.5 rounded-lg font-bold text-xs uppercase cursor-pointer select-none"
             >
-              ▲ DIVE
-            </button>
-            <button
-              id="btn-pitch-up"
-              class="bg-card active:bg-primary active:text-white border border-border px-3 py-2 rounded-lg text-foreground font-bold text-xs select-none touch-none"
-              title="Pull Nose Up"
-            >
-              ▼ CLIMB
-            </button>
-            <button
-              id="btn-roll-left"
-              class="bg-card active:bg-primary active:text-white border border-border px-3 py-2 rounded-lg text-foreground font-bold text-xs select-none touch-none"
-            >
-              ◀ BANK L
-            </button>
-            <button
-              id="btn-roll-right"
-              class="bg-card active:bg-primary active:text-white border border-border px-3 py-2 rounded-lg text-foreground font-bold text-xs select-none touch-none"
-            >
-              BANK R ▶
-            </button>
-            <button
-              id="btn-fire-cannon"
-              class="bg-rose-500/20 hover:bg-rose-600 text-rose-400 hover:text-white border border-rose-500/40 px-3 py-2 rounded-lg font-bold text-xs uppercase cursor-pointer select-none"
-            >
-              🚀 CANNON
+              🚀 Cannon
             </button>
           </div>
         </div>
@@ -369,7 +350,6 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
     const hudGearVal = document.getElementById('hud-gear-val')!;
     const hudFlapsVal = document.getElementById('hud-flaps-val')!;
     const radarBlipsEl = document.getElementById('radar-blips')!;
-    const cameraStatusText = document.getElementById('camera-status-text')!;
     const cameraLabel = document.getElementById('camera-label')!;
 
     // Overlay
@@ -397,14 +377,12 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
     const flapsToggleBtn = document.getElementById('flaps-toggle-btn')!;
     const flapsStatusEl = document.getElementById('flaps-status')!;
 
-    // Mobile Action buttons
-    const btnPitchUp = document.getElementById('btn-pitch-up')!;
-    const btnPitchDown = document.getElementById('btn-pitch-down')!;
-    const btnRollLeft = document.getElementById('btn-roll-left')!;
-    const btnRollRight = document.getElementById('btn-roll-right')!;
-    const btnFireCannon = document.getElementById('btn-fire-cannon')!;
+    // Touch Buttons
+    const touchCannonBtn = document.getElementById('touch-cannon-btn')!;
+    const touchGearBtn = document.getElementById('touch-gear-btn')!;
+    const btnFastCannon = document.getElementById('btn-fast-cannon')!;
 
-    // --- Sound Synthesis Engine ---
+    // --- Web Audio SFX Engine ---
     let soundEnabled = true;
     let audioCtx: AudioContext | null = null;
     let engineOsc: OscillatorNode | null = null;
@@ -443,7 +421,7 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
     function updateEngineSound(throttlePct: number) {
       if (!soundEnabled || !engineOsc || !engineGain) return;
       try {
-        const freq = 45 + throttlePct * 1.6;
+        const freq = 45 + throttlePct * 1.5;
         engineOsc.frequency.setTargetAtTime(freq, getAudioCtx().currentTime, 0.1);
       } catch (e) {}
     }
@@ -455,17 +433,20 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
         const now = ctx.currentTime;
 
         if (type === 'cannon') {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'square';
-          osc.frequency.setValueAtTime(320, now);
-          osc.frequency.exponentialRampToValueAtTime(70, now + 0.1);
-          gain.gain.setValueAtTime(0.3, now);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now);
-          osc.stop(now + 0.1);
+          // Double burst laser cannon sound
+          [0, 0.05].forEach((offset) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(450, now + offset);
+            osc.frequency.exponentialRampToValueAtTime(100, now + offset + 0.08);
+            gain.gain.setValueAtTime(0.35, now + offset);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + offset + 0.08);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + offset);
+            osc.stop(now + offset + 0.08);
+          });
         } else if (type === 'ring') {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
@@ -537,20 +518,21 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
     // Plane Flight Physics State
     const plane = {
       x: 0,
-      y: 850, // Altitude in feet (Safe level flight start!)
+      y: 850, // Altitude in feet
       z: 0,
       pitch: 0, // deg (-45 to +45)
       roll: 0,  // deg (-60 to +60)
       yaw: 45,  // heading deg (0 to 360)
-      speed: 150, // knots
+      speed: 120, // knots (calibrated realistic speed)
       throttle: 60, // 0 to 100%
       gearDown: false,
       flapsDown: false,
-      stalling: false
+      stalling: false,
+      muzzleFlash: 0 // Flash frame counter
     };
 
-    // Cannon Particles & Bullets
-    let bullets: { x: number; y: number; z: number; vx: number; vy: number; vz: number; life: number }[] = [];
+    // Cannon Plasma Tracer Bolts
+    let bullets: { x: number; y: number; z: number; vx: number; vy: number; vz: number; life: number; side: number }[] = [];
 
     // Target Rings
     let targetRings: { x: number; y: number; z: number; radius: number; passed: boolean }[] = [];
@@ -586,12 +568,18 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
       }
     };
 
-    // Input States
+    // Keyboard & Virtual Touch States
     const keys: Record<string, boolean> = {};
-    let mobilePitchUp = false;
-    let mobilePitchDown = false;
-    let mobileRollLeft = false;
-    let mobileRollRight = false;
+
+    // Touch Joystick State
+    const touchYoke = {
+      active: false,
+      startX: 0,
+      startY: 0,
+      pitchInput: 0, // -1 (dive) to +1 (climb)
+      rollInput: 0,  // -1 (left) to +1 (right)
+      touchId: null as number | null
+    };
 
     // --- Responsive Canvas Setup ---
     function resizeCanvas() {
@@ -615,14 +603,13 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
       targetRings = [];
 
       if (currentMission === 'rings') {
-        // Spawn 8 floating rings along scenic path in front of plane
         for (let i = 0; i < 8; i++) {
           const angle = (i / 8) * Math.PI * 1.5;
-          const dist = 800 + i * 550;
+          const dist = 700 + i * 500;
           targetRings.push({
             x: Math.sin(angle) * dist,
-            y: 650 + Math.sin(i * 1.5) * 250,
-            z: Math.cos(angle) * dist + 500,
+            y: 600 + Math.sin(i * 1.5) * 200,
+            z: Math.cos(angle) * dist + 400,
             radius: 90,
             passed: false
           });
@@ -630,10 +617,10 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
         telemetryMissionEl.textContent = 'Rings: 0 / 8';
       } else if (currentMission === 'landing') {
         plane.x = 0;
-        plane.y = 450;
-        plane.z = -800; // Aligned with runway
-        plane.pitch = -3;
-        plane.speed = 110;
+        plane.y = 400;
+        plane.z = -700;
+        plane.pitch = -2;
+        plane.speed = 95;
         plane.gearDown = true;
         plane.flapsDown = true;
         gearStatusEl.textContent = 'DOWN';
@@ -648,16 +635,17 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
 
     function resetFlight() {
       plane.x = 0;
-      plane.y = 850; // Safe initial cruising altitude
+      plane.y = 850;
       plane.z = 0;
       plane.pitch = 0;
       plane.roll = 0;
       plane.yaw = 45;
-      plane.speed = 150;
+      plane.speed = 120;
       plane.throttle = 60;
       plane.gearDown = false;
       plane.flapsDown = false;
       plane.stalling = false;
+      plane.muzzleFlash = 0;
 
       throttleSlider.value = '60';
       throttleValText.textContent = '60%';
@@ -695,26 +683,41 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
     cameraToggleBtn.addEventListener('click', () => {
       cameraMode = cameraMode === 'chase' ? 'cockpit' : 'chase';
       cameraLabel.textContent = cameraMode === 'chase' ? 'Chase Cam' : 'Cockpit HUD';
-      cameraStatusText.textContent = cameraMode === 'chase' ? 'VIEW: CHASE CAM (THIRD-PERSON)' : 'VIEW: COCKPIT HUD (FIRST-PERSON)';
     });
 
-    // --- Cannon Fire ---
+    // --- Cannon Plasma Laser Fire ---
     function fireCannon() {
       if (!isPlaying || isCrashed) return;
       playSFX('cannon');
+      plane.muzzleFlash = 4; // Trigger visual muzzle flash
 
       const radYaw = (plane.yaw * Math.PI) / 180;
       const radPitch = (plane.pitch * Math.PI) / 180;
 
-      const speed = 28;
+      const speed = 22;
+
+      // Left wing bullet
       bullets.push({
-        x: plane.x,
-        y: plane.y - 5,
-        z: plane.z,
+        x: plane.x - Math.cos(radYaw) * 15,
+        y: plane.y - 4,
+        z: plane.z - Math.sin(radYaw) * 15,
         vx: Math.sin(radYaw) * speed,
         vy: Math.sin(radPitch) * speed,
         vz: Math.cos(radYaw) * speed,
-        life: 55
+        life: 50,
+        side: -1
+      });
+
+      // Right wing bullet
+      bullets.push({
+        x: plane.x + Math.cos(radYaw) * 15,
+        y: plane.y - 4,
+        z: plane.z + Math.sin(radYaw) * 15,
+        vx: Math.sin(radYaw) * speed,
+        vy: Math.sin(radPitch) * speed,
+        vz: Math.cos(radYaw) * speed,
+        life: 50,
+        side: 1
       });
     }
 
@@ -722,78 +725,77 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
     function updatePhysics(dt: number) {
       if (!isPlaying || isPaused || isCrashed) return;
 
-      // 1. Read Inputs
-      let pitchInput = 0;
-      let rollInput = 0;
+      // 1. Read Inputs (Keyboard + Virtual Touch Yoke)
+      let pitchInput = touchYoke.pitchInput;
+      let rollInput = touchYoke.rollInput;
 
-      // Pitch Down (W / Up Arrow / Dive Button)
-      if (keys['w'] || keys['W'] || keys['ArrowUp'] || mobilePitchDown) pitchInput -= 1;
-      // Pitch Up (S / Down Arrow / Climb Button)
-      if (keys['s'] || keys['S'] || keys['ArrowDown'] || mobilePitchUp) pitchInput += 1;
+      // Keyboard Controls Override/Add
+      if (keys['w'] || keys['W'] || keys['ArrowUp']) pitchInput -= 1;
+      if (keys['s'] || keys['S'] || keys['ArrowDown']) pitchInput += 1;
+      if (keys['a'] || keys['A'] || keys['ArrowLeft']) rollInput -= 1;
+      if (keys['d'] || keys['D'] || keys['ArrowRight']) rollInput += 1;
 
-      // Roll Left/Right
-      if (keys['a'] || keys['A'] || keys['ArrowLeft'] || mobileRollLeft) rollInput -= 1;
-      if (keys['d'] || keys['D'] || keys['ArrowRight'] || mobileRollRight) rollInput += 1;
-
-      // Throttle Adjustment via Keys [I / K]
+      // Keyboard Throttle Adjust [I / K]
       if (keys['i'] || keys['I']) {
-        plane.throttle = Math.min(100, plane.throttle + 1.5 * dt);
+        plane.throttle = Math.min(100, plane.throttle + 1.2 * dt);
         throttleSlider.value = String(Math.round(plane.throttle));
         throttleValText.textContent = `${Math.round(plane.throttle)}%`;
       }
       if (keys['k'] || keys['K']) {
-        plane.throttle = Math.max(0, plane.throttle - 1.5 * dt);
+        plane.throttle = Math.max(0, plane.throttle - 1.2 * dt);
         throttleSlider.value = String(Math.round(plane.throttle));
         throttleValText.textContent = `${Math.round(plane.throttle)}%`;
       }
 
-      // Pitch & Roll Dynamics
-      plane.pitch += pitchInput * 2.2 * dt;
-      plane.roll += rollInput * 3.0 * dt;
+      // Pitch & Roll Response
+      plane.pitch += pitchInput * 2.0 * dt;
+      plane.roll += rollInput * 2.8 * dt;
 
-      // Auto Bank Turn: Rolling right turns heading clockwise, rolling left turns counter-clockwise
-      plane.yaw += (plane.roll * 0.05) * dt;
+      // Bank turns heading (Yaw)
+      plane.yaw += (plane.roll * 0.045) * dt;
 
-      // Damping / Auto-centering when yoke is released
-      if (rollInput === 0) {
-        plane.roll *= 0.93;
+      // Auto Damping when yoke released
+      if (rollInput === 0 && !touchYoke.active) {
+        plane.roll *= 0.92;
       }
-      if (pitchInput === 0) {
-        plane.pitch *= 0.94; // Decays pitch toward 0 (Level Flight Trim)
+      if (pitchInput === 0 && !touchYoke.active) {
+        plane.pitch *= 0.93; // Level flight trim
       }
 
       // Clamp angles
-      plane.pitch = Math.max(-50, Math.min(50, plane.pitch));
+      plane.pitch = Math.max(-48, Math.min(48, plane.pitch));
       plane.roll = Math.max(-75, Math.min(75, plane.roll));
       plane.yaw = (plane.yaw + 360) % 360;
 
-      // 2. Throttle & Speed Calculation
-      const targetSpeed = 60 + plane.throttle * 2.2 + (plane.flapsDown ? -25 : 0);
+      // Muzzle flash decay
+      if (plane.muzzleFlash > 0) plane.muzzleFlash -= 1;
+
+      // 2. Calibrated Realistic Speed & Altitude Movement
+      const targetSpeed = 50 + plane.throttle * 1.8 + (plane.flapsDown ? -20 : 0);
       plane.speed += (targetSpeed - plane.speed) * 0.04 * dt;
 
-      // Altitude Change: Pitch > 0 climbs up, Pitch < 0 dives down
       const radPitch = (plane.pitch * Math.PI) / 180;
       const radYaw = (plane.yaw * Math.PI) / 180;
 
-      const climbRate = Math.sin(radPitch) * plane.speed * 0.35;
+      const climbRate = Math.sin(radPitch) * plane.speed * 0.28;
       plane.y += climbRate * dt;
 
-      // Forward Position Scrolling Movement
-      plane.x += Math.sin(radYaw) * plane.speed * 0.25 * dt;
-      plane.z += Math.cos(radYaw) * plane.speed * 0.25 * dt;
+      // Forward Position Movement (Calibrated realistic speed ratio)
+      plane.x += Math.sin(radYaw) * plane.speed * 0.12 * dt;
+      plane.z += Math.cos(radYaw) * plane.speed * 0.12 * dt;
 
       // Stall Check
-      if (plane.speed < 65 && plane.pitch > 15) {
+      if (plane.speed < 55 && plane.pitch > 15) {
         plane.stalling = true;
         stallWarningEl.classList.remove('hidden');
-        plane.y -= 15 * dt;
+        plane.y -= 12 * dt;
         playSFX('stall');
       } else {
         plane.stalling = false;
         stallWarningEl.classList.add('hidden');
       }
 
-      // 3. Ground Touchdown & Landing System
+      // 3. Ground Touchdown System
       if (plane.y <= 0) {
         plane.y = 0;
 
@@ -804,7 +806,7 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
           plane.gearDown &&
           distRunwayX < runway.width &&
           distRunwayZ < runway.length &&
-          plane.speed < 135 &&
+          plane.speed < 120 &&
           Math.abs(plane.pitch) < 18 &&
           Math.abs(plane.roll) < 18
         ) {
@@ -812,17 +814,17 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
           isPlaying = false;
           playSFX('land');
           flightStatusEl.textContent = 'Touchdown Complete';
-          showOverlay('TOUCHDOWN SUCCESSFUL!', `Perfect landing at ${Math.round(plane.speed)} KTS on Runway 09!`, 'Fly Again');
+          showOverlay('TOUCHDOWN SUCCESSFUL!', `Smooth touchdown at ${Math.round(plane.speed)} KTS on Runway 09!`, 'Fly Again');
         } else {
           isCrashed = true;
           isPlaying = false;
           playSFX('crash');
           flightStatusEl.textContent = 'CRASH DETECTED';
-          showOverlay('AIRCRAFT CRASHED', `Impact with ground at ${Math.round(plane.speed)} KTS. Keep nose level (-5° to +5°) and lower landing gear [G].`, 'Try Again');
+          showOverlay('AIRCRAFT CRASHED', `Ground impact at ${Math.round(plane.speed)} KTS. Keep pitch level and lower gear [G] for landing.`, 'Try Again');
         }
       }
 
-      // 4. Ring Mission Tracking
+      // 4. Mission Target Rings Update
       if (currentMission === 'rings') {
         targetRings.forEach(ring => {
           if (!ring.passed) {
@@ -838,14 +840,14 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
               telemetryMissionEl.textContent = `Rings: ${ringsPassedCount} / 8`;
 
               if (ringsPassedCount >= 8) {
-                showOverlay('COURSE CLEARED!', 'Outstanding flying! All 8 target rings cleared with 16-bit precision.', 'Next Flight');
+                showOverlay('COURSE CLEARED!', 'All 8 target rings cleared with 16-bit precision!', 'Next Flight');
               }
             }
           }
         });
       }
 
-      // 5. Update Cannon Bullets
+      // 5. Update Cannon Plasma Tracer Bolts
       for (let i = bullets.length - 1; i >= 0; i--) {
         const b = bullets[i];
         b.x += b.vx * dt;
@@ -926,7 +928,7 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
       ctx.fillStyle = palette.groundBase;
       ctx.fillRect(-width * 1.5, 0, width * 3, height * 2.5);
 
-      // 2. Mode-7 Scrolling Grid Lines (Scrolling with plane.x & plane.z)
+      // 2. Mode-7 Scrolling Grid Lines
       ctx.strokeStyle = palette.gridLine;
       ctx.lineWidth = 1.5;
       ctx.globalAlpha = 0.45;
@@ -973,7 +975,6 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
         ctx.fillStyle = '#334155';
         ctx.fillRect(rwScreenX - rwWidth / 2, rwScreenY, rwWidth, 90 * scale);
 
-        // Center dashes
         ctx.fillStyle = '#f8fafc';
         ctx.fillRect(rwScreenX - 2, rwScreenY, 4, 90 * scale);
       }
@@ -1005,27 +1006,30 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
         });
       }
 
-      // 5. Render Cannon Bullets
+      // 5. Render Bright Plasma Cannon Tracers
       bullets.forEach(b => {
         const dz = b.z - plane.z;
         const dx = b.x - plane.x;
         const dy = b.y - plane.y;
 
-        if (dz > 10 && dz < 2000) {
+        if (dz > 10 && dz < 2200) {
           const scale = 300 / dz;
           const screenX = dx * scale;
           const screenY = -dy * scale;
 
-          ctx.fillStyle = '#fbbf24';
+          ctx.fillStyle = '#f43f5e';
+          ctx.shadowColor = '#f43f5e';
+          ctx.shadowBlur = 8;
           ctx.beginPath();
-          ctx.arc(screenX, screenY, Math.max(2, 4 * scale), 0, Math.PI * 2);
+          ctx.arc(screenX, screenY, Math.max(3, 6 * scale), 0, Math.PI * 2);
           ctx.fill();
+          ctx.shadowBlur = 0;
         }
       });
 
       ctx.restore(); // Restore unrotated viewport transform
 
-      // 6. Ground Shadow under plane (Visible when flying near terrain)
+      // 6. Ground Shadow under plane
       if (plane.y < 900) {
         const shadowAlpha = Math.max(0, 1 - plane.y / 900) * 0.45;
         const shadowOffsetY = Math.min(120, (plane.y / 900) * 100);
@@ -1039,26 +1043,64 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
         ctx.restore();
       }
 
-      // 7. Third-Person Aircraft Model Rendering (In Chase Cam view!)
+      // 7. Render Virtual Touch Yoke Ring on Canvas (When Touch Active)
+      if (touchYoke.active) {
+        ctx.save();
+        ctx.translate(touchYoke.startX, touchYoke.startY);
+        
+        // Touch Yoke Base Ring
+        ctx.strokeStyle = 'rgba(99, 102, 241, 0.4)';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(0, 0, 50, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Touch Knob Position
+        const knobX = touchYoke.rollInput * 50;
+        const knobY = touchYoke.pitchInput * 50;
+        ctx.fillStyle = '#6366f1';
+        ctx.shadowColor = '#6366f1';
+        ctx.shadowBlur = 12;
+        ctx.beginPath();
+        ctx.arc(knobX, knobY, 16, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.restore();
+      }
+
+      // 8. Third-Person Aircraft Model Rendering (In Chase Cam view!)
       if (cameraMode === 'chase') {
-        draw16BitAircraftSprite(width / 2, height - 90, plane.roll, plane.pitch, plane.throttle, plane.gearDown);
+        draw16BitAircraftSprite(width / 2, height - 90, plane.roll, plane.pitch, plane.throttle, plane.gearDown, plane.muzzleFlash);
       }
     }
 
     // Helper: Draw 16-Bit Fighter Jet Model
-    function draw16BitAircraftSprite(x: number, y: number, roll: number, pitch: number, throttle: number, gearDown: boolean) {
+    function draw16BitAircraftSprite(x: number, y: number, roll: number, pitch: number, throttle: number, gearDown: boolean, muzzleFlash: number) {
       ctx.save();
       ctx.translate(x, y);
       
-      // Banking Roll Tilt
+      // Roll Tilt
       ctx.rotate((roll * Math.PI) / 180);
       
-      // Pitch Perspective Squash
+      // Pitch Perspective
       const pitchScaleY = 1 - Math.sin((pitch * Math.PI) / 180) * 0.25;
       ctx.scale(1, pitchScaleY);
 
-      // Jet Main Wings (16-Bit Retro Vector Polygon)
-      ctx.fillStyle = '#475569'; // Slate dark wing color
+      // Muzzle Flash Effect on Wings
+      if (muzzleFlash > 0) {
+        ctx.fillStyle = '#fef08a';
+        ctx.shadowColor = '#fef08a';
+        ctx.shadowBlur = 15;
+        ctx.beginPath();
+        ctx.arc(-56, 12, 8, 0, Math.PI * 2);
+        ctx.arc(56, 12, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
+      // Jet Wings
+      ctx.fillStyle = '#475569';
       ctx.strokeStyle = '#94a3b8';
       ctx.lineWidth = 1.5;
 
@@ -1066,8 +1108,8 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
       ctx.moveTo(0, -28); // Nose tip
       ctx.lineTo(58, 14); // Right wingtip
       ctx.lineTo(16, 10);
-      ctx.lineTo(20, 28); // Tail right
-      ctx.lineTo(-20, 28); // Tail left
+      ctx.lineTo(20, 28);
+      ctx.lineTo(-20, 28);
       ctx.lineTo(-16, 10);
       ctx.lineTo(-58, 14); // Left wingtip
       ctx.closePath();
@@ -1081,7 +1123,7 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
       ctx.fill();
       ctx.stroke();
 
-      // Canopy Glass (Cyan Glow)
+      // Canopy Glass
       ctx.fillStyle = '#38bdf8';
       ctx.shadowColor = '#38bdf8';
       ctx.shadowBlur = 8;
@@ -1090,7 +1132,7 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
       ctx.fill();
       ctx.shadowBlur = 0;
 
-      // Jet Engine Thrust Flame Animation
+      // Jet Engine Thrust Flame
       if (throttle > 10) {
         const flameLen = 12 + (throttle / 100) * 28 + Math.random() * 6;
         ctx.fillStyle = '#f97316';
@@ -1137,7 +1179,78 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
       requestAnimationFrame(mainLoop);
     }
 
-    // --- Inputs & Event Handlers ---
+    // --- Intuitive Touch Yoke Gesture Event Listeners ---
+    canvas.addEventListener('touchstart', (e) => {
+      getAudioCtx();
+      if (!isPlaying) {
+        resetFlight();
+        return;
+      }
+
+      for (let i = 0; i < e.changedTouches.length; i++) {
+        const touch = e.changedTouches[i];
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = width / rect.width;
+        const scaleY = height / rect.height;
+        const tx = (touch.clientX - rect.left) * scaleX;
+        const ty = (touch.clientY - rect.top) * scaleY;
+
+        // Touch Joystick activates anywhere on canvas
+        if (!touchYoke.active) {
+          touchYoke.active = true;
+          touchYoke.touchId = touch.identifier;
+          touchYoke.startX = tx;
+          touchYoke.startY = ty;
+          touchYoke.pitchInput = 0;
+          touchYoke.rollInput = 0;
+        }
+      }
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', (e) => {
+      if (!touchYoke.active) return;
+      e.preventDefault();
+
+      for (let i = 0; i < e.changedTouches.length; i++) {
+        const touch = e.changedTouches[i];
+        if (touch.identifier === touchYoke.touchId) {
+          const rect = canvas.getBoundingClientRect();
+          const scaleX = width / rect.width;
+          const scaleY = height / rect.height;
+          const tx = (touch.clientX - rect.left) * scaleX;
+          const ty = (touch.clientY - rect.top) * scaleY;
+
+          const dx = tx - touchYoke.startX;
+          const dy = ty - touchYoke.startY;
+
+          const maxRadius = 50;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const clampDist = Math.min(maxRadius, dist);
+          const angle = Math.atan2(dy, dx);
+
+          touchYoke.rollInput = (Math.cos(angle) * clampDist) / maxRadius;
+          touchYoke.pitchInput = (Math.sin(angle) * clampDist) / maxRadius;
+        }
+      }
+    }, { passive: false });
+
+    function resetTouchYoke() {
+      touchYoke.active = false;
+      touchYoke.touchId = null;
+      touchYoke.pitchInput = 0;
+      touchYoke.rollInput = 0;
+    }
+
+    canvas.addEventListener('touchend', (e) => {
+      for (let i = 0; i < e.changedTouches.length; i++) {
+        if (e.changedTouches[i].identifier === touchYoke.touchId) {
+          resetTouchYoke();
+        }
+      }
+    });
+    canvas.addEventListener('touchcancel', resetTouchYoke);
+
+    // Keyboard Event Handlers
     window.addEventListener('keydown', (e) => {
       getAudioCtx();
       keys[e.key] = true;
@@ -1156,28 +1269,10 @@ import { Plane, Compass, Wind, Volume2, VolumeX, RefreshCw, Play, Pause, Zap, Tr
       keys[e.key] = false;
     });
 
-    // Mobile Virtual Touch Controls
-    btnPitchUp.addEventListener('touchstart', (e) => { e.preventDefault(); mobilePitchUp = true; });
-    btnPitchUp.addEventListener('touchend', (e) => { e.preventDefault(); mobilePitchUp = false; });
-    btnPitchUp.addEventListener('mousedown', () => { mobilePitchUp = true; });
-    btnPitchUp.addEventListener('mouseup', () => { mobilePitchUp = false; });
-
-    btnPitchDown.addEventListener('touchstart', (e) => { e.preventDefault(); mobilePitchDown = true; });
-    btnPitchDown.addEventListener('touchend', (e) => { e.preventDefault(); mobilePitchDown = false; });
-    btnPitchDown.addEventListener('mousedown', () => { mobilePitchDown = true; });
-    btnPitchDown.addEventListener('mouseup', () => { mobilePitchDown = false; });
-
-    btnRollLeft.addEventListener('touchstart', (e) => { e.preventDefault(); mobileRollLeft = true; });
-    btnRollLeft.addEventListener('touchend', (e) => { e.preventDefault(); mobileRollLeft = false; });
-    btnRollLeft.addEventListener('mousedown', () => { mobileRollLeft = true; });
-    btnRollLeft.addEventListener('mouseup', () => { mobileRollLeft = false; });
-
-    btnRollRight.addEventListener('touchstart', (e) => { e.preventDefault(); mobileRollRight = true; });
-    btnRollRight.addEventListener('touchend', (e) => { e.preventDefault(); mobileRollRight = false; });
-    btnRollRight.addEventListener('mousedown', () => { mobileRollRight = true; });
-    btnRollRight.addEventListener('mouseup', () => { mobileRollRight = false; });
-
-    btnFireCannon.addEventListener('click', fireCannon);
+    // Touch Action Buttons Event Handlers
+    touchCannonBtn.addEventListener('click', fireCannon);
+    btnFastCannon.addEventListener('click', fireCannon);
+    touchGearBtn.addEventListener('click', toggleGear);
 
     // Gear & Flaps Controls
     function toggleGear() {
