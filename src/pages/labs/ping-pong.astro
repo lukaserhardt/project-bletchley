@@ -1,9 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from '@lucide/astro';
+import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause, Gauge } from '@lucide/astro';
 ---
 
-<Layout title="Project Bletchley - Ping Pong Arcade" description="Mobile-friendly HTML5 Ping Pong arcade & simulation tool with AI difficulty, multi-touch controls, and synthesized sound effects.">
+<Layout title="Project Bletchley - Ping Pong Arcade" description="Mobile-friendly HTML5 Ping Pong arcade & simulation tool with customizable ball speeds, frame-independent physics, AI difficulty, multi-touch controls, and synthesized SFX.">
   <div class="space-y-8 flex-grow flex flex-col relative">
     
     <!-- Hero Glow Blobs -->
@@ -33,7 +33,7 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
             </span>
           </div>
           <p class="text-sm text-muted mt-2 max-w-2xl leading-relaxed">
-            Responsive table tennis arcade tool optimized for mobile touch surfaces and desktop controls. Play vs adaptive AI, practice wall rallies, or challenge a friend in 2-player local mode.
+            Responsive table tennis arcade tool with customizable speed tuning, frame-rate independent physics, and mobile multi-touch support.
           </p>
         </div>
       </div>
@@ -109,20 +109,42 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
             </div>
 
             <!-- Ball Speed Settings -->
-            <div class="space-y-1.5">
+            <div class="space-y-2 border-t border-border/60 pt-3">
               <div class="flex justify-between text-xs font-mono">
-                <span class="uppercase tracking-wider text-muted">Initial Ball Speed</span>
-                <span id="speed-val" class="font-bold text-foreground">Normal</span>
+                <span class="uppercase tracking-wider text-muted flex items-center gap-1">
+                  <Gauge class="w-3.5 h-3.5 text-primary" /> Ball Speed
+                </span>
+                <span id="speed-val" class="font-bold text-primary">Relaxed</span>
               </div>
               <input
                 type="range"
                 id="speed-slider"
                 min="1"
-                max="4"
+                max="5"
                 value="2"
                 step="1"
                 class="w-full h-1.5 bg-border appearance-none cursor-pointer accent-primary rounded-lg"
               />
+              <div class="flex justify-between text-[10px] font-mono text-muted">
+                <span>Slow</span>
+                <span>Relaxed</span>
+                <span>Normal</span>
+                <span>Fast</span>
+                <span>Hyper</span>
+              </div>
+            </div>
+
+            <!-- Rally Speed Acceleration Setting -->
+            <div class="space-y-1.5">
+              <div class="flex justify-between text-xs font-mono">
+                <span class="uppercase tracking-wider text-muted">Rally Acceleration</span>
+                <span id="accel-val" class="font-bold text-foreground">Gentle</span>
+              </div>
+              <div class="grid grid-cols-3 gap-1.5 font-mono text-xs">
+                <button type="button" data-accel="off" class="accel-btn border border-border bg-background text-muted p-1.5 rounded-md transition-all cursor-pointer text-center">Off (Fixed)</button>
+                <button type="button" data-accel="gentle" class="accel-btn border border-primary bg-primary/10 text-primary p-1.5 rounded-md font-semibold transition-all cursor-pointer text-center">Gentle</button>
+                <button type="button" data-accel="arcade" class="accel-btn border border-border bg-background text-muted p-1.5 rounded-md transition-all cursor-pointer text-center">Arcade</button>
+              </div>
             </div>
 
             <!-- Match Score Target -->
@@ -138,8 +160,8 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
               </div>
             </div>
 
-            <!-- Paddle Theme Colors -->
-            <div class="space-y-2 border-t border-border/60 pt-4">
+            <!-- Visual Theme Colors -->
+            <div class="space-y-2 border-t border-border/60 pt-3">
               <label class="block font-mono text-xs uppercase tracking-wider text-muted">Visual Theme</label>
               <div class="grid grid-cols-3 gap-2 font-mono text-xs">
                 <button type="button" data-theme="bletchley" class="theme-style-btn border border-primary bg-primary/10 text-primary p-1.5 rounded-md transition-all font-semibold cursor-pointer text-center">Cyber</button>
@@ -164,7 +186,7 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
               <span id="stat-max-rally" class="font-bold text-amber-500 text-sm">0 hits</span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="text-muted uppercase tracking-wider">Estimated Speed</span>
+              <span class="text-muted uppercase tracking-wider">Velocity Meter</span>
               <span id="stat-ball-speed" class="font-bold text-foreground">0 km/h</span>
             </div>
           </div>
@@ -175,7 +197,7 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
           <div class="flex items-center gap-1.5 text-foreground font-semibold">
             <span>📱 Mobile Touch:</span>
           </div>
-          <p>Drag thumb anywhere on left side of court to slide paddle. Touch controls buttons are also available below the canvas.</p>
+          <p>Slide thumb anywhere on left side of court to position paddle smoothly, or use the buttons below.</p>
           <div class="flex items-center gap-1.5 text-foreground font-semibold pt-1">
             <span>💻 Keyboard:</span>
           </div>
@@ -247,7 +269,7 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
 
         </div>
 
-        <!-- Mobile Touch Control Pad (Visible on small screens or when touch enabled) -->
+        <!-- Mobile Touch Control Pad -->
         <div class="border-t border-border bg-background p-3 flex items-center justify-between gap-3 font-mono text-xs">
           <div class="flex items-center gap-2">
             <span class="text-muted text-[11px]">Mobile Controls:</span>
@@ -316,6 +338,7 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
     // Sliders & Toggles
     const speedSlider = document.getElementById('speed-slider') as HTMLInputElement;
     const speedValEl = document.getElementById('speed-val');
+    const accelValEl = document.getElementById('accel-val');
     const aiDiffContainer = document.getElementById('ai-diff-container');
 
     // Mobile buttons
@@ -426,9 +449,22 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
     // --- Game Configuration & State ---
     let gameMode = 'vs-ai'; // 'vs-ai' | '2p' | 'practice'
     let aiDifficulty = 'medium'; // 'easy' | 'medium' | 'hard' | 'pro'
-    let baseSpeedSetting = 2; // 1 to 4
+    
+    // Ball Speed Calibration:
+    // 1: Super Slow (2.8), 2: Relaxed (3.8 - Default), 3: Normal (5.0), 4: Fast (6.4), 5: Hyper (8.0)
+    let baseSpeedSetting = 2;
+    const speedMap = [2.8, 3.8, 5.0, 6.4, 8.0];
+    const speedLabels = ['Super Slow', 'Relaxed', 'Normal', 'Fast', 'Hyper'];
+
+    let accelSetting = 'gentle'; // 'off' | 'gentle' | 'arcade'
+    const accelMap = {
+      off: 0.0,
+      gentle: 0.05,
+      arcade: 0.18
+    };
+
     let targetScore = 11;
-    let themeStyle = 'bletchley'; // 'bletchley' | 'emerald' | 'retro'
+    let themeStyle = 'bletchley';
 
     let isPlaying = false;
     let isPaused = false;
@@ -448,8 +484,8 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
       bletchley: {
         bg: '#05060b',
         courtLine: 'rgba(99, 102, 241, 0.25)',
-        p1: '#6366f1', // Indigo / Primary
-        p2: '#ec4899', // Pink / Secondary
+        p1: '#6366f1',
+        p2: '#ec4899',
         ball: '#ffffff',
         glow: 'rgba(99, 102, 241, 0.8)',
         particles: ['#6366f1', '#a855f7', '#ec4899', '#ffffff']
@@ -457,8 +493,8 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
       emerald: {
         bg: '#020f0a',
         courtLine: 'rgba(16, 185, 129, 0.25)',
-        p1: '#10b981', // Emerald
-        p2: '#38bdf8', // Cyan
+        p1: '#10b981',
+        p2: '#38bdf8',
         ball: '#fef08a',
         glow: 'rgba(16, 185, 129, 0.8)',
         particles: ['#10b981', '#34d399', '#38bdf8', '#ffffff']
@@ -466,8 +502,8 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
       retro: {
         bg: '#0c0a09',
         courtLine: 'rgba(245, 158, 11, 0.25)',
-        p1: '#f59e0b', // Amber
-        p2: '#ef4444', // Red
+        p1: '#f59e0b',
+        p2: '#ef4444',
         ball: '#fbbf24',
         glow: 'rgba(245, 158, 11, 0.8)',
         particles: ['#f59e0b', '#fbbf24', '#f97316', '#ffffff']
@@ -484,7 +520,7 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
       w: paddleW,
       h: paddleH,
       vy: 0,
-      speed: 9
+      speed: 8.5
     };
 
     const p2 = {
@@ -493,16 +529,16 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
       w: paddleW,
       h: paddleH,
       vy: 0,
-      speed: 8
+      speed: 7.5
     };
 
     const ball = {
       x: width / 2,
       y: height / 2,
       radius: 7,
-      vx: 5,
-      vy: 3,
-      speed: 6,
+      vx: 3.8,
+      vy: 2.0,
+      speed: 3.8,
       trail: [] as { x: number; y: number }[]
     };
 
@@ -527,7 +563,6 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
       canvas.height = height * dpr;
       ctx.scale(dpr, dpr);
 
-      // Keep paddles inside boundaries after resize
       p1.x = 24;
       p2.x = width - 24 - p1.w;
       p1.y = Math.min(p1.y, height - p1.h);
@@ -538,11 +573,11 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
     resizeCanvas();
 
     // --- Particle FX ---
-    function spawnSparks(x: number, y: number, count = 12) {
+    function spawnSparks(x: number, y: number, count = 10) {
       const palette = themes[themeStyle].particles;
       for (let i = 0; i < count; i++) {
         const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 4 + 1;
+        const speed = Math.random() * 3 + 1;
         particles.push({
           x: x,
           y: y,
@@ -550,17 +585,17 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
           vy: Math.sin(angle) * speed,
           alpha: 1.0,
           color: palette[Math.floor(Math.random() * palette.length)],
-          size: Math.random() * 3 + 1.5
+          size: Math.random() * 2.5 + 1
         });
       }
     }
 
-    function updateParticles() {
+    function updateParticles(dt: number) {
       for (let i = particles.length - 1; i >= 0; i--) {
         const pt = particles[i];
-        pt.x += pt.vx;
-        pt.y += pt.vy;
-        pt.alpha -= 0.03;
+        pt.x += pt.vx * dt;
+        pt.y += pt.vy * dt;
+        pt.alpha -= 0.03 * dt;
         if (pt.alpha <= 0) {
           particles.splice(i, 1);
         }
@@ -573,8 +608,8 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
       ball.y = height / 2;
       ball.trail = [];
 
-      const baseSpeed = 4.5 + baseSpeedSetting * 1.2;
-      const angle = (Math.random() * 0.6 - 0.3) * Math.PI; // -30 to +30 deg
+      const baseSpeed = speedMap[baseSpeedSetting - 1];
+      const angle = (Math.random() * 0.5 - 0.25) * Math.PI; // -22.5 to +22.5 deg
 
       const dirX = direction === 'p1' ? -1 : 1;
       ball.vx = dirX * baseSpeed * Math.cos(angle);
@@ -619,80 +654,78 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
     }
 
     // --- AI Movement Logic ---
-    function updateAI() {
-      if (gameMode === 'practice') return; // Practice mode has no P2 paddle or wall
-      if (gameMode === '2p') return; // 2 Player mode controlled by human
+    function updateAI(dt: number) {
+      if (gameMode === 'practice') return;
+      if (gameMode === '2p') return;
 
-      // Difficulty tuning parameters
-      let speedFactor = 0.08;
-      let errorMargin = 20;
+      let speedFactor = 0.06;
+      let errorMargin = 25;
 
       if (aiDifficulty === 'easy') {
-        speedFactor = 0.05;
-        errorMargin = 35;
+        speedFactor = 0.04;
+        errorMargin = 38;
       } else if (aiDifficulty === 'medium') {
-        speedFactor = 0.09;
-        errorMargin = 20;
+        speedFactor = 0.07;
+        errorMargin = 22;
       } else if (aiDifficulty === 'hard') {
-        speedFactor = 0.14;
-        errorMargin = 8;
+        speedFactor = 0.11;
+        errorMargin = 10;
       } else if (aiDifficulty === 'pro') {
-        speedFactor = 0.22;
-        errorMargin = 2;
+        speedFactor = 0.18;
+        errorMargin = 3;
       }
 
-      // Predict ball trajectory when ball moving towards AI
       let targetY = height / 2;
       if (ball.vx > 0) {
-        targetY = ball.y;
-        // Add subtle difficulty offset
-        targetY += (Math.sin(Date.now() / 300) * errorMargin);
+        targetY = ball.y + (Math.sin(Date.now() / 300) * errorMargin);
       }
 
       const centerY = p2.y + p2.h / 2;
       const diff = targetY - centerY;
 
-      p2.y += diff * speedFactor;
+      p2.y += diff * speedFactor * dt;
       p2.y = Math.max(10, Math.min(height - p2.h - 10, p2.y));
     }
 
-    // --- Game Loop Update Physics ---
-    function updatePhysics() {
+    // --- Frame-Rate Independent Physics Update ---
+    function updatePhysics(dt: number) {
       if (!isPlaying || isPaused || isGameOver) return;
 
-      // 1. Handle Player 1 Movement (Keyboard / Mobile buttons)
+      const moveY = p1.speed * dt;
+
+      // 1. Handle Player 1 Movement
       if (keys['w'] || keys['W'] || keys['ArrowUp'] || mobileUpPressed) {
-        p1.y -= p1.speed;
+        p1.y -= moveY;
       }
       if (keys['s'] || keys['S'] || keys['ArrowDown'] || mobileDownPressed) {
-        p1.y += p1.speed;
+        p1.y += moveY;
       }
       p1.y = Math.max(10, Math.min(height - p1.h - 10, p1.y));
 
-      // 2. Handle Player 2 Movement (in 2-Player mode)
+      // 2. Handle Player 2 Movement
       if (gameMode === '2p') {
         if (keys['i'] || keys['I']) {
-          p2.y -= p2.speed;
+          p2.y -= moveY;
         }
         if (keys['k'] || keys['K']) {
-          p2.y += p2.speed;
+          p2.y += moveY;
         }
         p2.y = Math.max(10, Math.min(height - p2.h - 10, p2.y));
       } else {
-        updateAI();
+        updateAI(dt);
       }
 
       // 3. Move Ball
-      ball.x += ball.vx;
-      ball.y += ball.vy;
+      ball.x += ball.vx * dt;
+      ball.y += ball.vy * dt;
 
       // Save trail
       ball.trail.push({ x: ball.x, y: ball.y });
-      if (ball.trail.length > 7) {
+      if (ball.trail.length > 6) {
         ball.trail.shift();
       }
 
-      // 4. Ball Collision with Top/Bottom Walls
+      // 4. Top/Bottom Wall Collisions
       if (ball.y - ball.radius <= 0) {
         ball.y = ball.radius;
         ball.vy *= -1;
@@ -705,17 +738,19 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
         spawnSparks(ball.x, ball.y, 6);
       }
 
-      // 5. Collision with Practice Wall or P2 Paddle
+      const accelStep = accelMap[accelSetting as keyof typeof accelMap] || 0.05;
+      const baseSpeed = speedMap[baseSpeedSetting - 1];
+      const maxCap = baseSpeed * 1.5;
+
+      // 5. Practice Wall or P2 Paddle Collision
       if (gameMode === 'practice') {
-        // Practice Mode: Bounce off right wall
         if (ball.x + ball.radius >= width - 15) {
           ball.x = width - 15 - ball.radius;
           ball.vx *= -1;
           playSFX('wall');
-          spawnSparks(ball.x, ball.y, 10);
+          spawnSparks(ball.x, ball.y, 8);
         }
       } else {
-        // P2 Paddle Collision
         if (
           ball.vx > 0 &&
           ball.x + ball.radius >= p2.x &&
@@ -725,13 +760,11 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
         ) {
           ball.x = p2.x - ball.radius;
           
-          // Calculate angle deflection based on hit position
           const hitPos = (ball.y - (p2.y + p2.h / 2)) / (p2.h / 2);
-          const maxAngle = Math.PI / 3; // 60 degrees
+          const maxAngle = Math.PI / 3;
           const angle = hitPos * maxAngle;
 
-          // Increase speed slightly each hit for dynamic gameplay
-          ball.speed = Math.min(18, ball.speed + 0.3);
+          ball.speed = Math.min(maxCap, ball.speed + accelStep);
           ball.vx = -Math.cos(angle) * ball.speed;
           ball.vy = Math.sin(angle) * ball.speed;
 
@@ -743,7 +776,7 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
           statRallyEl.textContent = `${currentRally} hits`;
 
           playSFX('paddle');
-          spawnSparks(p2.x, ball.y, 14);
+          spawnSparks(p2.x, ball.y, 12);
         }
       }
 
@@ -757,12 +790,11 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
       ) {
         ball.x = p1.x + p1.w + ball.radius;
 
-        // Angle deflection based on hit point on paddle
         const hitPos = (ball.y - (p1.y + p1.h / 2)) / (p1.h / 2);
         const maxAngle = Math.PI / 3;
         const angle = hitPos * maxAngle;
 
-        ball.speed = Math.min(18, ball.speed + 0.3);
+        ball.speed = Math.min(maxCap, ball.speed + accelStep);
         ball.vx = Math.cos(angle) * ball.speed;
         ball.vy = Math.sin(angle) * ball.speed;
 
@@ -774,34 +806,31 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
         statRallyEl.textContent = `${currentRally} hits`;
 
         playSFX('paddle');
-        spawnSparks(p1.x + p1.w, ball.y, 14);
+        spawnSparks(p1.x + p1.w, ball.y, 12);
       }
 
-      // Update estimated velocity stat (km/h conversion for arcade fun)
+      // Velocity Meter Display
       const currentVelocity = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
-      const estKmh = Math.round(currentVelocity * 4.2);
+      const estKmh = Math.round(currentVelocity * 4.8);
       statSpeedEl.textContent = `${estKmh} km/h`;
 
-      // 7. Scoring Check
-      // P1 missed (P2 Scores)
+      // 7. Scoring Checks
       if (ball.x + ball.radius < 0) {
         scoreP2++;
         scoreP2El.textContent = String(scoreP2);
         playSFX('score');
-        spawnSparks(0, ball.y, 20);
+        spawnSparks(0, ball.y, 18);
 
         if (scoreP2 >= targetScore) {
           handleGameOver('p2');
         } else {
           serveBall('p1');
         }
-      } 
-      // P2 missed (P1 Scores)
-      else if (ball.x - ball.radius > width) {
+      } else if (ball.x - ball.radius > width) {
         scoreP1++;
         scoreP1El.textContent = String(scoreP1);
         playSFX('score');
-        spawnSparks(width, ball.y, 20);
+        spawnSparks(width, ball.y, 18);
 
         if (scoreP1 >= targetScore) {
           handleGameOver('p1');
@@ -810,7 +839,7 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
         }
       }
 
-      updateParticles();
+      updateParticles(dt);
     }
 
     function handleGameOver(winner: 'p1' | 'p2') {
@@ -820,15 +849,15 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
 
       if (winner === 'p1') {
         playSFX('win');
-        showOverlay('PLAYER 1 WINS!', `Final Match Score: ${scoreP1} - ${scoreP2}. Outstanding rally performance!`, 'Play Again');
+        showOverlay('PLAYER 1 WINS!', `Final Score: ${scoreP1} - ${scoreP2}. Great rally control!`, 'Play Again');
       } else {
         playSFX('lose');
         const winnerName = gameMode === '2p' ? 'PLAYER 2' : 'AI AGENT';
-        showOverlay(`${winnerName} WINS!`, `Final Match Score: ${scoreP1} - ${scoreP2}. Better luck next rally!`, 'Rematch');
+        showOverlay(`${winnerName} WINS!`, `Final Score: ${scoreP1} - ${scoreP2}. Good match!`, 'Rematch');
       }
     }
 
-    // --- Render Rendering Loop ---
+    // --- Render Loop ---
     function draw() {
       const theme = themes[themeStyle];
 
@@ -836,7 +865,7 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
       ctx.fillStyle = theme.bg;
       ctx.fillRect(0, 0, width, height);
 
-      // Center Dividing Line (Dashed)
+      // Center Line
       ctx.strokeStyle = theme.courtLine;
       ctx.lineWidth = 3;
       ctx.setLineDash([10, 10]);
@@ -844,9 +873,9 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
       ctx.moveTo(width / 2, 0);
       ctx.lineTo(width / 2, height);
       ctx.stroke();
-      ctx.setLineDash([]); // Reset line dash
+      ctx.setLineDash([]);
 
-      // Practice Mode Wall Rendering
+      // Practice Wall
       if (gameMode === 'practice') {
         ctx.fillStyle = theme.p2;
         ctx.fillRect(width - 12, 0, 12, height);
@@ -856,38 +885,38 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
         ctx.shadowBlur = 0;
       }
 
-      // 2. Render Ball Trail & Body
+      // 2. Ball Trail & Body
       ball.trail.forEach((t, index) => {
         const ratio = (index + 1) / ball.trail.length;
         ctx.fillStyle = theme.ball;
-        ctx.globalAlpha = ratio * 0.4;
+        ctx.globalAlpha = ratio * 0.35;
         ctx.beginPath();
         ctx.arc(t.x, t.y, ball.radius * ratio, 0, Math.PI * 2);
         ctx.fill();
       });
       ctx.globalAlpha = 1.0;
 
-      // Ball Core
+      // Core Ball
       ctx.shadowColor = theme.glow;
-      ctx.shadowBlur = 15;
+      ctx.shadowBlur = 12;
       ctx.fillStyle = theme.ball;
       ctx.beginPath();
       ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
       ctx.fill();
       ctx.shadowBlur = 0;
 
-      // 3. Render Player 1 Paddle
+      // 3. P1 Paddle
       ctx.shadowColor = theme.p1;
-      ctx.shadowBlur = 12;
+      ctx.shadowBlur = 10;
       ctx.fillStyle = theme.p1;
       ctx.beginPath();
       ctx.roundRect(p1.x, p1.y, p1.w, p1.h, 6);
       ctx.fill();
 
-      // 4. Render Player 2 Paddle (If not practice mode)
+      // 4. P2 Paddle
       if (gameMode !== 'practice') {
         ctx.shadowColor = theme.p2;
-        ctx.shadowBlur = 12;
+        ctx.shadowBlur = 10;
         ctx.fillStyle = theme.p2;
         ctx.beginPath();
         ctx.roundRect(p2.x, p2.y, p2.w, p2.h, 6);
@@ -895,7 +924,7 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
       }
       ctx.shadowBlur = 0;
 
-      // 5. Render Particle FX
+      // 5. Particles
       particles.forEach(pt => {
         ctx.fillStyle = pt.color;
         ctx.globalAlpha = pt.alpha;
@@ -906,15 +935,24 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
       ctx.globalAlpha = 1.0;
     }
 
-    function mainLoop() {
-      updatePhysics();
+    // Normalized Delta-Time Game Loop
+    let lastTime = 0;
+    function mainLoop(timestamp = 0) {
+      if (timestamp && lastTime) {
+        const deltaTime = timestamp - lastTime;
+        // Clamp dt between 0.2 and 2.0 to handle tab switches or frame dips smoothly
+        const dt = Math.max(0.2, Math.min(2.0, deltaTime / 16.667));
+        updatePhysics(dt);
+      } else {
+        updatePhysics(1.0);
+      }
+      if (timestamp) lastTime = timestamp;
+
       draw();
       requestAnimationFrame(mainLoop);
     }
 
     // --- Inputs & Event Controls ---
-
-    // Touch Dragging on Canvas (Mobile First)
     function handleTouchMove(e: TouchEvent) {
       if (e.touches.length === 0) return;
       e.preventDefault();
@@ -927,7 +965,6 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
       const touchX = (touch.clientX - rect.left) * scaleX;
       const touchY = (touch.clientY - rect.top) * scaleY;
 
-      // In 2P mode, left side touch moves P1, right side touch moves P2
       if (gameMode === '2p' && touchX > width / 2) {
         p2.y = Math.max(10, Math.min(height - p2.h - 10, touchY - p2.h / 2));
       } else {
@@ -936,7 +973,7 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
     }
 
     canvas.addEventListener('touchstart', (e) => {
-      getAudioCtx(); // Initialize AudioContext on first user interaction
+      getAudioCtx();
       if (!isPlaying && !isGameOver) {
         resetMatch();
       } else {
@@ -946,7 +983,6 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
 
     canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
 
-    // Desktop Mouse Tracking
     canvas.addEventListener('mousemove', (e) => {
       const rect = canvas.getBoundingClientRect();
       const scaleY = height / rect.height;
@@ -954,12 +990,10 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
       p1.y = Math.max(10, Math.min(height - p1.h - 10, mouseY - p1.h / 2));
     });
 
-    // Keyboard Listeners
     window.addEventListener('keydown', (e) => {
       getAudioCtx();
       keys[e.key] = true;
 
-      // Spacebar toggles pause or serves ball
       if (e.key === ' ' || e.code === 'Space') {
         e.preventDefault();
         if (!isPlaying) {
@@ -993,13 +1027,11 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
       }
     });
 
-    // Start / Serve Button on Overlay
     startActionBtn?.addEventListener('click', () => {
       getAudioCtx();
       resetMatch();
     });
 
-    // Pause Toggle
     function togglePause() {
       if (!isPlaying || isGameOver) return;
       isPaused = !isPaused;
@@ -1033,16 +1065,19 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
           gameMode = 'vs-ai';
           currentModeBadge.textContent = 'VS AI';
           aiDiffContainer.style.display = 'block';
+          p1LabelEl.textContent = 'Player 1';
           p2LabelEl.textContent = 'AI Agent';
         } else if (target.id === 'mode-2p') {
           gameMode = '2p';
           currentModeBadge.textContent = '2 Player';
           aiDiffContainer.style.display = 'none';
+          p1LabelEl.textContent = 'Player 1';
           p2LabelEl.textContent = 'Player 2';
         } else if (target.id === 'mode-practice') {
           gameMode = 'practice';
           currentModeBadge.textContent = 'Practice';
           aiDiffContainer.style.display = 'none';
+          p1LabelEl.textContent = 'Player 1';
           p2LabelEl.textContent = 'Bounce Wall';
         }
         resetMatch();
@@ -1060,11 +1095,31 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
       });
     });
 
-    // Speed Slider
+    // Ball Speed Slider Handler
     speedSlider?.addEventListener('input', () => {
       baseSpeedSetting = parseInt(speedSlider.value);
-      const labels = ['Slow', 'Normal', 'Fast', 'Insane'];
-      speedValEl.textContent = labels[baseSpeedSetting - 1];
+      speedValEl.textContent = speedLabels[baseSpeedSetting - 1];
+      if (isPlaying) {
+        serveBall('p1');
+      }
+    });
+
+    // Rally Acceleration Switcher
+    const accelBtns = document.querySelectorAll('.accel-btn');
+    accelBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget as HTMLButtonElement;
+        accelBtns.forEach(b => b.className = 'accel-btn border border-border bg-background text-muted p-1.5 rounded-md transition-all cursor-pointer text-center');
+        target.className = 'accel-btn border border-primary bg-primary/10 text-primary p-1.5 rounded-md font-semibold transition-all cursor-pointer text-center';
+        accelSetting = target.dataset.accel || 'gentle';
+        
+        const labels: Record<string, string> = {
+          off: 'Off (Fixed)',
+          gentle: 'Gentle',
+          arcade: 'Arcade'
+        };
+        accelValEl.textContent = labels[accelSetting] || 'Gentle';
+      });
     });
 
     // Target Score Buttons
@@ -1091,7 +1146,7 @@ import { Gamepad2, Trophy, Zap, RefreshCw, Volume2, VolumeX, Play, Pause } from 
       });
     });
 
-    // Start loop
+    // Start Loop
     mainLoop();
   </script>
 </Layout>

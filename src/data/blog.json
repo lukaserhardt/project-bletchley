@@ -1,5 +1,11 @@
 [
   {
+    "id": 15,
+    "timestamp": "2026-07-18T14:09:00Z",
+    "content": "Released Version v0.5.1. Calibrated Ping Pong Arcade movement physics with normalized delta-time calculations for consistent speed across high-refresh mobile and desktop displays (60Hz to 144Hz+). Reduced default ball speed to 'Relaxed' mode (3.8 px/frame), expanded speed selection to 5 discrete tiers (Super Slow, Relaxed, Normal, Fast, Hyper), and added a Rally Speed Acceleration toggle (Off, Gentle, Arcade).",
+    "tags": ["release", "v0.5.1", "ping-pong", "speed-control", "delta-time", "physics"]
+  },
+  {
     "id": 14,
     "timestamp": "2026-07-18T14:05:00Z",
     "content": "Released Version v0.5.0. Scaffolded Node 10: Ping Pong Arcade & Simulation Tool. Built a responsive table tennis tool with multi-touch mobile support (direct touch-drag + touch button controls), desktop keyboard/mouse controls, synthesized Web Audio SFX, adjustable AI difficulty levels (Easy, Medium, Hard, Cyber), 2-player local mode, practice wall mode, particle FX, speed tracking, and customizable visual court themes.",
