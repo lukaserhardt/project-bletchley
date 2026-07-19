@@ -1,5 +1,11 @@
 [
   {
+    "id": 24,
+    "timestamp": "2026-07-19T07:07:00Z",
+    "content": "Released Version v0.8.5. Upgraded 16-Bit Flight Simulator with English-only UI, realistic aerodynamic lift/stall physics, 10,000 FT service ceiling with high-altitude perspective scaling, true 3D aircraft nose vector cannon firing, and a dedicated Flight Manual & Safe Landing Guide card.",
+    "tags": ["release", "v0.8.5", "flight-simulator", "english-ui", "cannon-vector-fix", "flight-physics", "landing-guide"]
+  },
+  {
     "id": 23,
     "timestamp": "2026-07-18T21:29:00Z",
     "content": "Released Version v0.8.0. Redesigned 16-Bit Flight Simulator into a dedicated 2-Stage User Flow. Stage 1: Clean pre-flight setup card on the hub page for selecting flight mission and sky atmosphere. Stage 2: Tapping '🚀 FLUG IN FULLSCREEN STARTEN' launches the full-screen simulator with complete in-flight touch controls (Touch Yoke, Vertical Throttle Lever, Gear, Flaps, Cannon, Radar, and Exit button).",
