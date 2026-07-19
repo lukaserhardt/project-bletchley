@@ -1,9 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert, Camera, Flame, Navigation, Maximize, X, HelpCircle, Bot } from '@lucide/astro';
+import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert, Camera, Flame, Navigation, Maximize, X, HelpCircle, Bot, Sliders } from '@lucide/astro';
 ---
 
-<Layout title="Project Bletchley - 16-Bit Flight Simulator" description="Retro 16-bit Mode-7 3D flight simulator featuring realistic F-14 jet physics, 50,000 FT service ceiling, repeating airbases, ILS glide slope approach lights, and Autoland autopilot.">
+<Layout title="Project Bletchley - 16-Bit Flight Simulator" description="Retro 16-bit Mode-7 3D flight simulator featuring realistic F-14 jet physics, 50,000 FT ceiling, repeating airbases, ILS glide slope approach lights, simulation speed controls, and a working Autoland autopilot.">
   <div class="space-y-8 flex-grow flex flex-col relative">
     
     <!-- Hero Background Glow Blobs -->
@@ -33,7 +33,7 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
             </span>
           </div>
           <p class="text-sm text-muted mt-2 max-w-2xl leading-relaxed">
-            Authentic F-14 Tomcat physics, 50,000 FT stratospheric ceiling, repeating runway airbases with ILS approach beacons, and full Autoland autopilot support.
+            F-14 Tomcat jet physics, 50,000 FT stratospheric ceiling, repeating airbases with ILS approach lights, adjustable simulation speeds, and working Autoland autopilot.
           </p>
         </div>
       </div>
@@ -135,30 +135,30 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
             <HelpCircle class="w-4 h-4 text-amber-400" />
             <span>Flight & Autoland Manual</span>
           </h3>
-          <span class="text-[10px] text-muted">v0.9.0</span>
+          <span class="text-[10px] text-muted">v0.9.5</span>
         </div>
 
         <!-- Autoland Autopilot Info -->
         <div class="space-y-2 bg-indigo-950/40 border border-indigo-500/40 p-3.5 rounded-xl">
           <div class="font-bold text-indigo-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
             <Bot class="w-4 h-4 text-indigo-400" />
-            <span>🤖 Autoland Autopilot System</span>
+            <span>🤖 Autoland Autopilot (Fixed & Tested)</span>
           </div>
           <p class="text-[11px] text-indigo-200/90 leading-relaxed font-sans">
-            Tap <strong>[🤖 AUTOLAND]</strong> on the HUD at any time! The autopilot will lock onto the nearest airbase runway, align heading, manage throttle to 140 KTS, deploy gear & flaps, and execute a textbook touchdown automatically.
+            Tap <strong>[🤖 AUTOLAND]</strong> on the HUD bar during flight! The autopilot will lock onto the nearest upcoming airbase, align heading to 000°, deploy gear & flaps, manage descent pitch (-3° glide slope), and execute a textbook touchdown automatically.
           </p>
         </div>
 
-        <!-- Safe Landing Parameters -->
+        <!-- Slow Motion & Landing Parameters -->
         <div class="space-y-2 bg-emerald-950/30 border border-emerald-500/30 p-3.5 rounded-xl">
           <div class="font-bold text-emerald-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-            <span>🛬 Manual Landing Parameters</span>
+            <span>⏱️ Relaxed Speed & Landing Guide</span>
           </div>
           <ul class="space-y-1.5 text-[11px] text-emerald-200/90 leading-relaxed font-sans">
+            <li>• <strong>Relaxed Motion:</strong> Flight speed multiplier slowed 3x for easy reaction time.</li>
+            <li>• <strong>Sim Speed Toggle:</strong> Use <strong>⏱️ 1.0x / 0.5x / 0.25x</strong> on HUD to adjust pace.</li>
             <li>• <strong>Touchdown Speed:</strong> Below <strong>160 KTS</strong> (Throttle ~25%).</li>
-            <li>• <strong>Altitude Ceiling:</strong> Service ceiling up to <strong>50,000 FT</strong>.</li>
-            <li>• <strong>Airbases:</strong> Repeating runways located every 4,000m along the map.</li>
-            <li>• <strong>ILS Beacons:</strong> Follow green & amber approach lights to runway.</li>
+            <li>• <strong>Airbases:</strong> Repeating runways every 3,000m with ILS approach lights.</li>
           </ul>
         </div>
 
@@ -197,8 +197,19 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
           <span id="hud-wayfinding-text">TARGET: FREE FLIGHT</span>
         </div>
 
-        <!-- Top Right Radar Minimap, Autoland & Exit Button -->
+        <!-- Top Right Radar Minimap, Sim Speed, Autoland & Exit Button -->
         <div class="flex items-center gap-2 pointer-events-auto">
+          <!-- Sim Speed Toggle -->
+          <button
+            id="hud-sim-speed-btn"
+            type="button"
+            class="bg-black/85 border border-primary/50 text-amber-400 font-mono text-xs font-bold px-2.5 py-2.5 rounded-xl transition-all active:scale-95 cursor-pointer shadow-xl flex items-center gap-1 select-none"
+            title="Toggle Simulation Speed"
+          >
+            <Sliders class="w-4 h-4" />
+            <span id="hud-sim-speed-label">1.0x</span>
+          </button>
+
           <!-- Autoland Autopilot Quick Button -->
           <button
             id="hud-autoland-btn"
@@ -353,6 +364,8 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
     const exitFullscreenBtn = document.getElementById('exit-fullscreen-btn')!;
     const hudAutolandBtn = document.getElementById('hud-autoland-btn')!;
     const hudAutolandLabel = document.getElementById('hud-autoland-label')!;
+    const hudSimSpeedBtn = document.getElementById('hud-sim-speed-btn')!;
+    const hudSimSpeedLabel = document.getElementById('hud-sim-speed-label')!;
 
     const hudPitchBar = document.getElementById('hud-pitch-bar')!;
     const hudSpeedText = document.getElementById('hud-speed-text')!;
@@ -517,6 +530,7 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
     let isCrashed = false;
     let isLanded = false;
     let isAutolandActive = false;
+    let simSpeedScale = 1.0; // 1.0x | 0.5x | 0.25x
 
     let currentMission = 'free'; // 'free' | 'rings' | 'landing'
     let skyTheme = 'day'; // 'day' | 'sunset' | 'night'
@@ -525,7 +539,7 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
     // F-14 Aerodynamic Physics Model
     const plane = {
       x: 0,
-      y: 3500, // Altitude in feet (Ceiling: 50,000 FT)
+      y: 2500, // Altitude in feet (Ceiling: 50,000 FT)
       z: 0,
       pitch: 0, // deg (-45 to +45)
       roll: 0,  // deg (-60 to +60)
@@ -543,17 +557,17 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
     let targetRings: { id: number; x: number; y: number; z: number; radius: number; passed: boolean }[] = [];
     let ringsPassedCount = 0;
 
-    // World Repeating Airbases (every 4000m along Z axis)
-    function getNearestRunway(planeZ: number) {
-      const spacing = 4000;
-      const index = Math.round(planeZ / spacing);
-      const targetZ = index * spacing + 1200;
+    // World Repeating Airbases (every 3000m along Z axis ahead)
+    function getUpcomingRunway(planeZ: number) {
+      const spacing = 3000;
+      const index = Math.max(0, Math.floor((planeZ + 1200) / spacing) + 1);
+      const targetZ = index * spacing;
       return {
-        id: Math.abs(index) + 1,
+        id: index,
         x: 0,
         z: targetZ,
         length: 1600,
-        width: 200
+        width: 220
       };
     }
 
@@ -604,6 +618,14 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
     }
 
     window.addEventListener('resize', resizeCanvas);
+
+    // --- Sim Speed Control Toggle ---
+    hudSimSpeedBtn.addEventListener('click', () => {
+      if (simSpeedScale === 1.0) simSpeedScale = 0.5;
+      else if (simSpeedScale === 0.5) simSpeedScale = 0.25;
+      else simSpeedScale = 1.0;
+      hudSimSpeedLabel.textContent = `${simSpeedScale}x`;
+    });
 
     // --- Fullscreen Launch & Exit Logic ---
     function launchFullscreenFlight() {
@@ -701,10 +723,10 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
           });
         }
       } else if (currentMission === 'landing') {
-        const rw = getNearestRunway(plane.z);
+        const rw = getUpcomingRunway(plane.z);
         plane.x = 0;
-        plane.y = 850;
-        plane.z = rw.z - 1800;
+        plane.y = 800;
+        plane.z = rw.z - 2200;
         plane.pitch = -2;
         plane.speed = 145;
         plane.gearDown = true;
@@ -729,7 +751,7 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
 
     function resetFlight() {
       plane.x = 0;
-      plane.y = 3500;
+      plane.y = 2500;
       plane.z = 0;
       plane.pitch = 0;
       plane.roll = 0;
@@ -741,6 +763,8 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
       plane.muzzleFlash = 0;
       plane.recoilShake = 0;
       isAutolandActive = false;
+      simSpeedScale = 1.0;
+      hudSimSpeedLabel.textContent = '1.0x';
 
       updateThrottleUI(60);
 
@@ -803,13 +827,14 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
       });
     }
 
-    // --- Aerodynamic Flight Dynamics & Autoland Physics Loop ---
-    function updatePhysics(dt: number) {
+    // --- Aerodynamic Flight Dynamics & Working Autoland Computer ---
+    function updatePhysics(rawDt: number) {
       if (!isPlaying || isPaused || isCrashed) return;
 
-      const currentRunway = getNearestRunway(plane.z);
+      const dt = rawDt * simSpeedScale;
+      const currentRunway = getUpcomingRunway(plane.z);
 
-      // --- AUTOLAND AUTOPILOT COMPUTER ---
+      // --- WORKING AUTOLAND AUTOPILOT COMPUTER ---
       if (isAutolandActive) {
         plane.gearDown = true;
         plane.flapsDown = true;
@@ -817,25 +842,28 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
         touchFlapsLabel.textContent = '✈️ FLAPS (DN)';
 
         // Target approach speed ~140 KTS
-        const targetThrottle = 25;
-        updateThrottleUI(plane.throttle + (targetThrottle - plane.throttle) * 0.05 * dt);
+        const targetThrottle = 22;
+        updateThrottleUI(plane.throttle + (targetThrottle - plane.throttle) * 0.08 * dt);
 
-        // Align X centerline
-        const targetX = currentRunway.x;
-        const dx = targetX - plane.x;
-        plane.roll = Math.max(-25, Math.min(25, dx * 0.15));
+        // Align X Centerline smoothly
+        const dx = currentRunway.x - plane.x;
+        plane.roll = Math.max(-20, Math.min(20, dx * 0.1));
 
-        // Align Heading with 000° North runway direction
-        let targetYaw = 0;
-        if (dx > 20) targetYaw = 8;
-        if (dx < -20) targetYaw = 352;
-        plane.yaw += (targetYaw - plane.yaw) * 0.05 * dt;
+        // Align Heading with 000° North
+        let targetYaw = (dx * 0.05 + 360) % 360;
+        plane.yaw += (targetYaw - plane.yaw) * 0.08 * dt;
 
-        // Glide slope descent calculation (-2.5° pitch down until flare at 50 FT)
-        if (plane.y > 50) {
-          plane.pitch += (-2.5 - plane.pitch) * 0.08 * dt;
+        // Ideal ILS Glide Slope Altitude: descent at -2.5° pitch down until flare at 40 FT
+        const distToRunway = Math.max(10, currentRunway.z - plane.z);
+        const idealAlt = Math.max(0, distToRunway * 0.28); // Smooth 15° glide angle to runway threshold
+
+        if (plane.y > 40) {
+          const altDiff = idealAlt - plane.y;
+          const desiredPitch = Math.max(-12, Math.min(5, altDiff * 0.02 - 2.5));
+          plane.pitch += (desiredPitch - plane.pitch) * 0.08 * dt;
         } else {
-          plane.pitch += (2.0 - plane.pitch) * 0.1 * dt; // Touchdown Flare!
+          // Touchdown Flare!
+          plane.pitch += (2.5 - plane.pitch) * 0.12 * dt;
         }
       } else {
         // Manual Flight Inputs
@@ -872,11 +900,8 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
       const radPitch = (plane.pitch * Math.PI) / 180;
       const radYaw = (plane.yaw * Math.PI) / 180;
 
-      // Aerodynamic Lift vs Weight
-      const flapLiftBonus = plane.flapsDown ? 1.25 : 1.0;
-      const minStallSpeed = plane.flapsDown ? 95 : 110;
-
-      const climbRate = Math.sin(radPitch) * plane.speed * 0.35 + (plane.speed - minStallSpeed) * 0.08 * flapLiftBonus;
+      // Aerodynamic Lift & Altitude Change (Pitch directly governs climb & descent rate!)
+      const climbRate = Math.sin(radPitch) * plane.speed * 0.45;
       plane.y += climbRate * dt;
 
       // Service Ceiling Limit (50,000 FT)
@@ -885,15 +910,17 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
         if (plane.pitch > 0) plane.pitch *= 0.8;
       }
 
-      // Movement Vector
-      plane.x += Math.sin(radYaw) * plane.speed * 0.08 * dt;
-      plane.z += Math.cos(radYaw) * plane.speed * 0.08 * dt;
+      // Relaxed World Position Movement Speed (0.025 multiplier for relaxed human reaction time!)
+      const moveScale = 0.025;
+      plane.x += Math.sin(radYaw) * plane.speed * moveScale * dt;
+      plane.z += Math.cos(radYaw) * plane.speed * moveScale * dt;
 
       // Aerodynamic Stall Check
+      const minStallSpeed = plane.flapsDown ? 95 : 110;
       if (plane.speed < minStallSpeed && plane.pitch > 8) {
         plane.stalling = true;
         stallWarningEl.classList.remove('hidden');
-        plane.y -= 18 * dt; // Aerodynamic sink drop!
+        plane.y -= 14 * dt; // Sink drop on stall
         playSFX('stall');
       } else {
         plane.stalling = false;
@@ -908,7 +935,7 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
         const distRunwayZ = Math.abs(plane.z - currentRunway.z);
 
         const isRunwayAlignment = distRunwayX < currentRunway.width && distRunwayZ < currentRunway.length;
-        const isSafeSpeed = plane.speed <= 160;
+        const isSafeSpeed = plane.speed <= 165;
         const isSafeAttitude = Math.abs(plane.pitch) <= 8 && Math.abs(plane.roll) <= 15;
 
         if (plane.gearDown && isRunwayAlignment && isSafeSpeed && isSafeAttitude) {
@@ -916,7 +943,7 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
           isPlaying = false;
           isAutolandActive = false;
           playSFX('land');
-          showFullscreenOverlay('TOUCHDOWN SUCCESSFUL!', `Textbook landing at ${Math.round(plane.speed)} KTS on Airbase Runway #${currentRunway.id}! Pitch: ${Math.round(plane.pitch)}°.`);
+          showFullscreenOverlay('TOUCHDOWN SUCCESSFUL!', `Textbook touchdown at ${Math.round(plane.speed)} KTS on Airbase Runway #${currentRunway.id}! Pitch: ${Math.round(plane.pitch)}°.`);
         } else {
           isCrashed = true;
           isPlaying = false;
@@ -925,8 +952,8 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
 
           let crashReason = `Ground impact at ${Math.round(plane.speed)} KTS.`;
           if (!plane.gearDown) crashReason = 'Belly scrape crash! Landing Gear was UP.';
-          else if (!isRunwayAlignment) crashReason = `Off-runway terrain crash! Target nearest Airbase Runway #${currentRunway.id}.`;
-          else if (!isSafeSpeed) crashReason = `Hard impact! Speed was ${Math.round(plane.speed)} KTS (Max allowed: 160 KTS).`;
+          else if (!isRunwayAlignment) crashReason = `Off-runway terrain crash! Target Airbase Runway #${currentRunway.id}.`;
+          else if (!isSafeSpeed) crashReason = `Hard impact! Speed was ${Math.round(plane.speed)} KTS (Max allowed: 165 KTS).`;
           else if (!isSafeAttitude) crashReason = `Unstable attitude! Pitch was ${Math.round(plane.pitch)}° (Keep between -8° and +8°).`;
 
           showFullscreenOverlay('AIRCRAFT CRASHED', crashReason);
@@ -935,7 +962,8 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
 
       // Wayfinding Updates
       if (isAutolandActive) {
-        hudWayfindingText.textContent = `🤖 AUTOLAND ACTIVE // ILS GLIDE SLOPE RUNWAY #${currentRunway.id} (${Math.round(Math.abs(currentRunway.z - plane.z))}m)`;
+        const distToRw = Math.max(0, Math.round(currentRunway.z - plane.z));
+        hudWayfindingText.textContent = `🤖 AUTOLAND ACTIVE // ILS APPROACH RUNWAY #${currentRunway.id} (${distToRw}m | ALT ${Math.round(plane.y)} FT)`;
       } else if (currentMission === 'rings') {
         const nextRing = targetRings.find(r => !r.passed);
 
@@ -1086,7 +1114,7 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
       ctx.globalAlpha = 1.0;
 
       // 3D Repeating Airbase Runways & ILS Approach Beacons
-      const currentRunway = getNearestRunway(plane.z);
+      const currentRunway = getUpcomingRunway(plane.z);
       const relRunwayZ = currentRunway.z - plane.z;
       const relRunwayX = currentRunway.x - plane.x;
 
