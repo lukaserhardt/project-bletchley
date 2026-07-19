@@ -1,9 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert, Camera, Flame, Navigation, Maximize, X, HelpCircle, AlertTriangle, Info } from '@lucide/astro';
+import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert, Camera, Flame, Navigation, Maximize, X, HelpCircle, Bot } from '@lucide/astro';
 ---
 
-<Layout title="Project Bletchley - 16-Bit Flight Simulator" description="Retro 16-bit Mode-7 3D flight simulator featuring realistic aerodynamic physics, F-14 Tomcat jet model, 3D target ring courses, plasma cannons, and full-screen touch flight controls.">
+<Layout title="Project Bletchley - 16-Bit Flight Simulator" description="Retro 16-bit Mode-7 3D flight simulator featuring realistic F-14 jet physics, 50,000 FT service ceiling, repeating airbases, ILS glide slope approach lights, and Autoland autopilot.">
   <div class="space-y-8 flex-grow flex flex-col relative">
     
     <!-- Hero Background Glow Blobs -->
@@ -33,7 +33,7 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
             </span>
           </div>
           <p class="text-sm text-muted mt-2 max-w-2xl leading-relaxed">
-            Retro 16-bit Mode-7 3D flight simulation. Select your flight parameters below, review the flight manual, and launch directly into the full-screen cockpit with touch yoke & throttle controls.
+            Authentic F-14 Tomcat physics, 50,000 FT stratospheric ceiling, repeating runway airbases with ILS approach beacons, and full Autoland autopilot support.
           </p>
         </div>
       </div>
@@ -65,7 +65,7 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
                 class="setup-mission-btn border-2 border-primary bg-primary/15 text-primary p-3 rounded-xl transition-all font-bold cursor-pointer text-left space-y-1 shadow-sm"
               >
                 <div class="text-sm">🛩️ Free Flight</div>
-                <div class="text-[11px] text-primary/80 font-sans font-normal">Explore 3D landscape</div>
+                <div class="text-[11px] text-primary/80 font-sans font-normal">Explore 50k FT world</div>
               </button>
 
               <button
@@ -83,7 +83,7 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
                 class="setup-mission-btn border border-border bg-background hover:border-primary text-foreground p-3 rounded-xl transition-all font-bold cursor-pointer text-left space-y-1 shadow-sm"
               >
                 <div class="text-sm text-emerald-400">🛬 Runway Landing</div>
-                <div class="text-[11px] text-muted font-sans font-normal">Final approach to Runway 09</div>
+                <div class="text-[11px] text-muted font-sans font-normal">Final approach to Airbase</div>
               </button>
             </div>
           </div>
@@ -128,47 +128,38 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
 
       </div>
 
-      <!-- Flight Operations & Landing Manual Card -->
+      <!-- Flight Operations & Autoland Manual Card -->
       <div class="lg:col-span-5 border border-border bg-card p-6 rounded-2xl space-y-5 shadow-lg font-mono text-xs">
         <div class="border-b border-border pb-3 flex items-center justify-between">
           <h3 class="font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
             <HelpCircle class="w-4 h-4 text-amber-400" />
-            <span>Flight Manual & Operations</span>
+            <span>Flight & Autoland Manual</span>
           </h3>
-          <span class="text-[10px] text-muted">v0.8.5</span>
+          <span class="text-[10px] text-muted">v0.9.0</span>
+        </div>
+
+        <!-- Autoland Autopilot Info -->
+        <div class="space-y-2 bg-indigo-950/40 border border-indigo-500/40 p-3.5 rounded-xl">
+          <div class="font-bold text-indigo-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+            <Bot class="w-4 h-4 text-indigo-400" />
+            <span>🤖 Autoland Autopilot System</span>
+          </div>
+          <p class="text-[11px] text-indigo-200/90 leading-relaxed font-sans">
+            Tap <strong>[🤖 AUTOLAND]</strong> on the HUD at any time! The autopilot will lock onto the nearest airbase runway, align heading, manage throttle to 140 KTS, deploy gear & flaps, and execute a textbook touchdown automatically.
+          </p>
         </div>
 
         <!-- Safe Landing Parameters -->
         <div class="space-y-2 bg-emerald-950/30 border border-emerald-500/30 p-3.5 rounded-xl">
           <div class="font-bold text-emerald-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-            <span>🛬 Safe Runway Touchdown Guide</span>
+            <span>🛬 Manual Landing Parameters</span>
           </div>
           <ul class="space-y-1.5 text-[11px] text-emerald-200/90 leading-relaxed font-sans">
-            <li>• <strong>Touchdown Speed:</strong> Below <strong>110 KTS</strong> (Throttle ~35%).</li>
-            <li>• <strong>Descent Attitude:</strong> Keep pitch level (between <strong>-4° and +4°</strong>).</li>
-            <li>• <strong>Configurations:</strong> Deploy <strong>Landing Gear [G]</strong> and <strong>Flaps [F]</strong> before touchdown.</li>
-            <li>• <strong>Touchdown Zone:</strong> Align on Runway 09 centerline.</li>
+            <li>• <strong>Touchdown Speed:</strong> Below <strong>160 KTS</strong> (Throttle ~25%).</li>
+            <li>• <strong>Altitude Ceiling:</strong> Service ceiling up to <strong>50,000 FT</strong>.</li>
+            <li>• <strong>Airbases:</strong> Repeating runways located every 4,000m along the map.</li>
+            <li>• <strong>ILS Beacons:</strong> Follow green & amber approach lights to runway.</li>
           </ul>
-        </div>
-
-        <!-- Aerodynamic Aerodynamics Guide -->
-        <div class="space-y-2 bg-primary/10 border border-primary/20 p-3.5 rounded-xl">
-          <div class="font-bold text-primary uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-            <span>✈️ Aerodynamics & Altitude Physics</span>
-          </div>
-          <ul class="space-y-1.5 text-[11px] text-muted leading-relaxed font-sans">
-            <li>• <strong>Stall Danger:</strong> Speeds below <strong>50 KTS</strong> drop aerodynamic lift and cause downward sink!</li>
-            <li>• <strong>Service Ceiling:</strong> Engine thrust & lift decrease above <strong>8,000 FT</strong> (Max ceiling: 10,000 FT).</li>
-            <li>• <strong>Belly Impact:</strong> Flying under <strong>30 FT</strong> without Gear DOWN causes belly scrape crash!</li>
-          </ul>
-        </div>
-
-        <!-- Controls Overview -->
-        <div class="space-y-2 border-t border-border/60 pt-3 text-muted text-[11px] leading-relaxed">
-          <div class="font-bold text-foreground uppercase tracking-wider">🕹️ In-Flight Touch Controls</div>
-          <p>• <strong>Left Screen:</strong> Drag thumb anywhere to steer flight yoke (Pitch & Roll).</p>
-          <p>• <strong>Right Screen:</strong> Slide vertical Throttle lever up/down (0% - 100%).</p>
-          <p>• <strong>Buttons:</strong> Cannon [Space], Gear [G], Flaps [F], Camera view.</p>
         </div>
 
       </div>
@@ -190,12 +181,12 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
       <div class="flex justify-between items-start gap-2">
         <!-- Artificial Horizon & Telemetry -->
         <div class="bg-black/85 backdrop-blur-md border border-primary/40 p-2.5 rounded-xl text-primary space-y-1 shrink-0 shadow-lg">
-          <div class="text-[10px] uppercase text-muted tracking-wider">Horizon & Airspeed</div>
+          <div class="text-[10px] uppercase text-muted tracking-wider">Horizon & Telemetry</div>
           <div class="w-24 sm:w-28 h-2 bg-primary/20 relative overflow-hidden rounded border border-primary/40">
             <div id="hud-pitch-bar" class="absolute inset-x-0 h-full bg-primary transition-all duration-75"></div>
           </div>
           <div class="text-[11px] font-bold text-white flex justify-between gap-2">
-            <span id="hud-speed-text">90 KTS</span>
+            <span id="hud-speed-text">350 KTS</span>
             <span id="hud-alt-text" class="text-primary">850 FT</span>
           </div>
         </div>
@@ -206,8 +197,19 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
           <span id="hud-wayfinding-text">TARGET: FREE FLIGHT</span>
         </div>
 
-        <!-- Top Right Radar Minimap & Exit Button -->
+        <!-- Top Right Radar Minimap, Autoland & Exit Button -->
         <div class="flex items-center gap-2 pointer-events-auto">
+          <!-- Autoland Autopilot Quick Button -->
+          <button
+            id="hud-autoland-btn"
+            type="button"
+            class="bg-indigo-600 hover:bg-indigo-500 text-white font-mono text-xs font-bold px-3 py-2.5 rounded-xl transition-all active:scale-95 cursor-pointer shadow-xl flex items-center gap-1.5 select-none"
+            title="Toggle Autoland Autopilot"
+          >
+            <Bot class="w-4 h-4" />
+            <span id="hud-autoland-label">AUTOLAND</span>
+          </button>
+
           <!-- Radar Minimap -->
           <div class="w-16 h-16 sm:w-20 sm:h-20 bg-black/85 border border-primary/50 rounded-full relative overflow-hidden flex items-center justify-center shadow-lg shrink-0">
             <div class="absolute inset-2 border border-primary/20 rounded-full"></div>
@@ -233,10 +235,10 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
 
       <!-- Stall Warning Indicator -->
       <div id="stall-warning" class="self-center bg-rose-600/90 text-white px-4 py-1.5 rounded-xl font-mono text-xs font-bold animate-pulse hidden flex items-center gap-1.5 shadow-xl">
-        <ShieldAlert class="w-4 h-4" /> STALL WARNING // SPEED &lt; 50 KTS // PITCH DOWN
+        <ShieldAlert class="w-4 h-4" /> STALL WARNING // AIRSPEED CRITICAL // PITCH DOWN
       </div>
 
-      <!-- Bottom Touch Cockpit HUD Controls (ALL CONTROLS SIMULTANEOUSLY VISIBLE) -->
+      <!-- Bottom Touch Cockpit HUD Controls -->
       <div class="flex justify-between items-end gap-3 pointer-events-auto">
         
         <!-- Left Side: Touch Yoke Gesture Area Indicator -->
@@ -349,6 +351,9 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
 
     // Stage 2 Fullscreen HUD Elements
     const exitFullscreenBtn = document.getElementById('exit-fullscreen-btn')!;
+    const hudAutolandBtn = document.getElementById('hud-autoland-btn')!;
+    const hudAutolandLabel = document.getElementById('hud-autoland-label')!;
+
     const hudPitchBar = document.getElementById('hud-pitch-bar')!;
     const hudSpeedText = document.getElementById('hud-speed-text')!;
     const hudAltText = document.getElementById('hud-alt-text')!;
@@ -421,7 +426,7 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
       try {
         const ctx = getAudioCtx();
         if (ctx) {
-          const freq = 45 + throttlePct * 1.5;
+          const freq = 45 + throttlePct * 2.5;
           engineOsc.frequency.setTargetAtTime(freq, ctx.currentTime, 0.1);
         }
       } catch (e) {}
@@ -511,20 +516,21 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
     let isPaused = false;
     let isCrashed = false;
     let isLanded = false;
+    let isAutolandActive = false;
 
     let currentMission = 'free'; // 'free' | 'rings' | 'landing'
     let skyTheme = 'day'; // 'day' | 'sunset' | 'night'
     let cameraMode = 'chase'; // 'chase' | 'cockpit'
 
-    // Aerodynamic Flight Physics State
+    // F-14 Aerodynamic Physics Model
     const plane = {
       x: 0,
-      y: 850, // Altitude in feet
+      y: 3500, // Altitude in feet (Ceiling: 50,000 FT)
       z: 0,
       pitch: 0, // deg (-45 to +45)
       roll: 0,  // deg (-60 to +60)
-      yaw: 45,  // heading deg (0 to 360)
-      speed: 90, // airspeed in knots
+      yaw: 0,   // heading deg (0 to 360)
+      speed: 420, // airspeed in knots
       throttle: 60, // engine thrust %
       gearDown: false,
       flapsDown: false,
@@ -537,28 +543,38 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
     let targetRings: { id: number; x: number; y: number; z: number; radius: number; passed: boolean }[] = [];
     let ringsPassedCount = 0;
 
-    const runway = {
-      x: 0,
-      z: 1200,
-      length: 1400,
-      width: 180
-    };
+    // World Repeating Airbases (every 4000m along Z axis)
+    function getNearestRunway(planeZ: number) {
+      const spacing = 4000;
+      const index = Math.round(planeZ / spacing);
+      const targetZ = index * spacing + 1200;
+      return {
+        id: Math.abs(index) + 1,
+        x: 0,
+        z: targetZ,
+        length: 1600,
+        width: 200
+      };
+    }
 
     const skyPalettes = {
       day: {
-        skyTop: '#1e3a8a',
+        skyTop: '#0f172a',
+        skyMid: '#1e3a8a',
         skyBottom: '#38bdf8',
         groundBase: '#15803d',
         gridLine: '#16a34a'
       },
       sunset: {
-        skyTop: '#4c1d95',
+        skyTop: '#1e1b4b',
+        skyMid: '#4c1d95',
         skyBottom: '#f97316',
         groundBase: '#7c2d12',
         gridLine: '#ea580c'
       },
       night: {
         skyTop: '#020617',
+        skyMid: '#090d16',
         skyBottom: '#1e1b4b',
         groundBase: '#09090b',
         gridLine: '#6366f1'
@@ -607,6 +623,7 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
 
     function exitFullscreenFlight() {
       isPlaying = false;
+      isAutolandActive = false;
       if (document.exitFullscreen) {
         document.exitFullscreen().catch(() => {});
       } else if ((document as any).webkitExitFullscreen) {
@@ -624,6 +641,20 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
       fullscreenOverlay.classList.add('hidden');
       resetFlight();
     });
+
+    // Toggle Autoland System
+    function toggleAutoland() {
+      isAutolandActive = !isAutolandActive;
+      if (isAutolandActive) {
+        hudAutolandBtn.className = 'bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs font-bold px-3 py-2.5 rounded-xl transition-all active:scale-95 cursor-pointer shadow-xl flex items-center gap-1.5 select-none animate-pulse';
+        hudAutolandLabel.textContent = 'AUTOLAND (ON)';
+      } else {
+        hudAutolandBtn.className = 'bg-indigo-600 hover:bg-indigo-500 text-white font-mono text-xs font-bold px-3 py-2.5 rounded-xl transition-all active:scale-95 cursor-pointer shadow-xl flex items-center gap-1.5 select-none';
+        hudAutolandLabel.textContent = 'AUTOLAND';
+      }
+    }
+
+    hudAutolandBtn.addEventListener('click', toggleAutoland);
 
     // --- Mission Setup Handlers ---
     setupMissionBtns.forEach(btn => {
@@ -659,22 +690,23 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
       if (currentMission === 'rings') {
         for (let i = 0; i < 8; i++) {
           const angle = (i / 8) * Math.PI * 1.2;
-          const dist = 600 + i * 450;
+          const dist = 800 + i * 550;
           targetRings.push({
             id: i + 1,
             x: Math.sin(angle) * dist,
-            y: 550 + Math.sin(i * 1.4) * 220,
-            z: Math.cos(angle) * dist + 350,
-            radius: 95,
+            y: 800 + Math.sin(i * 1.4) * 350,
+            z: Math.cos(angle) * dist + 400,
+            radius: 120,
             passed: false
           });
         }
       } else if (currentMission === 'landing') {
+        const rw = getNearestRunway(plane.z);
         plane.x = 0;
-        plane.y = 450;
-        plane.z = -700;
-        plane.pitch = -1;
-        plane.speed = 85;
+        plane.y = 850;
+        plane.z = rw.z - 1800;
+        plane.pitch = -2;
+        plane.speed = 145;
         plane.gearDown = true;
         plane.flapsDown = true;
         touchGearLabel.textContent = '🛞 GEAR (DN)';
@@ -697,17 +729,18 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
 
     function resetFlight() {
       plane.x = 0;
-      plane.y = 850;
+      plane.y = 3500;
       plane.z = 0;
       plane.pitch = 0;
       plane.roll = 0;
-      plane.yaw = 45;
-      plane.speed = 90;
+      plane.yaw = 0;
+      plane.speed = 420;
       plane.gearDown = false;
       plane.flapsDown = false;
       plane.stalling = false;
       plane.muzzleFlash = 0;
       plane.recoilShake = 0;
+      isAutolandActive = false;
 
       updateThrottleUI(60);
 
@@ -727,7 +760,7 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
       initEngineSound();
     }
 
-    // --- Cannon Vector Calculation (Aligned with True Aircraft Nose Vector) ---
+    // --- Cannon Vector Calculation ---
     function fireCannon() {
       if (!isPlaying || isCrashed) return;
       playSFX('cannon');
@@ -737,15 +770,13 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
       const radYaw = (plane.yaw * Math.PI) / 180;
       const radPitch = (plane.pitch * Math.PI) / 180;
 
-      // True 3D Nose Direction Vector!
       const fx = Math.sin(radYaw) * Math.cos(radPitch);
       const fy = Math.sin(radPitch);
       const fz = Math.cos(radYaw) * Math.cos(radPitch);
 
-      const speed = 28;
+      const speed = 40;
 
-      // Ejection points from left and right wings
-      const wingOffset = 18;
+      const wingOffset = 22;
       const lx = plane.x - Math.cos(radYaw) * wingOffset;
       const rx = plane.x + Math.cos(radYaw) * wingOffset;
       const lz = plane.z + Math.sin(radYaw) * wingOffset;
@@ -755,9 +786,9 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
         x: lx,
         y: plane.y - 4,
         z: lz,
-        vx: fx * speed + Math.sin(radYaw) * plane.speed * 0.06,
+        vx: fx * speed + Math.sin(radYaw) * plane.speed * 0.08,
         vy: fy * speed,
-        vz: fz * speed + Math.cos(radYaw) * plane.speed * 0.06,
+        vz: fz * speed + Math.cos(radYaw) * plane.speed * 0.08,
         life: 45
       });
 
@@ -765,38 +796,67 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
         x: rx,
         y: plane.y - 4,
         z: rz,
-        vx: fx * speed + Math.sin(radYaw) * plane.speed * 0.06,
+        vx: fx * speed + Math.sin(radYaw) * plane.speed * 0.08,
         vy: fy * speed,
-        vz: fz * speed + Math.cos(radYaw) * plane.speed * 0.06,
+        vz: fz * speed + Math.cos(radYaw) * plane.speed * 0.08,
         life: 45
       });
     }
 
-    // --- Aerodynamic Flight Dynamics Physics Loop ---
+    // --- Aerodynamic Flight Dynamics & Autoland Physics Loop ---
     function updatePhysics(dt: number) {
       if (!isPlaying || isPaused || isCrashed) return;
 
-      // 1. Inputs (Touch Yoke + Keyboard)
-      let pitchInput = touchYoke.pitchInput;
-      let rollInput = touchYoke.rollInput;
+      const currentRunway = getNearestRunway(plane.z);
 
-      if (keys['w'] || keys['W'] || keys['ArrowUp']) pitchInput -= 1;
-      if (keys['s'] || keys['S'] || keys['ArrowDown']) pitchInput += 1;
-      if (keys['a'] || keys['A'] || keys['ArrowLeft']) rollInput -= 1;
-      if (keys['d'] || keys['D'] || keys['ArrowRight']) rollInput += 1;
+      // --- AUTOLAND AUTOPILOT COMPUTER ---
+      if (isAutolandActive) {
+        plane.gearDown = true;
+        plane.flapsDown = true;
+        touchGearLabel.textContent = '🛞 GEAR (DN)';
+        touchFlapsLabel.textContent = '✈️ FLAPS (DN)';
 
-      if (keys['i'] || keys['I']) updateThrottleUI(plane.throttle + 1.2 * dt);
-      if (keys['k'] || keys['K']) updateThrottleUI(plane.throttle - 1.2 * dt);
+        // Target approach speed ~140 KTS
+        const targetThrottle = 25;
+        updateThrottleUI(plane.throttle + (targetThrottle - plane.throttle) * 0.05 * dt);
 
-      // Pitch & Roll Response
-      plane.pitch += pitchInput * 1.8 * dt;
-      plane.roll += rollInput * 2.5 * dt;
+        // Align X centerline
+        const targetX = currentRunway.x;
+        const dx = targetX - plane.x;
+        plane.roll = Math.max(-25, Math.min(25, dx * 0.15));
 
-      // Yaw Banking Turn
-      plane.yaw += (plane.roll * 0.04) * dt;
+        // Align Heading with 000° North runway direction
+        let targetYaw = 0;
+        if (dx > 20) targetYaw = 8;
+        if (dx < -20) targetYaw = 352;
+        plane.yaw += (targetYaw - plane.yaw) * 0.05 * dt;
 
-      if (rollInput === 0 && !touchYoke.active) plane.roll *= 0.92;
-      if (pitchInput === 0 && !touchYoke.active) plane.pitch *= 0.93;
+        // Glide slope descent calculation (-2.5° pitch down until flare at 50 FT)
+        if (plane.y > 50) {
+          plane.pitch += (-2.5 - plane.pitch) * 0.08 * dt;
+        } else {
+          plane.pitch += (2.0 - plane.pitch) * 0.1 * dt; // Touchdown Flare!
+        }
+      } else {
+        // Manual Flight Inputs
+        let pitchInput = touchYoke.pitchInput;
+        let rollInput = touchYoke.rollInput;
+
+        if (keys['w'] || keys['W'] || keys['ArrowUp']) pitchInput -= 1;
+        if (keys['s'] || keys['S'] || keys['ArrowDown']) pitchInput += 1;
+        if (keys['a'] || keys['A'] || keys['ArrowLeft']) rollInput -= 1;
+        if (keys['d'] || keys['D'] || keys['ArrowRight']) rollInput += 1;
+
+        if (keys['i'] || keys['I']) updateThrottleUI(plane.throttle + 1.2 * dt);
+        if (keys['k'] || keys['K']) updateThrottleUI(plane.throttle - 1.2 * dt);
+
+        plane.pitch += pitchInput * 1.8 * dt;
+        plane.roll += rollInput * 2.5 * dt;
+        plane.yaw += (plane.roll * 0.04) * dt;
+
+        if (rollInput === 0 && !touchYoke.active) plane.roll *= 0.92;
+        if (pitchInput === 0 && !touchYoke.active) plane.pitch *= 0.93;
+      }
 
       plane.pitch = Math.max(-45, Math.min(45, plane.pitch));
       plane.roll = Math.max(-75, Math.min(75, plane.roll));
@@ -805,76 +865,78 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
       if (plane.muzzleFlash > 0) plane.muzzleFlash -= 1;
       if (plane.recoilShake > 0) plane.recoilShake *= 0.8;
 
-      // 2. Aerodynamic Lift & Engine Thrust Physics
-      const altitudeCeilingFactor = Math.max(0.2, 1 - Math.max(0, plane.y - 7000) / 4000);
-      const targetSpeed = (45 + plane.throttle * 1.5 + (plane.flapsDown ? -18 : 0)) * altitudeCeilingFactor;
-      plane.speed += (targetSpeed - plane.speed) * 0.04 * dt;
+      // Realistic Jet Speed Physics (130 KTS to 850 KTS Mach 1.2)
+      const targetSpeed = 130 + plane.throttle * 7.2 + (plane.flapsDown ? -40 : 0);
+      plane.speed += (targetSpeed - plane.speed) * 0.05 * dt;
 
       const radPitch = (plane.pitch * Math.PI) / 180;
       const radYaw = (plane.yaw * Math.PI) / 180;
 
-      // Lift calculation (Aerodynamic Lift vs Gravity Weight)
-      const liftFactor = Math.pow(plane.speed / 80, 1.8);
-      const climbRate = Math.sin(radPitch) * plane.speed * 0.26 + (liftFactor - 1.0) * 8.0;
-      
+      // Aerodynamic Lift vs Weight
+      const flapLiftBonus = plane.flapsDown ? 1.25 : 1.0;
+      const minStallSpeed = plane.flapsDown ? 95 : 110;
+
+      const climbRate = Math.sin(radPitch) * plane.speed * 0.35 + (plane.speed - minStallSpeed) * 0.08 * flapLiftBonus;
       plane.y += climbRate * dt;
 
-      // Altitude Ceiling Limit (10,000 FT)
-      if (plane.y > 10000) {
-        plane.y = 10000;
+      // Service Ceiling Limit (50,000 FT)
+      if (plane.y > 50000) {
+        plane.y = 50000;
         if (plane.pitch > 0) plane.pitch *= 0.8;
       }
 
-      // Aircraft Position Movement
-      plane.x += Math.sin(radYaw) * plane.speed * 0.06 * dt;
-      plane.z += Math.cos(radYaw) * plane.speed * 0.06 * dt;
+      // Movement Vector
+      plane.x += Math.sin(radYaw) * plane.speed * 0.08 * dt;
+      plane.z += Math.cos(radYaw) * plane.speed * 0.08 * dt;
 
-      // 3. Aerodynamic Stall Warning (Speed < 50 KTS or High Pitch Low Speed)
-      if (plane.speed < 50 && plane.pitch > 10) {
+      // Aerodynamic Stall Check
+      if (plane.speed < minStallSpeed && plane.pitch > 8) {
         plane.stalling = true;
         stallWarningEl.classList.remove('hidden');
-        plane.y -= 14 * dt; // Gravity sink drop!
+        plane.y -= 18 * dt; // Aerodynamic sink drop!
         playSFX('stall');
       } else {
         plane.stalling = false;
         stallWarningEl.classList.add('hidden');
       }
 
-      // 4. Ground Collision & Landing Touchdown Mechanics
+      // Ground Collision & Landing Touchdown Mechanics
       if (plane.y <= 0) {
         plane.y = 0;
 
-        const distRunwayX = Math.abs(plane.x - runway.x);
-        const distRunwayZ = Math.abs(plane.z - runway.z);
+        const distRunwayX = Math.abs(plane.x - currentRunway.x);
+        const distRunwayZ = Math.abs(plane.z - currentRunway.z);
 
-        const isRunwayAlignment = distRunwayX < runway.width && distRunwayZ < runway.length;
-        const isSafeSpeed = plane.speed <= 110;
-        const isSafeAttitude = Math.abs(plane.pitch) <= 5 && Math.abs(plane.roll) <= 12;
+        const isRunwayAlignment = distRunwayX < currentRunway.width && distRunwayZ < currentRunway.length;
+        const isSafeSpeed = plane.speed <= 160;
+        const isSafeAttitude = Math.abs(plane.pitch) <= 8 && Math.abs(plane.roll) <= 15;
 
         if (plane.gearDown && isRunwayAlignment && isSafeSpeed && isSafeAttitude) {
-          // Touchdown Success!
           isLanded = true;
           isPlaying = false;
+          isAutolandActive = false;
           playSFX('land');
-          showFullscreenOverlay('TOUCHDOWN SUCCESSFUL!', `Flawless approach landing at ${Math.round(plane.speed)} KTS on Runway 09! Pitch: ${Math.round(plane.pitch)}°.`);
+          showFullscreenOverlay('TOUCHDOWN SUCCESSFUL!', `Textbook landing at ${Math.round(plane.speed)} KTS on Airbase Runway #${currentRunway.id}! Pitch: ${Math.round(plane.pitch)}°.`);
         } else {
-          // Crash Impact!
           isCrashed = true;
           isPlaying = false;
+          isAutolandActive = false;
           playSFX('crash');
 
           let crashReason = `Ground impact at ${Math.round(plane.speed)} KTS.`;
           if (!plane.gearDown) crashReason = 'Belly scrape crash! Landing Gear was UP.';
-          else if (!isRunwayAlignment) crashReason = 'Off-runway terrain crash! Align with Runway 09 centerline.';
-          else if (!isSafeSpeed) crashReason = `Hard impact! Speed was ${Math.round(plane.speed)} KTS (Max allowed: 110 KTS).`;
-          else if (!isSafeAttitude) crashReason = `Unstable attitude! Pitch was ${Math.round(plane.pitch)}° (Keep between -5° and +5°).`;
+          else if (!isRunwayAlignment) crashReason = `Off-runway terrain crash! Target nearest Airbase Runway #${currentRunway.id}.`;
+          else if (!isSafeSpeed) crashReason = `Hard impact! Speed was ${Math.round(plane.speed)} KTS (Max allowed: 160 KTS).`;
+          else if (!isSafeAttitude) crashReason = `Unstable attitude! Pitch was ${Math.round(plane.pitch)}° (Keep between -8° and +8°).`;
 
           showFullscreenOverlay('AIRCRAFT CRASHED', crashReason);
         }
       }
 
-      // 5. Wayfinding Updates
-      if (currentMission === 'rings') {
+      // Wayfinding Updates
+      if (isAutolandActive) {
+        hudWayfindingText.textContent = `🤖 AUTOLAND ACTIVE // ILS GLIDE SLOPE RUNWAY #${currentRunway.id} (${Math.round(Math.abs(currentRunway.z - plane.z))}m)`;
+      } else if (currentMission === 'rings') {
         const nextRing = targetRings.find(r => !r.passed);
 
         if (nextRing) {
@@ -894,7 +956,7 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
 
           hudWayfindingText.textContent = `${arrow} RING #${nextRing.id}: ${dist}m (HDG ${String(ringHdg).padStart(3, '0')}°)`;
 
-          if (dist < nextRing.radius + 35) {
+          if (dist < nextRing.radius + 45) {
             nextRing.passed = true;
             ringsPassedCount++;
             playSFX('ring');
@@ -904,11 +966,9 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
             }
           }
         }
-      } else if (currentMission === 'landing') {
-        const distRunway = Math.round(Math.abs(runway.z - plane.z));
-        hudWayfindingText.textContent = `🛬 RUNWAY 09: ${distRunway}m | ALT ${Math.round(plane.y)} FT`;
       } else {
-        hudWayfindingText.textContent = `FREE EXPLORATION // HDG ${String(Math.round(plane.yaw)).padStart(3, '0')}°`;
+        const distRunway = Math.round(Math.abs(currentRunway.z - plane.z));
+        hudWayfindingText.textContent = `🛬 AIRBASE RUNWAY #${currentRunway.id}: ${distRunway}m | ALT ${Math.round(plane.y)} FT`;
       }
 
       // Cannon Bullets Update
@@ -930,17 +990,29 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
 
       if (hudPitchBar) hudPitchBar.style.transform = `translateY(${-plane.pitch * 0.8}px) rotate(${-plane.roll}deg)`;
 
-      updateRadarUI();
+      updateRadarUI(currentRunway);
     }
 
-    function updateRadarUI() {
+    function updateRadarUI(currentRunway: any) {
       if (!radarBlipsEl) return;
       radarBlipsEl.innerHTML = '';
+
+      // Runway Blip on Radar
+      const rwRelX = (currentRunway.x - plane.x) / 45;
+      const rwRelZ = (currentRunway.z - plane.z) / 45;
+      if (Math.abs(rwRelX) < 42 && Math.abs(rwRelZ) < 42) {
+        const blip = document.createElement('div');
+        blip.className = 'absolute w-3 h-3 bg-emerald-400 border border-white rounded-sm';
+        blip.style.left = `${36 + rwRelX}px`;
+        blip.style.top = `${36 - rwRelZ}px`;
+        radarBlipsEl.appendChild(blip);
+      }
+
       if (currentMission === 'rings') {
         targetRings.forEach(ring => {
           if (!ring.passed) {
-            const relX = (ring.x - plane.x) / 35;
-            const relZ = (ring.z - plane.z) / 35;
+            const relX = (ring.x - plane.x) / 45;
+            const relZ = (ring.z - plane.z) / 45;
             if (Math.abs(relX) < 42 && Math.abs(relZ) < 42) {
               const blip = document.createElement('div');
               blip.className = 'absolute w-2 h-2 bg-amber-400 rounded-full animate-ping';
@@ -960,23 +1032,22 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
       const shakeX = (Math.random() - 0.5) * plane.recoilShake;
       const shakeY = (Math.random() - 0.5) * plane.recoilShake;
 
-      // High Altitude Horizon & Grid Perspective Scaling
-      const altScale = Math.max(0.4, 1 - (plane.y / 10000) * 0.5);
+      // 50,000 FT High Altitude Horizon & Grid Perspective Scaling
+      const altScale = Math.max(0.2, 1 - (plane.y / 50000) * 0.75);
       const horizonY = height / 2 + (plane.pitch * 3.5) + shakeY;
 
       ctx.save();
       ctx.translate(width / 2 + shakeX, horizonY);
       ctx.rotate((-plane.roll * Math.PI) / 180);
 
-      // Sky Background
-      ctx.fillStyle = palette.skyTop;
-      ctx.fillRect(-width * 1.5, -height * 2.5, width * 3, height * 2.5);
+      // Stratospheric Dynamic Gradient (Shifts to deep space blue near 50k FT)
+      const skyGrad = ctx.createLinearGradient(0, -height * 2.5, 0, 0);
+      skyGrad.addColorStop(0, palette.skyTop);
+      skyGrad.addColorStop(0.5, palette.skyMid);
+      skyGrad.addColorStop(1, palette.skyBottom);
 
-      const skyGlow = ctx.createLinearGradient(0, -120, 0, 0);
-      skyGlow.addColorStop(0, palette.skyTop);
-      skyGlow.addColorStop(1, palette.skyBottom);
-      ctx.fillStyle = skyGlow;
-      ctx.fillRect(-width * 1.5, -150, width * 3, 150);
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(-width * 1.5, -height * 2.5, width * 3, height * 2.5);
 
       // Ground Base
       ctx.fillStyle = palette.groundBase;
@@ -985,7 +1056,7 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
       // Mode-7 Grid Lines with Altitude Perspective Scaling
       ctx.strokeStyle = palette.gridLine;
       ctx.lineWidth = 1.5;
-      ctx.globalAlpha = 0.45;
+      ctx.globalAlpha = Math.max(0.15, 0.45 * altScale);
 
       const gridSize = 140 * altScale;
       const offsetX = (plane.x % gridSize);
@@ -1014,24 +1085,36 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
       }
       ctx.globalAlpha = 1.0;
 
-      // 3D Runway
-      const relRunwayZ = runway.z - plane.z;
-      const relRunwayX = runway.x - plane.x;
+      // 3D Repeating Airbase Runways & ILS Approach Beacons
+      const currentRunway = getNearestRunway(plane.z);
+      const relRunwayZ = currentRunway.z - plane.z;
+      const relRunwayX = currentRunway.x - plane.x;
 
-      if (relRunwayZ > -400 && relRunwayZ < 3500) {
+      if (relRunwayZ > -400 && relRunwayZ < 4500) {
         const scale = 300 / (relRunwayZ + 350);
         const rwScreenX = relRunwayX * scale;
         const rwScreenY = (plane.y + 40) * scale;
-        const rwWidth = runway.width * scale;
+        const rwWidth = currentRunway.width * scale;
 
-        ctx.fillStyle = '#334155';
-        ctx.fillRect(rwScreenX - rwWidth / 2, rwScreenY, rwWidth, 90 * scale);
+        // Asphalt Pavement
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(rwScreenX - rwWidth / 2, rwScreenY, rwWidth, 110 * scale);
 
+        // Centerline Stripes
         ctx.fillStyle = '#f8fafc';
-        ctx.fillRect(rwScreenX - 2, rwScreenY, 4, 90 * scale);
+        ctx.fillRect(rwScreenX - 3, rwScreenY, 6, 110 * scale);
+
+        // ILS Approach Beacons (Green Threshold & Amber Glide Slope Lights)
+        for (let b = -4; b <= 4; b++) {
+          ctx.fillStyle = '#22c55e';
+          ctx.shadowColor = '#22c55e';
+          ctx.shadowBlur = 8;
+          ctx.fillRect(rwScreenX + b * 22 * scale - 4, rwScreenY - 6 * scale, 8 * scale, 8 * scale);
+        }
+        ctx.shadowBlur = 0;
       }
 
-      // 3D Target Rings & Wayfinding Beacons
+      // 3D Target Rings
       if (currentMission === 'rings') {
         const nextRing = targetRings.find(r => !r.passed);
 
@@ -1075,7 +1158,7 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
         });
       }
 
-      // Plasma Cannon Tracers (Projected Perspective along Nose Vector)
+      // Plasma Cannon Tracers
       bullets.forEach(b => {
         const dz = b.z - plane.z;
         const dx = b.x - plane.x;
@@ -1102,9 +1185,9 @@ import { Plane, Compass, Volume2, VolumeX, Play, Pause, Zap, Trophy, ShieldAlert
       ctx.restore();
 
       // Ground Shadow
-      if (plane.y < 900) {
-        const shadowAlpha = Math.max(0, 1 - plane.y / 900) * 0.45;
-        const shadowOffsetY = Math.min(120, (plane.y / 900) * 100);
+      if (plane.y < 1200) {
+        const shadowAlpha = Math.max(0, 1 - plane.y / 1200) * 0.45;
+        const shadowOffsetY = Math.min(120, (plane.y / 1200) * 100);
         ctx.save();
         ctx.translate(width / 2, height - 90 + shadowOffsetY);
         ctx.rotate((-plane.roll * Math.PI) / 180 * 0.4);
